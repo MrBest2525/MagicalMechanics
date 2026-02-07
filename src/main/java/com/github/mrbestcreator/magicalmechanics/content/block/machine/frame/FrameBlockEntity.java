@@ -3,6 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
+import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
@@ -116,12 +117,20 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         FrameSlot slot = FrameSlot.fromDirection(context.getClickedFace());
         ItemStack offhandItem = player.getOffhandItem();
+        ItemStack itemStack = context.getItemInHand();
         
         boolean inserted;
-        if (!(offhandItem.getItem() instanceof WrenchItem)) {
-            inserted = this.tryInsert(slot, offhandItem);
+        if (!offhandItem.is(ModTags.Items.WRENCH_ITEMS)) {
+            
+            inserted = switch (WrenchItem.getMode(itemStack)) {
+                case SIDE -> tryInsert(slot, offhandItem);
+                case CORE -> tryInsert(FrameSlot.CORE, offhandItem);
+            };
         } else {
-            ItemStack out = tryExtract(slot);
+            ItemStack out = switch (WrenchItem.getMode(itemStack)) {
+                case SIDE -> tryExtract(slot);
+                case CORE -> tryExtract(FrameSlot.CORE);
+            };
             if (!out.isEmpty()) {
                 if (!player.getInventory().add(out)) {
                     player.drop(out, false);
