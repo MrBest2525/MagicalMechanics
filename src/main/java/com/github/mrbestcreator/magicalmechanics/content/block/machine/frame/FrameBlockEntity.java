@@ -1,0 +1,141 @@
+package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
+
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
+import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
+import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumMap;
+import java.util.Map;
+
+public class FrameBlockEntity extends BlockEntity implements WrenchInteractable {
+    
+    private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
+    
+    public FrameBlockEntity(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);
+        for (FrameSlot slot : FrameSlot.values()) {
+            parts.put(slot, ItemStack.EMPTY);
+        }
+    }
+    
+    public void setPart(FrameSlot slot, ItemStack item) {
+        parts.put(slot, item);
+        setChanged();
+    }
+    
+    public ItemStack getPart(FrameSlot slot) {
+        return parts.get(slot);
+    }
+    
+    @Override
+    protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        
+        CompoundTag partsTag = new CompoundTag();
+        for (Map.Entry<FrameSlot, ItemStack> entry : parts.entrySet()) {
+            if (!entry.getValue().isEmpty()) {
+                partsTag.put(entry.getKey().name(), entry.getValue().save(provider));
+            }
+        }
+        tag.put("Parts", partsTag);
+    }
+    
+    @Override
+    protected void loadAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+        
+        parts.clear();
+        CompoundTag partsTag = tag.getCompound("Parts");
+        for (FrameSlot slot : FrameSlot.values()) {
+            if (partsTag.contains(slot.name())) {
+                parts.put(slot, ItemStack.parse(provider, partsTag.getCompound(slot.name())).orElse(ItemStack.EMPTY));
+            } else {
+                parts.put(slot, ItemStack.EMPTY);
+            }
+        }
+    }
+    
+    public void tick() {
+        if (level == null || !level.isClientSide) return;
+        
+        level.addParticle(
+                ParticleTypes.END_ROD,
+                worldPosition.getX() + 0.5,
+                worldPosition.getY() + 1.0,
+                worldPosition.getZ() + 0.5,
+                (Math.random() - 0.5) / 10, (Math.random() - 0.5) / 2, (Math.random() - 0.5) / 10
+        );
+    }
+    
+    public boolean tryInsert(FrameSlot slot, ItemStack stack) {
+        if (stack.isEmpty()) return false;
+        
+        ItemStack current = parts.get(slot);
+        if (!current.isEmpty()) return false;
+        
+        ItemStack inserted = stack.copy();
+        inserted.setCount(1);
+        parts.put(slot, inserted);
+        
+        stack.shrink(1);
+        setChanged();
+        return true;
+    }
+    
+    public ItemStack tryExtract(FrameSlot slot) {
+        ItemStack current = parts.get(slot);
+        if (current.isEmpty()) return ItemStack.EMPTY;
+        
+        parts.put(slot, ItemStack.EMPTY);
+        setChanged();
+        
+        return current.copy();
+    }
+    
+    @Override
+    public InteractionResult onWrenchUse(UseOnContext context) {
+        if (context.getLevel().isClientSide) return InteractionResult.SUCCESS;
+        
+        Player player = context.getPlayer();
+        if (player == null) return InteractionResult.CONSUME;
+        if (player.getOffhandItem().isEmpty()) {
+            player.getCooldowns().addCooldown(context.getItemInHand().getItem(), 5);
+            return InteractionResult.CONSUME;
+        }
+        
+        FrameSlot slot = FrameSlot.fromDirection(context.getClickedFace());
+        ItemStack offhandItem = player.getOffhandItem();
+        
+        boolean inserted;
+        if (!(offhandItem.getItem() instanceof WrenchItem)) {
+            inserted = this.tryInsert(slot, offhandItem);
+        } else {
+            ItemStack out = tryExtract(slot);
+            if (!out.isEmpty()) {
+                if (!player.getInventory().add(out)) {
+                    player.drop(out, false);
+                }
+                inserted = true;
+            } else {
+                inserted = false;
+            }
+        }
+        
+        if (!inserted) player.getCooldowns().addCooldown(context.getItemInHand().getItem(), 5);
+        
+        return inserted
+                ? InteractionResult.CONSUME
+                : InteractionResult.PASS;
+    }
+}
