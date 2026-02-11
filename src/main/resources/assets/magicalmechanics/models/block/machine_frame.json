@@ -3,5 +3,5 @@
   "textures": {
     "all": "magicalmechanics:block/machine_frame"
   },
-  "render_type": "cutout"
+  "render_type": "translucent"
 }

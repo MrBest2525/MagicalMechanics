@@ -10,7 +10,6 @@ import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -100,6 +99,15 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         ItemStack current = parts.get(slot);
         if (!current.isEmpty()) return false;
+        
+        switch (slot) {
+            case SIDE:
+                if (!stack.is(ModTags.Items.FRAME_SIDE_PARTS)) return false;
+                break;
+            case CORE:
+                if (!stack.is(ModTags.Items.FRAME_CORE_PARTS)) return false;
+                break;
+        }
         
         ItemStack inserted = stack.copy();
         inserted.setCount(1);
