@@ -24,29 +24,9 @@ public class FrameBlock extends Block implements EntityBlock {
     
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-        if (!level.isClientSide) return null; // サーバー側は無視
+//        if (!level.isClientSide) return null; // サーバー側は無視
         return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
-                ? (lvl, pos, st, be) -> ((FrameBlockEntity) be).tick()
+                ? (lvl, pos, st, be) -> ((FrameBlockEntity) be).tick(lvl, pos, st)
                 : null;
     }
-    
-//    @Override
-//    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack itemStack, @NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
-//        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
-//
-//
-//        if (!(level.getBlockEntity(blockPos) instanceof FrameBlockEntity be)) {
-//            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-//        }
-//
-//        if (!itemStack.is(ModItems.WRENCH)) return ItemInteractionResult.SUCCESS;
-//
-//        if (player.getOffhandItem().isEmpty()) return ItemInteractionResult.SUCCESS;
-//
-//        FrameSlot slot = FrameSlot.fromDirection(blockHitResult.getDirection());
-//
-//        boolean inserted = be.tryInsert(slot, player.getOffhandItem());
-//
-//        return ItemInteractionResult.SUCCESS;
-//    }
 }

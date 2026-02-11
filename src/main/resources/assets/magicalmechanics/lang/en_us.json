@@ -1,10 +1,11 @@
 {
   "itemGroup.magicalmechanics.machines": "Machines",
   "itemGroup.magicalmechanics.tools": "Tools",
-  "itemGroup.magicalmechanics.machineFrames": "Frames",
+  "itemGroup.magicalmechanics.machineFrames": "Frame Parts",
 
-  "item.magicalmechanics.machine_frame": "Machine Frame",
   "item.magicalmechanics.wrench": "Wrench",
+  "item.magicalmechanics.machine_frame": "Machine Frame",
+  "item.magicalmechanics.furnace_core": "Furnace Core",
 
   "actionbar.item.wrench.modeChange": "Wrench Mode: %s"
 }

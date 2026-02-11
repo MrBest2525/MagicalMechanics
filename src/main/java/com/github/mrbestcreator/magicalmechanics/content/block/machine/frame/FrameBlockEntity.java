@@ -1,6 +1,10 @@
 package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameParts;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.PartsInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
@@ -12,6 +16,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +27,8 @@ import java.util.Map;
 public class FrameBlockEntity extends BlockEntity implements WrenchInteractable {
     
     private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
+    private CoreInstance coreInstance;
+    private PartsInstance partsInstance;
     
     public FrameBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);
@@ -65,18 +72,33 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
                 parts.put(slot, ItemStack.EMPTY);
             }
         }
+        if (parts.get(FrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
+            coreInstance = frameCore.createInstance();
+            System.out.println("load coreInstance");
+        }
+        if (parts.get(FrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
+            partsInstance = frameParts.createInstance();
+        }
+        System.out.println("loaded FrameBlock");
     }
     
-    public void tick() {
-        if (level == null || !level.isClientSide) return;
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (level == null) return;
         
-        level.addParticle(
-                ParticleTypes.END_ROD,
-                worldPosition.getX() + 0.5,
-                worldPosition.getY() + 1.0,
-                worldPosition.getZ() + 0.5,
-                (Math.random() - 0.5) / 10, (Math.random() - 0.5) / 2, (Math.random() - 0.5) / 10
-        );
+        if (level.isClientSide()) {
+            level.addParticle(
+                    ParticleTypes.END_ROD,
+                    worldPosition.getX() + 0.5,
+                    worldPosition.getY() + 1.0,
+                    worldPosition.getZ() + 0.5,
+                    (Math.random() - 0.5) / 10, (Math.random() - 0.5) / 2, (Math.random() - 0.5) / 10
+            );
+        } else {
+            if (coreInstance != null) {
+                coreInstance.tick(level, pos, state, this);
+                coreInstance.getThermal();
+            }
+        }
     }
     
     public boolean tryInsert(FrameSlot slot, ItemStack stack) {
@@ -91,6 +113,20 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         stack.shrink(1);
         setChanged();
+        
+        switch (slot) {
+            case CORE:
+                if (parts.get(slot).getItem() instanceof FrameCore frameCore) {
+                    coreInstance = frameCore.createInstance();
+                }
+                break;
+            case SIDE:
+                if (parts.get(slot).getItem() instanceof FrameParts frameParts) {
+                    partsInstance = frameParts.createInstance();
+                }
+                break;
+        }
+        
         return true;
     }
     
@@ -100,6 +136,15 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         parts.put(slot, ItemStack.EMPTY);
         setChanged();
+        
+        switch (slot) {
+            case CORE:
+                coreInstance = null;
+                break;
+            case SIDE:
+                partsInstance = null;
+                break;
+        }
         
         return current.copy();
     }
@@ -115,7 +160,6 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
             return InteractionResult.CONSUME;
         }
         
-        FrameSlot slot = FrameSlot.fromDirection(context.getClickedFace());
         ItemStack offhandItem = player.getOffhandItem();
         ItemStack itemStack = context.getItemInHand();
         
@@ -123,12 +167,12 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         if (!offhandItem.is(ModTags.Items.WRENCH_ITEMS)) {
             
             inserted = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryInsert(slot, offhandItem);
+                case SIDE -> tryInsert(FrameSlot.SIDE, offhandItem);
                 case CORE -> tryInsert(FrameSlot.CORE, offhandItem);
             };
         } else {
             ItemStack out = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryExtract(slot);
+                case SIDE -> tryExtract(FrameSlot.SIDE);
                 case CORE -> tryExtract(FrameSlot.CORE);
             };
             if (!out.isEmpty()) {

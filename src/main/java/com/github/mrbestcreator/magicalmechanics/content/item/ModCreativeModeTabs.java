@@ -25,7 +25,7 @@ public class ModCreativeModeTabs {
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
-            CREATIVE_MODE_TABS.register("tools_Tab", () -> CreativeModeTab.builder()
+            CREATIVE_MODE_TABS.register("tools_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.magicalmechanics.tools"))
                     .icon(() -> new ItemStack(ModItems.WRENCH.get()))
                     .displayItems(((itemDisplayParameters, output) -> {
@@ -34,7 +34,7 @@ public class ModCreativeModeTabs {
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINE_FRAMES_TAB =
-            CREATIVE_MODE_TABS.register("machine_frame_Tab", () -> CreativeModeTab.builder()
+            CREATIVE_MODE_TABS.register("machine_frame_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.magicalmechanics.machineFrames"))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {

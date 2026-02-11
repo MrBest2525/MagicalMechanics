@@ -1,0 +1,5 @@
+package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance;
+
+public interface FrameParts {
+    PartsInstance createInstance();
+}

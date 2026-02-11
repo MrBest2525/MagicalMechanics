@@ -1,6 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.item;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.parts.FurnaceCoreItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchData;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchMode;
@@ -13,9 +14,9 @@ public class ModItems {
     public static final DeferredRegister.Items ITEMS =
             DeferredRegister.createItems(MagicalMechanics.MODID);
     
-    public static final DeferredItem<Item> FURNACE_CORE = ITEMS.registerSimpleItem(
+    public static final DeferredItem<Item> FURNACE_CORE = ITEMS.register(
             "furnace_core",
-            new Item.Properties()
+            () -> new FurnaceCoreItem(new Item.Properties())
     );
     
     public static final DeferredItem<Item> WRENCH = ITEMS.register("wrench", () -> new WrenchItem(
