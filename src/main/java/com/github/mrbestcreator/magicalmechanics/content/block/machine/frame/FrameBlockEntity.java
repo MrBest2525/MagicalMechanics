@@ -86,13 +86,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         if (level == null) return;
         
         if (level.isClientSide()) {
-            level.addParticle(
-                    ParticleTypes.END_ROD,
-                    worldPosition.getX() + 0.5,
-                    worldPosition.getY() + 1.0,
-                    worldPosition.getZ() + 0.5,
-                    (Math.random() - 0.5) / 10, (Math.random() - 0.5) / 2, (Math.random() - 0.5) / 10
-            );
+        
         } else {
             if (coreInstance != null) {
                 coreInstance.tick(level, pos, state, this);

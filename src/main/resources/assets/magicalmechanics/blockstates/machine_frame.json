@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "magicalmechanics:block/machine_frame" }
+  }
+}

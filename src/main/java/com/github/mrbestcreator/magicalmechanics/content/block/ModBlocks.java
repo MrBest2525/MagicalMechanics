@@ -17,7 +17,9 @@ public class ModBlocks {
             BLOCKS.register(
                     "machine_frame",
                     () -> new FrameBlock(
-                            BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                            BlockBehaviour.Properties.of()
+                                    .mapColor(MapColor.METAL)
+                                    .noOcclusion()
                     )
             );
     
