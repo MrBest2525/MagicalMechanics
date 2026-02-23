@@ -1,9 +1,13 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core;
 
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
+import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,8 +45,17 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
+    public AbstractContainerMenu getMenu(int id, Inventory inventory, FrameBlockEntity blockEntity) {
+        return new FurnaceCorePartsMenu(id, inventory, blockEntity);
+    }
+    
+    @Override
+    public boolean supportsThermal() {
+        return true;
+    }
+    
+    @Override
     public float getThermal() {
-        System.out.println("Thermal: "+ thermal);
         return thermal;
     }
 }

@@ -11,11 +11,13 @@ import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +40,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
     
     public void setPart(FrameSlot slot, ItemStack item) {
         parts.put(slot, item);
-        setChanged();
+        setChangeData();
     }
     
     public ItemStack getPart(FrameSlot slot) {
@@ -73,12 +75,10 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
         if (parts.get(FrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
             coreInstance = frameCore.createInstance();
-            System.out.println("load coreInstance");
         }
         if (parts.get(FrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
             partsInstance = frameParts.createInstance();
         }
-        System.out.println("loaded FrameBlock");
     }
     
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -90,6 +90,9 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
             if (coreInstance != null) {
                 coreInstance.tick(level, pos, state, this);
                 coreInstance.getThermal();
+            }
+            if (partsInstance != null) {
+                partsInstance.tick(level, pos, state, this);
             }
         }
     }
@@ -114,7 +117,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         parts.put(slot, inserted);
         
         stack.shrink(1);
-        setChanged();
+        setChangeData();
         
         switch (slot) {
             case CORE:
@@ -137,7 +140,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         if (current.isEmpty()) return ItemStack.EMPTY;
         
         parts.put(slot, ItemStack.EMPTY);
-        setChanged();
+        setChangeData();
         
         switch (slot) {
             case CORE:
@@ -192,5 +195,25 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         return inserted
                 ? InteractionResult.CONSUME
                 : InteractionResult.PASS;
+    }
+    
+    @Override
+    public @NotNull CompoundTag getUpdateTag(@NotNull HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag, registries); // 全データをタグに書き込む
+        return tag;
+    }
+    
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        // サーバーからクライアントへ送るパケットを生成
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+    
+    private void setChangeData() {
+        setChanged();
+        if (level != null && !level.isClientSide) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 }

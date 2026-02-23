@@ -6,6 +6,7 @@ import com.github.mrbestcreator.magicalmechanics.content.block.ModBlocks;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModCreativeModeTabs;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
+import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.util.WorldMultiplier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,6 +27,7 @@ public class MagicalMechanics {
         ModItemDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
+        ModMenus.register(modEventBus);
     }
     
     @SubscribeEvent

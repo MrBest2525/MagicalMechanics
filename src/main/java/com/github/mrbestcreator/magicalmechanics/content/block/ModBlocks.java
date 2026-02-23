@@ -20,6 +20,8 @@ public class ModBlocks {
                             BlockBehaviour.Properties.of()
                                     .mapColor(MapColor.METAL)
                                     .noOcclusion()
+                                    .isViewBlocking((state, level, pos) -> false)
+                                    .isSuffocating((state, level, pos) -> false)
                     )
             );
     
