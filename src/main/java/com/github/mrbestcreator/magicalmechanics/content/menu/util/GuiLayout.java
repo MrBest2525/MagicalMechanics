@@ -33,8 +33,8 @@ public class GuiLayout {
      * @param offset  中心からの広がり（短い辺に対する比率）
      */
     public Box getBox(double anchorX, double anchorY, double offset) {
-        int centerX = (int) (screenW * anchorX);
-        int centerY = (int) (screenH * anchorY);
+        int centerX = getPointX(anchorX);
+        int centerY = getPointY(anchorY);
         
         // 短い方の辺を基準にしたサイズ（正方形を維持）
         int size = (int) (Math.min(screenW, screenH) * offset);
