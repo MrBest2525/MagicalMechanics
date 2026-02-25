@@ -14,6 +14,16 @@ public class GuiLayout {
     }
     
     /**
+     * 短編基準で統一Scale取得
+     * @param base 計算元Scale
+     * @return 計算後Scale
+     */
+    public double getScale(double base) {
+        double shortSide = Math.min(screenW, screenH);
+        return shortSide / base;
+    }
+    
+    /**
      * @param x 0.0-1.0(座標)
      */
     public int getPointX(double x) {
