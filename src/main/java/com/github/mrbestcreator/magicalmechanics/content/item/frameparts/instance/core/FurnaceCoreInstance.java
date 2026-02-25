@@ -30,18 +30,23 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
-    public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+    public boolean tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        float lastThermal = thermal;
         if (!isBiomeThermal) {
             biomeThermal = (level.getBiome(pos).value().getBaseTemperature() - 0.15f) * 30.77f;
             thermal = biomeThermal;
             isBiomeThermal = true;
         }
         
+        thermal += (float) ((Math.random() - 0.5) * 10) + 5;
+        
         float diff = biomeThermal - thermal;
         // 20tick/s 前提で数十秒スケール
         float k = 0.005f;
         // 差が小さいほどさらに遅くする
         thermal += diff * k * Math.min(1.0f, Math.abs(diff) / 30.0f);
+        
+        return lastThermal != thermal;
     }
     
     @Override
@@ -59,7 +64,7 @@ public class FurnaceCoreInstance implements CoreInstance {
         return thermal;
     }
     
-    public boolean isbBurning() {
+    public boolean isBurning() {
         return true;
     }
 }

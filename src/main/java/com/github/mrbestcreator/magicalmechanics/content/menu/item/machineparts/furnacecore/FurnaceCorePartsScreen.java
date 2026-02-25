@@ -1,14 +1,15 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
-import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ContainerData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,12 +56,14 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         guiGraphics.blit(FIRE_STAND_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
         guiGraphics.pose().popPose();
         
-        if (this.menu.blockEntity.coreInstance instanceof FurnaceCoreInstance coreInstance) {
-            if (coreInstance.isbBurning()) {
-                particlesList.forEach(particles -> particles.render(guiGraphics));
-                
-            }
+        ContainerData data = this.menu.data;
+        
+        if (data.get(0) == 1) {
+            particlesList.forEach(particles -> particles.render(guiGraphics, Float.intBitsToFloat(data.get(1))));
+            
         }
+        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
+        
     }
     
     @Override
@@ -68,24 +71,24 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     }
     
     private class Particles {
+        private boolean isFast = true;
+        
         private final float startPointX, startPointY; // 出現相対位置
         private int x, y, z = 0; // 出現位置
         private float offsetX, offsetY; // 動いた分の距離
         private float vx, vy;           // 速度
         private int life;
         private long maxAge;
-        private int color;
+        private float colorRatio;
         // TODO 色を範囲内でランダム化と温度に合わせて色の範囲を変える
         // TODO 温度が高くなると炎が若干大きく、低くなると逆に
         
         public Particles(float startX, float startY) {
             startPointX = startX;
             startPointY = startY;
-            color = 0xFF4400;
-            init();
         }
         
-        private void init() {
+        private void init(float thermal) {
             long time = System.currentTimeMillis();
             vx = (float) ((Math.random() - 0.5) * 2.0f) / 100 * 0.1f; // 左右に少し揺れる
             vy = (float) ((Math.random() * -3.0) - 1.0f) / 100 * 0.05f; // 上に向かって飛ぶ
@@ -93,16 +96,38 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             maxAge = time + life;
             offsetX = (float)(Math.random() - 0.5) * 0.01f;
             offsetY = (float)(Math.random() - 0.5) * 0.001f;
+            
+            // 色の計算
+            
+            float currentTemp = thermal; // 摂氏を取得
+            float minTemp = 0f;
+            float maxTemp = 1000f;
+            // 0.0 ~ 1.0 の範囲に正規化
+            colorRatio = Mth.clamp((currentTemp - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f);
+            
+            vx *= (1 + colorRatio * 1.5f);
+            vy *= (1 + colorRatio * 0.4f);
         }
         
-        public void render(GuiGraphics guiGraphics) {
+        public void render(GuiGraphics guiGraphics, float thermal) {
+            if (isFast) {
+                init(thermal);
+                isFast = false;
+            }
             long time = System.currentTimeMillis();
+            
             offsetX += vx;
             offsetY += vy;
             // 寿命が来たらリセットする（テスト用）
             if (time > maxAge) {
-                init();
+                init(thermal);
             }
+            
+            // 寿命に応じて透明度を変える計算 (1.0 -> 0.0)
+            float lifeRatio = ((float) (maxAge - time) / life / 2);
+            int alpha = (int) (lifeRatio * 255);
+            
+            int color = calculateColor(colorRatio, alpha);
             
             offsetX *= 0.9f;
             vy -= 0.000001f;
@@ -110,10 +135,6 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             x = GUI_LAYOUT.getPointX(startPointX + offsetX);
             y = GUI_LAYOUT.getPointY(startPointY + offsetY);
             
-            // 寿命に応じて透明度を変える計算 (1.0 -> 0.0)
-            float lifeRatio = ((float) (maxAge - time) / life / 2);
-            int alpha = (int) (lifeRatio * 255);
-            int color = (alpha << 24) | this.color;
             
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(x, y, z);
@@ -121,6 +142,28 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees((float)(maxAge - time) * 0.1f));
             guiGraphics.fill(-5, -5, 5, 5, color);
             guiGraphics.pose().popPose();
+        }
+        
+        private int calculateColor(float ratio, int alpha) {
+            int r, g, b;
+            float randomOffset = (float)(Math.random() * 0.2); // 20%程度の個体差
+            
+            if (ratio < 0.5f) { // 低温〜中温 (赤〜オレンジ)
+                r = 200 + (int)(55 * ratio);
+                g = (int)(200 * (ratio + randomOffset));
+                b = (int)(50 * ratio);
+            } else { // 高温 (白〜青)
+                r = (int)(255 * (1.0f - ratio + randomOffset));
+                g = (int)(255 * (0.8f + randomOffset * 0.5f));
+                b = 255;
+            }
+            
+            // clampして0-255に収める
+            r = Mth.clamp(r, 0, 255);
+            g = Mth.clamp(g, 0, 255);
+            b = Mth.clamp(b, 0, 255);
+            
+            return (alpha << 24) | (r << 16) | (g << 8) | b;
         }
     }
     

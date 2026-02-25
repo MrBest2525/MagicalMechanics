@@ -5,6 +5,7 @@ import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instanc
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameParts;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.PartsInstance;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -30,6 +32,32 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
     private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
     public CoreInstance coreInstance;
     public PartsInstance partsInstance;
+    
+    public final ContainerData data = new ContainerData() {
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> {
+                    if (FrameBlockEntity.this.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
+                        yield furnaceCoreInstance.isBurning() ? 1 : 0;
+                    }
+                    yield 0;
+                }
+                case 1 -> Float.floatToIntBits(FrameBlockEntity.this.coreInstance.getThermal());
+                default -> 0;
+            };
+        }
+        
+        @Override
+        public void set(int i, int i1) {
+        
+        }
+        
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    };
     
     public FrameBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);
@@ -84,16 +112,25 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level == null) return;
         
+        boolean isChangeData = false;
+        
         if (level.isClientSide()) {
         
         } else {
             if (coreInstance != null) {
-                coreInstance.tick(level, pos, state, this);
-                coreInstance.getThermal();
+                if (coreInstance.tick(level, pos, state, this)) {
+                    isChangeData = true;
+                }
             }
             if (partsInstance != null) {
-                partsInstance.tick(level, pos, state, this);
+                if (partsInstance.tick(level, pos, state, this)) {
+                    isChangeData = true;
+                }
             }
+        }
+        
+        if (isChangeData) {
+            setChangeData();
         }
     }
     
@@ -211,9 +248,9 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
     }
     
     private void setChangeData() {
-        setChanged();
         if (level != null && !level.isClientSide) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+        setChanged();
     }
 }
