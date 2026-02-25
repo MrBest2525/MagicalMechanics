@@ -73,6 +73,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     private class Particles {
         private boolean isFast = true;
         
+        private long spawnWait;
         private final float startPointX, startPointY; // 出現相対位置
         private int x, y, z = 0; // 出現位置
         private float offsetX, offsetY; // 動いた分の距離
@@ -86,6 +87,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         public Particles(float startX, float startY) {
             startPointX = startX;
             startPointY = startY;
+            spawnWait = (long) (System.currentTimeMillis() + Math.random() * 1000);
         }
         
         private void init(float thermal) {
@@ -110,11 +112,12 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         }
         
         public void render(GuiGraphics guiGraphics, float thermal) {
-            if (isFast) {
+            long time = System.currentTimeMillis();
+            
+            if (isFast && time > spawnWait) {
                 init(thermal);
                 isFast = false;
             }
-            long time = System.currentTimeMillis();
             
             offsetX += vx;
             offsetY += vy;
