@@ -3,6 +3,10 @@ package com.github.mrbestcreator.magicalmechanics.content.menu.util;
 public class GuiLayout {
     private int screenW, screenH;
     
+    // Minecraftデフォルトコンテナサイズ
+    private static final double BASE_WIDTH  = 176.0;
+    private static final double BASE_HEIGHT = 166.0;
+    
     public GuiLayout(int screenW, int screenH) {
         this.screenW = screenW;
         this.screenH = screenH;
@@ -15,12 +19,19 @@ public class GuiLayout {
     
     /**
      * 短編基準で統一Scale取得
-     * @param base 計算元Scale
+     * @param value 計算元Scale
      * @return 計算後Scale
      */
-    public double getScale(double base) {
-        double shortSide = Math.min(screenW, screenH);
-        return shortSide / base;
+    public double getScale(double value) {
+        if (value == 0.0) return 0.0;
+        
+        double scaleW = screenW / BASE_WIDTH;
+        double scaleH = screenH / BASE_HEIGHT;
+        
+        // はみ出さないよう小さい方を採用
+        double factor = Math.min(scaleW, scaleH);
+        
+        return value * factor;
     }
     
     /**
