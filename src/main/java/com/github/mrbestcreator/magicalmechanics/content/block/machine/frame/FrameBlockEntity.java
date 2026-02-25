@@ -28,8 +28,8 @@ import java.util.Map;
 public class FrameBlockEntity extends BlockEntity implements WrenchInteractable {
     
     private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
-    private CoreInstance coreInstance;
-    private PartsInstance partsInstance;
+    public CoreInstance coreInstance;
+    public PartsInstance partsInstance;
     
     public FrameBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);

@@ -58,4 +58,8 @@ public class FurnaceCoreInstance implements CoreInstance {
     public float getThermal() {
         return thermal;
     }
+    
+    public boolean isbBurning() {
+        return true;
+    }
 }

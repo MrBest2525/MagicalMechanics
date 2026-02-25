@@ -1,10 +1,13 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore;
 
+import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,12 +18,16 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     private final GuiLayout GUI_LAYOUT = new GuiLayout(this.width, this.height);
     
+    private final ResourceLocation FIRE_STAND_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand.png");
+    
+    private final float fireX = 0.5f;
+    private final float fireY = 0.3f;
     private final List<Particles> particlesList = new ArrayList<>();
     
     public FurnaceCorePartsScreen(FurnaceCorePartsMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         for (int i = 0; i < 100; i++) {
-            particlesList.add(new Particles(0.5f, 0.5f));
+            particlesList.add(new Particles(fireX, fireY));
         }
     }
     
@@ -41,7 +48,19 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float v, int i, int i1) {
         // TODO 四角いパーティクル的なので(■)燃えてる時に炎があがっていくような動的Screenにしたい
-        particlesList.forEach(particles -> particles.render(guiGraphics));
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), -100);
+        guiGraphics.pose().scale(1, 1, 1);
+        guiGraphics.pose().translate(-32, -32, 0);
+        guiGraphics.blit(FIRE_STAND_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
+        guiGraphics.pose().popPose();
+        
+        if (this.menu.blockEntity.coreInstance instanceof FurnaceCoreInstance coreInstance) {
+            if (coreInstance.isbBurning()) {
+                particlesList.forEach(particles -> particles.render(guiGraphics));
+                
+            }
+        }
     }
     
     @Override

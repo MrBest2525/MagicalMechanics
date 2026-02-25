@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     
-    private final FrameBlockEntity blockEntity;
+    public final FrameBlockEntity blockEntity;
     private final Level level;
     
     // --- サーバー側 ---
