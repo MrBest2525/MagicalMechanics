@@ -4,8 +4,8 @@ public class GuiLayout {
     private int screenW, screenH;
     
     // Minecraftデフォルトコンテナサイズ
-    private static final double BASE_WIDTH  = 176.0;
-    private static final double BASE_HEIGHT = 166.0;
+    private static final double BASE_WIDTH  = 1920;
+    private static final double BASE_HEIGHT = 1080;
     
     public GuiLayout(int screenW, int screenH) {
         this.screenW = screenW;
