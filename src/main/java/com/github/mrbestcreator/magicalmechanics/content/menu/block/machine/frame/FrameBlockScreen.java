@@ -73,50 +73,7 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
     public FrameBlockScreen(FrameBlockMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         
-        // 必要な値の初期化
-        centerX = this.width / 2f;
-        centerY = this.height / 2f;
-        elapsed = System.currentTimeMillis() - startTime;
-        rawProgress = Math.min(1.0f, elapsed / (float) targetTimeLag);
-        progress = (float) (1.0 - Math.pow(1.0 - rawProgress, 3));
-        
-        
-        // パーツのスロット描画
-        time = System.currentTimeMillis();
-        texterSide = 32;
-        rotation = (time % 4000) / 4000f * 360f;
-        insideScale = (float) GUI_LAYOUT.getScale(1.3f);
-        outsideScale = (float) GUI_LAYOUT.getScale(1.6f);
-        frameInsideRotation = (time % 4000) / 4000f * 360f;
-        frameMiddlesideRotation = (((time) % 4000) / 4000f * 360f) * -1;
-        frameOutsideRotation = ((time + 500) % 4000) / 4000f * 360f;
-        frameInsideScale = (float) GUI_LAYOUT.getScale(2f);
-        frameMiddlesideScale = (float) GUI_LAYOUT.getScale(2.3f);
-        frameOutsideScale = (float) GUI_LAYOUT.getScale(2.6f);
-        frameInsideScaleMultiplier = (float) Math.sin(time * 2 * Math.PI / 2000.0) / 3;
-        frameMiddlesideScaleMultiplier = (float) Math.sin((time + 200) * 2 * Math.PI / 2000.0) / 3;
-        frameOutSideScaleMultiplier = (float) Math.sin((time + 600) * 2 * Math.PI / 2000.0) / 3;
-        
-        sideTargetX = GUI_LAYOUT.getPointX(0.3);
-        sideTargetY = GUI_LAYOUT.getPointY(0.7);
-        coreTargetX = GUI_LAYOUT.getPointX(0.7);
-        coreTargetY = GUI_LAYOUT.getPointY(0.7);
-        frameTargetX = GUI_LAYOUT.getPointX(0.5);
-        frameTargetY = GUI_LAYOUT.getPointY(0.3);
-        
-        sideXPos = centerX + (sideTargetX - centerX) * progress;
-        sideYPos = centerY + (sideTargetY - centerY) * progress;
-        coreXPos = centerX + (coreTargetX - centerX) * progress;
-        coreYPos = centerY + (coreTargetY - centerY) * progress;
-        frameXPos = centerX + (frameTargetX - centerX) * progress;
-        frameYPos = centerY + (frameTargetY - centerY) * progress;
-        
-        // 3D Item & Blockの表示
-        sideItemScale = (float) GUI_LAYOUT.getScale(3);
-        coreItemScale = (float) GUI_LAYOUT.getScale(3);
-        frameBlockScale = (float) GUI_LAYOUT.getScale(30);
-        partsHitBox = (int) (16 * (sideItemScale * 10) / 2);
-        frameHitBox = (int) (16 * (frameBlockScale * 10) / 2);
+        renderSettingInit();
     }
     
     @Override
@@ -124,51 +81,7 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
         super.init();
         GUI_LAYOUT.updateSize(this.width, this.height);
         
-        // 必要な値の初期化
-        centerX = this.width / 2f;
-        centerY = this.height / 2f;
-        elapsed = System.currentTimeMillis() - startTime;
-        rawProgress = Math.min(1.0f, elapsed / (float) targetTimeLag);
-        progress = (float) (1.0 - Math.pow(1.0 - rawProgress, 3));
-        
-        
-        // パーツのスロット描画
-        time = System.currentTimeMillis();
-        texterSide = 32;
-        rotation = (time % 4000) / 4000f * 360f;
-        insideScale = (float) GUI_LAYOUT.getScale(1.3f);
-        outsideScale = (float) GUI_LAYOUT.getScale(1.6f);
-        frameInsideRotation = (time % 4000) / 4000f * 360f;
-        frameMiddlesideRotation = (((time) % 4000) / 4000f * 360f) * -1;
-        frameOutsideRotation = ((time + 500) % 4000) / 4000f * 360f;
-        frameInsideScale = (float) GUI_LAYOUT.getScale(2f);
-        frameMiddlesideScale = (float) GUI_LAYOUT.getScale(2.3f);
-        frameOutsideScale = (float) GUI_LAYOUT.getScale(2.6f);
-        frameInsideScaleMultiplier = (float) Math.sin(time * 2 * Math.PI / 2000.0) / 3;
-        frameMiddlesideScaleMultiplier = (float) Math.sin((time + 200) * 2 * Math.PI / 2000.0) / 3;
-        frameOutSideScaleMultiplier = (float) Math.sin((time + 600) * 2 * Math.PI / 2000.0) / 3;
-        
-        sideTargetX = GUI_LAYOUT.getPointX(0.3);
-        sideTargetY = GUI_LAYOUT.getPointY(0.7);
-        coreTargetX = GUI_LAYOUT.getPointX(0.7);
-        coreTargetY = GUI_LAYOUT.getPointY(0.7);
-        frameTargetX = GUI_LAYOUT.getPointX(0.5);
-        frameTargetY = GUI_LAYOUT.getPointY(0.3);
-        
-        sideXPos = centerX + (sideTargetX - centerX) * progress;
-        sideYPos = centerY + (sideTargetY - centerY) * progress;
-        coreXPos = centerX + (coreTargetX - centerX) * progress;
-        coreYPos = centerY + (coreTargetY - centerY) * progress;
-        frameXPos = centerX + (frameTargetX - centerX) * progress;
-        frameYPos = centerY + (frameTargetY - centerY) * progress;
-        
-        // 3D Item & Blockの表示
-        sideItemScale = (float) GUI_LAYOUT.getScale(3);
-        coreItemScale = (float) GUI_LAYOUT.getScale(3);
-        frameBlockScale = (float) GUI_LAYOUT.getScale(30);
-        partsHitBox = (int) (16 * (sideItemScale * 10) / 2);
-        frameHitBox = (int) (16 * (frameBlockScale * 10) / 2);
-        System.out.println("sideItemScale: " + sideItemScale);
+        renderSettingInit();
     }
     
     @Override
@@ -192,19 +105,19 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
         
         // パーツのスロット描画
         time = System.currentTimeMillis();
-//        texterSide = 32;
+        texterSide = 32;
         rotation = (time % 4000) / 4000f * 360f;
-        insideScale = (float) GUI_LAYOUT.getScale(1.3f);
-        outsideScale = (float) GUI_LAYOUT.getScale(1.6f);
+        insideScale = (float) GUI_LAYOUT.getScale(5f);
+        outsideScale = (float) GUI_LAYOUT.getScale(7f);
         frameInsideRotation = (time % 4000) / 4000f * 360f;
         frameMiddlesideRotation = (((time) % 4000) / 4000f * 360f) * -1;
         frameOutsideRotation = ((time + 500) % 4000) / 4000f * 360f;
-        frameInsideScale = (float) GUI_LAYOUT.getScale(2f);
-        frameMiddlesideScale = (float) GUI_LAYOUT.getScale(2.3f);
-        frameOutsideScale = (float) GUI_LAYOUT.getScale(2.6f);
+        frameInsideScale = (float) GUI_LAYOUT.getScale(7f);
+        frameMiddlesideScale = (float) GUI_LAYOUT.getScale(9f);
+        frameOutsideScale = (float) GUI_LAYOUT.getScale(11f);
         frameInsideScaleMultiplier = (float) Math.sin(time * 2 * Math.PI / 2000.0) / 3;
-        frameMiddlesideScaleMultiplier =(float) Math.sin((time + 200) * 2 * Math.PI / 2000.0) / 3;
-        frameOutSideScaleMultiplier =(float) Math.sin((time + 600) * 2 * Math.PI / 2000.0) / 3;
+        frameMiddlesideScaleMultiplier = (float) Math.sin((time + 200) * 2 * Math.PI / 2000.0) / 3;
+        frameOutSideScaleMultiplier = (float) Math.sin((time + 600) * 2 * Math.PI / 2000.0) / 3;
         
         sideTargetX = GUI_LAYOUT.getPointX(0.3);
         sideTargetY = GUI_LAYOUT.getPointY(0.7);
@@ -291,9 +204,9 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
         
         
         // 3D Item & Blockの表示
-        sideItemScale = isSideHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(4) : (float) GUI_LAYOUT.getScale(3);
-        coreItemScale = isCoreHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(4) : (float) GUI_LAYOUT.getScale(3);
-        frameBlockScale = isFrameHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(40) : (float) GUI_LAYOUT.getScale(30);
+        sideItemScale = isSideHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(20) : (float) GUI_LAYOUT.getScale(15);
+        coreItemScale = isCoreHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(20) : (float) GUI_LAYOUT.getScale(15);
+        frameBlockScale = isFrameHovered(mouseX, mouseY) ? (float) GUI_LAYOUT.getScale(200) : (float) GUI_LAYOUT.getScale(150);
         
         // HitBox を現在のスケールに合わせて更新
         partsHitBox = (int)(8 * Math.max(sideItemScale, coreItemScale));
@@ -355,6 +268,53 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+    
+    private void renderSettingInit() {
+        // 必要な値の初期化
+        centerX = this.width / 2f;
+        centerY = this.height / 2f;
+        elapsed = System.currentTimeMillis() - startTime;
+        rawProgress = Math.min(1.0f, elapsed / (float) targetTimeLag);
+        progress = (float) (1.0 - Math.pow(1.0 - rawProgress, 3));
+        
+        
+        // パーツのスロット描画
+        time = System.currentTimeMillis();
+        texterSide = 32;
+        rotation = (time % 4000) / 4000f * 360f;
+        insideScale = (float) GUI_LAYOUT.getScale(5f);
+        outsideScale = (float) GUI_LAYOUT.getScale(7f);
+        frameInsideRotation = (time % 4000) / 4000f * 360f;
+        frameMiddlesideRotation = (((time) % 4000) / 4000f * 360f) * -1;
+        frameOutsideRotation = ((time + 500) % 4000) / 4000f * 360f;
+        frameInsideScale = (float) GUI_LAYOUT.getScale(7f);
+        frameMiddlesideScale = (float) GUI_LAYOUT.getScale(9f);
+        frameOutsideScale = (float) GUI_LAYOUT.getScale(11f);
+        frameInsideScaleMultiplier = (float) Math.sin(time * 2 * Math.PI / 2000.0) / 3;
+        frameMiddlesideScaleMultiplier = (float) Math.sin((time + 200) * 2 * Math.PI / 2000.0) / 3;
+        frameOutSideScaleMultiplier = (float) Math.sin((time + 600) * 2 * Math.PI / 2000.0) / 3;
+        
+        sideTargetX = GUI_LAYOUT.getPointX(0.3);
+        sideTargetY = GUI_LAYOUT.getPointY(0.7);
+        coreTargetX = GUI_LAYOUT.getPointX(0.7);
+        coreTargetY = GUI_LAYOUT.getPointY(0.7);
+        frameTargetX = GUI_LAYOUT.getPointX(0.5);
+        frameTargetY = GUI_LAYOUT.getPointY(0.3);
+        
+        sideXPos = centerX + (sideTargetX - centerX) * progress;
+        sideYPos = centerY + (sideTargetY - centerY) * progress;
+        coreXPos = centerX + (coreTargetX - centerX) * progress;
+        coreYPos = centerY + (coreTargetY - centerY) * progress;
+        frameXPos = centerX + (frameTargetX - centerX) * progress;
+        frameYPos = centerY + (frameTargetY - centerY) * progress;
+        
+        // 3D Item & Blockの表示
+        sideItemScale = (float) GUI_LAYOUT.getScale(15);
+        coreItemScale = (float) GUI_LAYOUT.getScale(15);
+        frameBlockScale = (float) GUI_LAYOUT.getScale(150);
+        partsHitBox = (int) (16 * (sideItemScale * 10) / 2);
+        frameHitBox = (int) (16 * (frameBlockScale * 10) / 2);
     }
     
     private boolean isSideHovered(double mouseX, double mouseY) {
