@@ -2,15 +2,19 @@ package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +24,12 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     private final GuiLayout GUI_LAYOUT = new GuiLayout(this.width, this.height);
     
     private final ResourceLocation FIRE_STAND_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand.png");
+    private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
     private final float fireX = 0.5f;
     private final float fireY = 0.3f;
+    private final float inventoryX = 0.5f;
+    private final float inventoryY = 0.65f;
     private final List<Particles> particlesList = new ArrayList<>();
     
     public FurnaceCorePartsScreen(FurnaceCorePartsMenu menu, Inventory playerInventory, Component title) {
@@ -40,10 +47,18 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderables.forEach(r -> r.render(guiGraphics, mouseX, mouseY, partialTick));
-        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+//        super.renderables.forEach(r -> r.render(guiGraphics, mouseX, mouseY, partialTick));
+//        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+//        this.renderTooltip(guiGraphics, mouseX, mouseY);
         
+    }
+    
+    @Override
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+//        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+//        this.renderTransparentBackground(guiGraphics);
+        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
     }
     
     @Override
@@ -51,25 +66,94 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         // TODO 四角いパーティクル的なので(■)燃えてる時に炎があがっていくような動的Screenにしたい
         float fireStandScale = (float) GUI_LAYOUT.getScale(5);
         
+        ContainerData data = this.menu.data;
+        
+        float minTemp = 0f;
+        float maxTemp = 1000f;
+        int color = calculateColor(Mth.clamp((Float.intBitsToFloat(data.get(1)) - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
+        
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), -100);
+        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
         guiGraphics.pose().scale(fireStandScale, fireStandScale, fireStandScale);
         guiGraphics.pose().translate(-32, -32, 0);
-        guiGraphics.blit(FIRE_STAND_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
+        blitWithGradient(guiGraphics, FIRE_STAND_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64, color);
         guiGraphics.pose().popPose();
         
-        ContainerData data = this.menu.data;
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(inventoryX), GUI_LAYOUT.getPointY(inventoryY), 0);
+        guiGraphics.pose().translate(-110, -83, 0);
+        // 1. ブレンド（透明度）を有効化
+        RenderSystem.enableBlend();
+        // 2. ブレンド関数の設定（通常はこの設定でOK）
+        RenderSystem.defaultBlendFunc();
+        // 3. 色を白（1.0, 1.0, 1.0, 1.0）にリセットして透明度を維持
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        guiGraphics.blit(INVENTORY_SLOT_TEXTURE, 0, 0, 0, 0, 220, 166, 220, 166);
+        // 4. ブレンドを無効化（他の描画への影響を防ぐため）
+        RenderSystem.disableBlend();
+        guiGraphics.pose().popPose();
+        
         
         if (data.get(0) == 1) {
             particlesList.forEach(particles -> particles.render(guiGraphics, Float.intBitsToFloat(data.get(1))));
             
         }
-        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
+//        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
         
     }
     
     @Override
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    }
+    
+    public void blitWithGradient(GuiGraphics guiGraphics, ResourceLocation texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color) {
+        Matrix4f matrix = guiGraphics.pose().last().pose();
+        VertexConsumer buffer = guiGraphics.bufferSource().getBuffer(RenderType.entityTranslucent(texture));
+        
+        float u0 = u / (float)textureWidth;
+        float v0 = v / (float)textureHeight;
+        float u1 = (u + (float)width) / (float)textureWidth;
+        float v1 = (v + (float)height) / (float)textureHeight;
+        
+        // 頂点定義のヘルパー
+        addVertex(buffer, matrix, (float)x, (float)y, u0, v0, color); // 左上(白)
+        addVertex(buffer, matrix, (float)x, (float)(y + height), u0, v1, 0xFFFFFFFF);   // 左下(変色)
+        addVertex(buffer, matrix, (float)(x + width), (float)(y + height), u1, v1, 0xFFFFFFFF); // 右下(変色)
+        addVertex(buffer, matrix, (float)(x + width), (float)y, u1, v0, color); // 右上(白)
+        
+        // 即時反映させるためにflushを呼ぶ（任意ですが安全です）
+        guiGraphics.flush();
+    }
+    
+    private void addVertex(VertexConsumer buffer, Matrix4f matrix, float x, float y, float u, float v, int color) {
+        buffer.addVertex(matrix, x, y, 0.0F)
+                .setColor(color)
+                .setUv(u, v)
+                .setUv1(0, 10)  // これを追加
+                .setUv2(240, 240)                 // フルブライトのライトマップ値
+                .setNormal(0.0F, 0.0F, 1.0F);      // 正面を向く法線
+    }
+    
+    private int calculateColor(float ratio, int alpha) {
+        int r, g, b;
+        float randomOffset = (float)(Math.random() * 0.6); // 20%程度の個体差
+        
+        if (ratio < 0.5f) { // 低温〜中温 (赤〜オレンジ)
+            r = 200 + (int)(55 * ratio);
+            g = (int)(200 * (ratio + randomOffset));
+            b = (int)(50 * ratio);
+        } else { // 高温 (白〜青)
+            r = (int)(255 * (1.0f - ratio + randomOffset));
+            g = (int)(255 * (0.8f + randomOffset * 0.5f));
+            b = 255;
+        }
+        
+        // clampして0-255に収める
+        r = Mth.clamp(r, 0, 255);
+        g = Mth.clamp(g, 0, 255);
+        b = Mth.clamp(b, 0, 255);
+        
+        return (alpha << 24) | (r << 16) | (g << 8) | b;
     }
     
     private class Particles {
@@ -101,15 +185,14 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             maxAge = time + life;
             offsetX = (float)(Math.random() - 0.5) * 0.01f;
             offsetY = (float)(Math.random() - 0.5) * 0.001f;
-            particleScale = (float) GUI_LAYOUT.getScale(2.5);
+            particleScale = (float) GUI_LAYOUT.getScale(1.5);
             
             // 色の計算
             
-            float currentTemp = thermal; // 摂氏を取得
             float minTemp = 0f;
             float maxTemp = 1000f;
             // 0.0 ~ 1.0 の範囲に正規化
-            colorRatio = Mth.clamp((currentTemp - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f);
+            colorRatio = Mth.clamp((thermal - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f);
             
             vx *= (1 + colorRatio * 1.5f);
             vy *= (1 + colorRatio * 0.4f);
@@ -146,31 +229,13 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(x, y, z);
             guiGraphics.pose().scale(particleScale, particleScale, particleScale);
-            guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees((float)(maxAge - time) * 0.1f));
+            if (vx > 0) {
+                guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees((float) (maxAge - time) * 0.1f));
+            } else {
+                guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees((float) (maxAge - time) * -0.1f));
+            }
             guiGraphics.fill(-5, -5, 5, 5, color);
             guiGraphics.pose().popPose();
-        }
-        
-        private int calculateColor(float ratio, int alpha) {
-            int r, g, b;
-            float randomOffset = (float)(Math.random() * 0.2); // 20%程度の個体差
-            
-            if (ratio < 0.5f) { // 低温〜中温 (赤〜オレンジ)
-                r = 200 + (int)(55 * ratio);
-                g = (int)(200 * (ratio + randomOffset));
-                b = (int)(50 * ratio);
-            } else { // 高温 (白〜青)
-                r = (int)(255 * (1.0f - ratio + randomOffset));
-                g = (int)(255 * (0.8f + randomOffset * 0.5f));
-                b = 255;
-            }
-            
-            // clampして0-255に収める
-            r = Mth.clamp(r, 0, 255);
-            g = Mth.clamp(g, 0, 255);
-            b = Mth.clamp(b, 0, 255);
-            
-            return (alpha << 24) | (r << 16) | (g << 8) | b;
         }
     }
     
