@@ -49,9 +49,11 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float v, int i, int i1) {
         // TODO 四角いパーティクル的なので(■)燃えてる時に炎があがっていくような動的Screenにしたい
+        float fireStandScale = (float) GUI_LAYOUT.getScale(5);
+        
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), -100);
-        guiGraphics.pose().scale(1, 1, 1);
+        guiGraphics.pose().scale(fireStandScale, fireStandScale, fireStandScale);
         guiGraphics.pose().translate(-32, -32, 0);
         guiGraphics.blit(FIRE_STAND_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
         guiGraphics.pose().popPose();
@@ -81,6 +83,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         private int life;
         private long maxAge;
         private float colorRatio;
+        private float particleScale;
         // TODO 色を範囲内でランダム化と温度に合わせて色の範囲を変える
         // TODO 温度が高くなると炎が若干大きく、低くなると逆に
         
@@ -98,6 +101,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             maxAge = time + life;
             offsetX = (float)(Math.random() - 0.5) * 0.01f;
             offsetY = (float)(Math.random() - 0.5) * 0.001f;
+            particleScale = (float) GUI_LAYOUT.getScale(2.5);
             
             // 色の計算
             
@@ -141,7 +145,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(x, y, z);
-            guiGraphics.pose().scale(0.5f, 0.5f, 0.5f);
+            guiGraphics.pose().scale(particleScale, particleScale, particleScale);
             guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees((float)(maxAge - time) * 0.1f));
             guiGraphics.fill(-5, -5, 5, 5, color);
             guiGraphics.pose().popPose();
