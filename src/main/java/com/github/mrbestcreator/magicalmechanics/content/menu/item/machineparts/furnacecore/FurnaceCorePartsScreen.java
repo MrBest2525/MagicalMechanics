@@ -25,6 +25,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     private final GuiLayout GUI_LAYOUT = new GuiLayout(this.width, this.height);
     
     private final ResourceLocation FIRE_STAND_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand.png");
+    private final ResourceLocation FIRE_STAND_HOVERING_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand_hovering.png");
     private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
     private final float fireX = 0.5f;
@@ -234,8 +235,16 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             guiGraphics.pose().translate(0, 0, 100); // アイテムより手前に描画
             
             if (slot.index == 0) {
-                float hs = size / 2.0f;
-                guiGraphics.fill(RenderType.guiOverlay(), (int)(finalX - hs), (int)(finalY - hs), (int)(finalX + hs), (int)(finalY + hs), 0x80FFFFFF);
+                float fireStandScale = (float) GUI_LAYOUT.getScale(fireStandDefaultScale);
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
+                guiGraphics.pose().scale(fireStandScale, fireStandScale, fireStandScale);
+                guiGraphics.pose().translate(-32, -32, 150);
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+                guiGraphics.blit(FIRE_STAND_HOVERING_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
+                RenderSystem.disableBlend();
+                guiGraphics.pose().popPose();
             } else {
                 guiGraphics.fill(RenderType.guiOverlay(), (int)finalX, (int)finalY, (int)(finalX + size), (int)(finalY + size), 0x80FFFFFF);
             }
