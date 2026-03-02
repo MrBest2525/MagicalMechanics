@@ -55,7 +55,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 //        super.renderables.forEach(r -> r.render(guiGraphics, mouseX, mouseY, partialTick));
 //        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-//        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
         
     }
     
