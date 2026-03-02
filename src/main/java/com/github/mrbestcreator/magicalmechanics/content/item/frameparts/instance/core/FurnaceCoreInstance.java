@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCoreInstance implements CoreInstance {
@@ -18,6 +19,8 @@ public class FurnaceCoreInstance implements CoreInstance {
     private float biomeThermal;
     private boolean isBiomeThermal = false;
     private float thermal = 25;
+    
+    public ItemStackHandler inventory = new ItemStackHandler(1);
     
     @Override
     public void save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {

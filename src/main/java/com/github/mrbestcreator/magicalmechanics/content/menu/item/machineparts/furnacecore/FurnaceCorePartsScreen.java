@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -28,6 +29,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     private final float fireX = 0.5f;
     private final float fireY = 0.3f;
+    private final float fireStandDefaultScale = 5;
+    private final float fuelSlotScale = 4.4f;
     private final float inventoryX = 0.5f;
     private final float inventoryY = 0.65f;
     private final List<Particles> particlesList = new ArrayList<>();
@@ -41,6 +44,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     @Override
     protected void init() {
+        this.imageWidth = this.width;
+        this.imageHeight = this.height;
         super.init();
         GUI_LAYOUT.updateSize(this.width, this.height);
     }
@@ -64,7 +69,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float v, int i, int i1) {
         // TODO 四角いパーティクル的なので(■)燃えてる時に炎があがっていくような動的Screenにしたい
-        float fireStandScale = (float) GUI_LAYOUT.getScale(5);
+        float fireStandScale = (float) GUI_LAYOUT.getScale(this.fireStandDefaultScale);
         
         ContainerData data = this.menu.data;
         
@@ -104,6 +109,139 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     @Override
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    }
+    
+    @Override
+    protected void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+        if (slot.index == 0) {
+            float scale = (float) GUI_LAYOUT.getScale(fuelSlotScale);
+            float targetX = GUI_LAYOUT.getPointX(fireX);
+            float targetY = (float) (GUI_LAYOUT.getPointY(fireY) + 90 * GUI_LAYOUT.getScale(1));
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(targetX, targetY, 0);
+            guiGraphics.pose().scale(scale, scale, scale);
+            guiGraphics.pose().translate(-8, -8, 0);
+            super.renderSlot(guiGraphics, slot);
+            guiGraphics.pose().popPose();
+        } else if (slot.index >= 1 && slot.index <= 27) {
+            float targetX = GUI_LAYOUT.getPointX(inventoryX);
+            float targetY = GUI_LAYOUT.getPointY(inventoryY);
+            int i = slot.index - 1;
+            float offsetX = -80 + (18 * (i % 9));
+            float offsetY = -37 + (18 * (int) (i / 9));
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(targetX, targetY, 0);
+            guiGraphics.pose().translate(offsetX, offsetY, 0);
+            super.renderSlot(guiGraphics, slot);
+            guiGraphics.pose().popPose();
+        } else if (slot.index >= 28 && slot.index <= 36) {
+            float targetX = GUI_LAYOUT.getPointX(inventoryX);
+            float targetY = GUI_LAYOUT.getPointY(inventoryY);
+            int i = slot.index - 1;
+            float offsetX = -80 + (18 * (i % 9));
+            float offsetY = -37 + 18 * 3 + 4;
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(targetX, targetY, 0);
+            guiGraphics.pose().translate(offsetX, offsetY , 0);
+            super.renderSlot(guiGraphics, slot);
+            guiGraphics.pose().popPose();
+        } else {
+            super.renderSlot(guiGraphics, slot);
+        }
+    }
+    
+    @Override
+    public boolean isHovering(@NotNull Slot slot, double mouseX, double mouseY) {
+        float finalX, finalY;
+        float currentScale = 1.0f;
+        
+        if (slot.index == 0) {
+            // --- ケース1: 燃料スロット (Scaleあり) ---
+            currentScale = (float) GUI_LAYOUT.getScale(fuelSlotScale);
+            finalX = GUI_LAYOUT.getPointX(fireX);
+            finalY = (float) (GUI_LAYOUT.getPointY(fireY) + 90 * GUI_LAYOUT.getScale(1));
+            
+        } else if (slot.index >= 1 && slot.index <= 27) {
+            // --- ケース2: インベントリメイン ---
+            float targetX = GUI_LAYOUT.getPointX(inventoryX);
+            float targetY = GUI_LAYOUT.getPointY(inventoryY);
+            int i = slot.index - 1;
+            finalX = targetX + (-80 + (18 * (i % 9))) + 8;
+            finalY = targetY + (-37 + (18 * (int) (i / 9))) + 8;
+            
+        } else if (slot.index >= 28 && slot.index <= 36) {
+            // --- ケース3: ホットバー ---
+            float targetX = GUI_LAYOUT.getPointX(inventoryX);
+            float targetY = GUI_LAYOUT.getPointY(inventoryY);
+            int i = slot.index - 1;
+            finalX = targetX + (-80 + (18 * (i % 9))) + 8;
+            finalY = targetY + (-37 + 18 * 3 + 4) + 8;
+            
+        } else {
+            // その他（デフォルト）
+            return super.isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY);
+        }
+        
+        // 判定範囲の計算 (中心 finalX, finalY から、サイズ 16 * scale の半分ずつ広げる)
+        float halfSize = (16.0f * currentScale) / 2.0f;
+        
+//        return mouseX >= (double)finalX - halfSize && mouseX <= (double)finalX + halfSize &&
+//                mouseX >= (double)finalY - halfSize && mouseX <= (double)finalY + halfSize;
+        return  this.isHovering((int) (finalX - halfSize), (int) (finalY - halfSize), (int) (halfSize * 2), (int) (halfSize * 2), mouseX, mouseY);
+    }
+    
+    @Override
+    protected void renderSlotHighlight(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, int mouseX, int mouseY, float partialTick) {
+        // 自分の判定ロジックが true のときだけ描画
+        if (this.isHovering(slot, (double)mouseX, (double)mouseY)) {
+            
+            // --- ここで isHovering と同じ finalX, finalY, currentScale を算出 ---
+            // (コードの重複を避けるなら、座標算出部分をメソッドに切り出すと楽です)
+            float finalX, finalY;
+            float currentScale = 1.0f;
+            
+            if (slot.index == 0) {
+                // --- ケース1: 燃料スロット (Scaleあり) ---
+                currentScale = (float) GUI_LAYOUT.getScale(fuelSlotScale);
+                finalX = GUI_LAYOUT.getPointX(fireX);
+                finalY = (float) (GUI_LAYOUT.getPointY(fireY) + 90 * GUI_LAYOUT.getScale(1));
+                
+            } else if (slot.index >= 1 && slot.index <= 27) {
+                // --- ケース2: インベントリメイン ---
+                float targetX = GUI_LAYOUT.getPointX(inventoryX);
+                float targetY = GUI_LAYOUT.getPointY(inventoryY);
+                int i = slot.index - 1;
+                finalX = targetX + (-80 + (18 * (i % 9)));
+                finalY = targetY + (-37 + (18 * (int) (i / 9)));
+                
+            } else if (slot.index >= 28 && slot.index <= 36) {
+                // --- ケース3: ホットバー ---
+                float targetX = GUI_LAYOUT.getPointX(inventoryX);
+                float targetY = GUI_LAYOUT.getPointY(inventoryY);
+                int i = slot.index - 1;
+                finalX = targetX + (-80 + (18 * (i % 9)));
+                finalY = targetY + (-37 + 18 * 3 + 4);
+                
+            } else {
+                // その他（デフォルト）
+                super.renderSlotHighlight(guiGraphics, slot, mouseX, mouseY, partialTick);
+                return;
+            }
+            
+            float size = 16.0f * currentScale;
+            
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate(0, 0, 100); // アイテムより手前に描画
+            
+            if (slot.index == 0) {
+                float hs = size / 2.0f;
+                guiGraphics.fill(RenderType.guiOverlay(), (int)(finalX - hs), (int)(finalY - hs), (int)(finalX + hs), (int)(finalY + hs), 0x80FFFFFF);
+            } else {
+                guiGraphics.fill(RenderType.guiOverlay(), (int)finalX, (int)finalY, (int)(finalX + size), (int)(finalY + size), 0x80FFFFFF);
+            }
+            
+            guiGraphics.pose().popPose();
+        }
     }
     
     public void blitWithGradient(GuiGraphics guiGraphics, ResourceLocation texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color) {
