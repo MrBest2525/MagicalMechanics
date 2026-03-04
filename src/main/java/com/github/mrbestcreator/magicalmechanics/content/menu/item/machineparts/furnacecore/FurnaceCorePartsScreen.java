@@ -31,6 +31,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     private final float fireX = 0.5f;
     private final float fireY = 0.3f;
     private final float fireStandDefaultScale = 5;
+    private final float fireStandBurningItemScale = 2.5f;
     private final float fuelSlotScale = 4.4f;
     private final float inventoryX = 0.5f;
     private final float inventoryY = 0.65f;
@@ -69,7 +70,6 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float v, int i, int i1) {
-        // TODO 四角いパーティクル的なので(■)燃えてる時に炎があがっていくような動的Screenにしたい
         float fireStandScale = (float) GUI_LAYOUT.getScale(this.fireStandDefaultScale);
         
         ContainerData data = this.menu.data;
@@ -104,8 +104,14 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             particlesList.forEach(particles -> particles.render(guiGraphics, Float.intBitsToFloat(data.get(1))));
             
         }
-//        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
+        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
         
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(fireX, fireY, 0);
+        guiGraphics.pose().translate(-8, -8, 0);
+        guiGraphics.pose().scale(fireStandBurningItemScale, fireStandBurningItemScale, fireStandBurningItemScale);
+        guiGraphics.renderFakeItem(this.menu.furnaceCore.getBurningItem(), 0, 0);
+        guiGraphics.pose().popPose();
     }
     
     @Override
@@ -129,7 +135,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
             int i = slot.index - 1;
             float offsetX = -80 + (18 * (i % 9));
-            float offsetY = -37 + (18 * (int) (i / 9));
+            float offsetY = -37 + (18 * ((float) i / 9));
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(targetX, targetY, 0);
             guiGraphics.pose().translate(offsetX, offsetY, 0);
@@ -168,7 +174,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
             int i = slot.index - 1;
             finalX = targetX + (-80 + (18 * (i % 9))) + 8;
-            finalY = targetY + (-37 + (18 * (int) (i / 9))) + 8;
+            finalY = targetY + (-37 + (18 * ((float) i / 9))) + 8;
             
         } else if (slot.index >= 28 && slot.index <= 36) {
             // --- ケース3: ホットバー ---
@@ -186,15 +192,13 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         // 判定範囲の計算 (中心 finalX, finalY から、サイズ 16 * scale の半分ずつ広げる)
         float halfSize = (16.0f * currentScale) / 2.0f;
         
-//        return mouseX >= (double)finalX - halfSize && mouseX <= (double)finalX + halfSize &&
-//                mouseX >= (double)finalY - halfSize && mouseX <= (double)finalY + halfSize;
         return  this.isHovering((int) (finalX - halfSize), (int) (finalY - halfSize), (int) (halfSize * 2), (int) (halfSize * 2), mouseX, mouseY);
     }
     
     @Override
     protected void renderSlotHighlight(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, int mouseX, int mouseY, float partialTick) {
         // 自分の判定ロジックが true のときだけ描画
-        if (this.isHovering(slot, (double)mouseX, (double)mouseY)) {
+        if (this.isHovering(slot, mouseX, mouseY)) {
             
             // --- ここで isHovering と同じ finalX, finalY, currentScale を算出 ---
             // (コードの重複を避けるなら、座標算出部分をメソッドに切り出すと楽です)
@@ -213,7 +217,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
                 float targetY = GUI_LAYOUT.getPointY(inventoryY);
                 int i = slot.index - 1;
                 finalX = targetX + (-80 + (18 * (i % 9)));
-                finalY = targetY + (-37 + (18 * (int) (i / 9)));
+                finalY = targetY + (-37 + (18 * ((float) i / 9)));
                 
             } else if (slot.index >= 28 && slot.index <= 36) {
                 // --- ケース3: ホットバー ---
@@ -316,7 +320,9 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         private float colorRatio;
         private float particleScale;
         // TODO 色を範囲内でランダム化と温度に合わせて色の範囲を変える
+        // TODO 燃え始めてからの時間によって炎の量を多少増減(最大数あり)
         // TODO 温度が高くなると炎が若干大きく、低くなると逆に
+        // TODO 窯と炎の温度での変化を切り離す
         
         public Particles(float startX, float startY) {
             startPointX = startX;

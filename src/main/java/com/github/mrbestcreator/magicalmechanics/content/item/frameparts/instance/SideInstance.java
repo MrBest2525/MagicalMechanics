@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public interface PartsInstance {
+public interface SideInstance {
     void save(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     void load(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     boolean tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity);

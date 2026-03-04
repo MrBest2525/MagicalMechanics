@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -17,17 +18,23 @@ import org.jetbrains.annotations.NotNull;
 public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     
     public final FrameBlockEntity blockEntity;
+    public final FurnaceCoreInstance furnaceCore;
     public final Level level;
     public final ContainerData data;
     
     public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, IItemHandler dataInventory, ContainerData containerData, FrameBlockEntity blockEntity) {
         super(ModMenus.FURNACE_CORE_PARTS_MENU.get(), containerId);
         this.blockEntity = blockEntity;
+        FurnaceCoreInstance furnaceCore = new FurnaceCoreInstance();
+        if (blockEntity.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
+            furnaceCore = furnaceCoreInstance;
+        }
+        this.furnaceCore = furnaceCore;
         this.level = playerInventory.player.level();
         this.data = containerData;
         this.addDataSlots(containerData);
         
-        this.addSlot(new SlotItemHandler(dataInventory, 0, 0, 0));
+        this.addSlot(new FuelSlot(dataInventory, 0, 0, 0));
         
         // 2. プレイヤーインベントリ (Index 1 ~ 27)
         for (int i = 0; i < 3; ++i) {
@@ -93,6 +100,19 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
             return furnaceCore.inventory;
         }
         // nullを返すと呼び出し先でエラーになる可能性があるため、空のハンドラーを返す
-        return new net.neoforged.neoforge.items.ItemStackHandler(0);
+        return new ItemStackHandler(0);
+    }
+    
+    private static class FuelSlot extends SlotItemHandler {
+        public FuelSlot(IItemHandler itemHandler, int index, int x, int y) {
+            super(itemHandler, index, x, y);
+        }
+        
+        @Override
+        public boolean mayPlace(@NotNull ItemStack stack) {
+            // 例燃焼時間のあるアイテムのみ許可
+            return stack.getBurnTime(RecipeType.SMELTING) > 0;
+            
+        }
     }
 }
