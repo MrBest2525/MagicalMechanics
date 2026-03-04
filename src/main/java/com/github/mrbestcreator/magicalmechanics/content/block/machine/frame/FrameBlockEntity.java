@@ -175,11 +175,13 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
             case CORE:
                 if (parts.get(slot).getItem() instanceof FrameCore frameCore) {
                     coreInstance = frameCore.createInstance();
+                    coreInstance.onAttached(this);
                 }
                 break;
             case SIDE:
                 if (parts.get(slot).getItem() instanceof FrameParts frameParts) {
                     sideInstance = frameParts.createInstance();
+                    sideInstance.onAttached(this);
                 }
                 break;
         }
@@ -196,9 +198,11 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         switch (slot) {
             case CORE:
+                coreInstance.onDetached(this);
                 coreInstance = null;
                 break;
             case SIDE:
+                sideInstance.onDetached(this);
                 sideInstance = null;
                 break;
         }

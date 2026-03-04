@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -114,6 +115,25 @@ public class FurnaceCoreInstance implements CoreInstance {
         thermal += diff * k * Math.min(1.0f, Math.abs(diff) / 30.0f) * (float) (Math.min(Math.random() * 2, 1));
         
         return lastThermal != thermal;
+    }
+    
+    @Override
+    public void onAttached(FrameBlockEntity frame) {
+    }
+    
+    @Override
+    public void onDetached(FrameBlockEntity frame) {
+        Level level = frame.getLevel();
+        BlockPos pos = frame.getBlockPos();
+        if (level != null && !level.isClientSide) {
+            // インベントリと燃焼中アイテムをドロップ
+            for (int i = 0; i < inventory.getSlots(); i++) {
+                ItemStack stack = inventory.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
+                }
+            }
+        }
     }
     
     @Override
