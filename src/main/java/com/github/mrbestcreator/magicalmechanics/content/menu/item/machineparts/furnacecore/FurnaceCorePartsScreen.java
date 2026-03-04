@@ -107,10 +107,11 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
         
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(fireX, fireY, 0);
+        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
+        guiGraphics.pose().scale(fireStandScale / 2, fireStandScale / 2, fireStandScale / 2);
+        guiGraphics.pose().scale(0, 0, -16 * (fireStandScale / 2));
         guiGraphics.pose().translate(-8, -8, 0);
-        guiGraphics.pose().scale(fireStandBurningItemScale, fireStandBurningItemScale, fireStandBurningItemScale);
-        guiGraphics.renderFakeItem(this.menu.furnaceCore.getBurningItem(), 0, 0);
+        guiGraphics.renderFakeItem(this.menu.slots.get(1).getItem(), 0, 0);
         guiGraphics.pose().popPose();
     }
     
@@ -127,13 +128,14 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(targetX, targetY, 0);
             guiGraphics.pose().scale(scale, scale, scale);
+            guiGraphics.pose().translate(0, 0, -16 * scale * 2);
             guiGraphics.pose().translate(-8, -8, 0);
             super.renderSlot(guiGraphics, slot);
             guiGraphics.pose().popPose();
-        } else if (slot.index >= 1 && slot.index <= 27) {
+        } else if (slot.index >= 3 && slot.index <= 30) {
             float targetX = GUI_LAYOUT.getPointX(inventoryX);
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index - 1;
+            int i = slot.index - 1 -2;
             float offsetX = -80 + (18 * (i % 9));
             float offsetY = -37 + (18 * (i / 9));
             guiGraphics.pose().pushPose();
@@ -141,10 +143,10 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             guiGraphics.pose().translate(offsetX, offsetY, 0);
             super.renderSlot(guiGraphics, slot);
             guiGraphics.pose().popPose();
-        } else if (slot.index >= 28 && slot.index <= 36) {
+        } else if (slot.index >= 31 && slot.index <= 39) {
             float targetX = GUI_LAYOUT.getPointX(inventoryX);
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index - 1;
+            int i = slot.index - 1 -2;
             float offsetX = -80 + (18 * (i % 9));
             float offsetY = -37 + 18 * 3 + 4;
             guiGraphics.pose().pushPose();
@@ -168,19 +170,19 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             finalX = GUI_LAYOUT.getPointX(fireX);
             finalY = (float) (GUI_LAYOUT.getPointY(fireY) + 90 * GUI_LAYOUT.getScale(1));
             
-        } else if (slot.index >= 1 && slot.index <= 27) {
+        } else if (slot.index >= 3 && slot.index <= 30) {
             // --- ケース2: インベントリメイン ---
             float targetX = GUI_LAYOUT.getPointX(inventoryX);
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index - 1;
+            int i = slot.index - 1 -2;
             finalX = targetX + (-80 + (18 * (i % 9))) + 8;
             finalY = targetY + (-37 + (18 * ( i / 9))) + 8;
             
-        } else if (slot.index >= 28 && slot.index <= 36) {
+        } else if (slot.index >= 31 && slot.index <= 39) {
             // --- ケース3: ホットバー ---
             float targetX = GUI_LAYOUT.getPointX(inventoryX);
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index - 1;
+            int i = slot.index - 1 -2;
             finalX = targetX + (-80 + (18 * (i % 9))) + 8;
             finalY = targetY + (-37 + 18 * 3 + 4) + 8;
             
@@ -211,19 +213,19 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
                 finalX = GUI_LAYOUT.getPointX(fireX);
                 finalY = (float) (GUI_LAYOUT.getPointY(fireY) + 90 * GUI_LAYOUT.getScale(1));
                 
-            } else if (slot.index >= 1 && slot.index <= 27) {
+            } else if (slot.index >= 3 && slot.index <= 30) {
                 // --- ケース2: インベントリメイン ---
                 float targetX = GUI_LAYOUT.getPointX(inventoryX);
                 float targetY = GUI_LAYOUT.getPointY(inventoryY);
-                int i = slot.index - 1;
+                int i = slot.index - 1 -2;
                 finalX = targetX + (-80 + (18 * (i % 9)));
                 finalY = targetY + (-37 + (18 * (i / 9)));
                 
-            } else if (slot.index >= 28 && slot.index <= 36) {
+            } else if (slot.index >= 31 && slot.index <= 39) {
                 // --- ケース3: ホットバー ---
                 float targetX = GUI_LAYOUT.getPointX(inventoryX);
                 float targetY = GUI_LAYOUT.getPointY(inventoryY);
-                int i = slot.index - 1;
+                int i = slot.index - 1 -2;
                 finalX = targetX + (-80 + (18 * (i % 9)));
                 finalY = targetY + (-37 + 18 * 3 + 4);
                 
@@ -242,8 +244,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
                 float fireStandScale = (float) GUI_LAYOUT.getScale(fireStandDefaultScale);
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
-                guiGraphics.pose().scale(fireStandScale, fireStandScale, fireStandScale);
-                guiGraphics.pose().translate(-32, -32, 150);
+                guiGraphics.pose().scale(fireStandScale, fireStandScale, 0);
+                guiGraphics.pose().translate(-32, -32, 10);
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
                 guiGraphics.blit(FIRE_STAND_HOVERING_TEXTURE, 0, 0, 0, 0, 64, 64, 64, 64);
@@ -312,8 +314,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         
         private long spawnWait;
         private final float startPointX, startPointY; // 出現相対位置
-        private int x, y, z = 0; // 出現位置
-        private float offsetX, offsetY; // 動いた分の距離
+        private float x, y, z = 0; // 出現位置
+        private float offsetX, offsetY, offsetZ; // 動いた分の距離
         private float vx, vy;           // 速度
         private int life;
         private long maxAge;
@@ -339,6 +341,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             offsetX = (float)(Math.random() - 0.5) * 0.01f;
             offsetY = (float)(Math.random() - 0.5) * 0.001f;
             particleScale = (float) GUI_LAYOUT.getScale(1.5);
+            offsetZ = (float) (Math.random() - 0.5) * particleScale;
             
             // 色の計算
             
@@ -377,6 +380,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             
             x = GUI_LAYOUT.getPointX(startPointX + offsetX);
             y = GUI_LAYOUT.getPointY(startPointY + offsetY);
+            z = offsetZ;
             
             
             guiGraphics.pose().pushPose();

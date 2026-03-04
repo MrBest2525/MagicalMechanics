@@ -34,22 +34,33 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         this.data = containerData;
         this.addDataSlots(containerData);
         
+        // 1. 燃料スロット (Index 0)
         this.addSlot(new FuelSlot(dataInventory, 0, 0, 0));
+
+        // 2. 燃焼中アイテム同期用スロット (Index 1)
+        // 画面外(x=-1000)に配置し、プレイヤーの操作を完全に禁止する
+        this.addSlot(new SlotItemHandler(dataInventory, 1, -1000, -1000) {
+            @Override public boolean mayPickup(@NotNull Player player) { return false; }
+            @Override public boolean mayPlace(@NotNull ItemStack stack) { return false; }
+        });
+
+        // 3. 前回燃焼アイテム同期用スロット (Index 2)
+        this.addSlot(new SlotItemHandler(dataInventory, 2, -1000, -1000) {
+            @Override public boolean mayPickup(@NotNull Player player) { return false; }
+            @Override public boolean mayPlace(@NotNull ItemStack stack) { return false; }
+        });
         
-        // 2. プレイヤーインベントリ (Index 1 ~ 27)
+        // 4. プレイヤーインベントリ (Index 3 ~ 30)
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-//                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, j * 18, i * 18));
                 this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 0, 0));
             }
         }
         
-        // 3. ホットバー (Index 28 ~ 36)
+        // 5. ホットバー (Index 31 ~ 39)
         for (int i = 0; i < 9; ++i) {
-//            this.addSlot(new Slot(playerInventory, i, i * 18, 18 * 3 + 2));
             this.addSlot(new Slot(playerInventory, i, 0, 0));
         }
-        
     }
     
     // --- サーバー側 ---
@@ -60,7 +71,7 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     
     // --- クライアント側 ---
     public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(containerId, playerInventory, new ItemStackHandler(1), new SimpleContainerData(2), (FrameBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()));
+        this(containerId, playerInventory, new ItemStackHandler(3), new SimpleContainerData(2), (FrameBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()));
     }
     
     @Override
@@ -73,7 +84,7 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         
         // 0番(マシン)からプレイヤーへ
         if (index < 1) {
-            if (!moveItemStackTo(sourceStack, 1, 37, true)) {
+            if (!moveItemStackTo(sourceStack, 3, 39, true)) {
                 return ItemStack.EMPTY;
             }
         }
@@ -100,7 +111,7 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
             return furnaceCore.inventory;
         }
         // nullを返すと呼び出し先でエラーになる可能性があるため、空のハンドラーを返す
-        return new ItemStackHandler(0);
+        return new ItemStackHandler(3);
     }
     
     private static class FuelSlot extends SlotItemHandler {

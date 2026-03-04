@@ -27,12 +27,15 @@ public class FurnaceCoreInstance implements CoreInstance {
     private float fireThermal = minFireThermal;
     private float lastFireThermal = fireThermal;
     private int remainingBurnTime;
-    private ItemStack burningItem = ItemStack.EMPTY;
-    private ItemStack lastBurningItem = ItemStack.EMPTY;
+//    private ItemStack burningItem = ItemStack.EMPTY;
+//    private ItemStack lastBurningItem = ItemStack.EMPTY;
     private boolean burning = false;
     private boolean isBurningRequired = true; //TODO テストで有効化 無効化忘れずに
     
-    public ItemStackHandler inventory = new ItemStackHandler(1);
+    public ItemStackHandler inventory = new ItemStackHandler(3);
+    // 0 -> 燃料追加スロット
+    // 1 -> 現在燃えているアイテムを表示するスロット
+    // 2 -> 前回燃えていたアイテムを保持するスロット
     
     @Override
     public void save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
@@ -40,12 +43,12 @@ public class FurnaceCoreInstance implements CoreInstance {
         coreTag.putFloat("thermal", thermal);
         coreTag.putBoolean("burning", burning);
         coreTag.putBoolean("isBurningRequired", isBurningRequired);
-        if (!burningItem.isEmpty()) {
-            coreTag.put("burningItem", burningItem.save(provider));
-        }
-        if (!lastBurningItem.isEmpty()) {
-            coreTag.put("lastBurningItem", lastBurningItem.save(provider));
-        }
+//        if (!burningItem.isEmpty()) {
+//            coreTag.put("burningItem", burningItem.save(provider));
+//        }
+//        if (!lastBurningItem.isEmpty()) {
+//            coreTag.put("lastBurningItem", lastBurningItem.save(provider));
+//        }
         coreTag.put("inventory", inventory.serializeNBT(provider));
         coreTag.putFloat("fireThermal", fireThermal);
         coreTag.putFloat("lastFireThermal", lastFireThermal);
@@ -59,8 +62,8 @@ public class FurnaceCoreInstance implements CoreInstance {
         thermal = coreTag.getFloat("thermal");
         burning = coreTag.getBoolean("burning");
         isBurningRequired = coreTag.getBoolean("isBurningRequired");
-        burningItem = ItemStack.parse(provider, coreTag.getCompound("burningItem")).orElse(ItemStack.EMPTY);
-        lastBurningItem = ItemStack.parse(provider, coreTag.getCompound("lastBurningItem")).orElse(ItemStack.EMPTY);
+//        burningItem = ItemStack.parse(provider, coreTag.getCompound("burningItem")).orElse(ItemStack.EMPTY);
+//        lastBurningItem = ItemStack.parse(provider, coreTag.getCompound("lastBurningItem")).orElse(ItemStack.EMPTY);
         if (coreTag.contains("inventory", Tag.TAG_COMPOUND)) {
             inventory.deserializeNBT(provider, coreTag.getCompound("inventory"));
         }
@@ -84,9 +87,9 @@ public class FurnaceCoreInstance implements CoreInstance {
             // 燃えていないかつ燃やす必要があるかつ燃えるアイテムが入ってる場合
             if (!burning && !inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getBurnTime(RecipeType.SMELTING) > 0) {
                 burning = true;
-                burningItem = inventory.extractItem(0, 1, false);
-                remainingBurnTime = burningItem.getBurnTime(RecipeType.SMELTING);
-                if (burningItem.getBurnTime(RecipeType.SMELTING) >= lastBurningItem.getBurnTime(RecipeType.SMELTING)) {
+                inventory.insertItem(1, inventory.extractItem(0, 1, false), false);
+                remainingBurnTime = inventory.getStackInSlot(1).getBurnTime(RecipeType.SMELTING);
+                if (remainingBurnTime >= inventory.getStackInSlot(2).getBurnTime(RecipeType.SMELTING)) {
                     fireThermal = lastFireThermal;
                 }
             }
@@ -94,14 +97,14 @@ public class FurnaceCoreInstance implements CoreInstance {
         
         // 燃焼処理
         if (burning) {
-            fireThermal += (burningItem.getBurnTime(RecipeType.SMELTING) - (fireThermal - minFireThermal)) / 3 / 10;
+            fireThermal += (inventory.getStackInSlot(1).getBurnTime(RecipeType.SMELTING) - (fireThermal - minFireThermal)) / 3 / 10;
             thermal += (float) ((fireThermal - thermal) * 0.1);
             
             remainingBurnTime --;
             if (remainingBurnTime <= 0) {
                 burning = false;
-                lastBurningItem = burningItem;
-                burningItem = ItemStack.EMPTY;
+                inventory.insertItem(2, inventory.extractItem(1, 1, false), false);
+                inventory.insertItem(1, ItemStack.EMPTY, false);
                 lastFireThermal = fireThermal;
                 fireThermal = minFireThermal;
             }
@@ -164,6 +167,6 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     public ItemStack getBurningItem() {
-        return burningItem;
+        return inventory.getStackInSlot(1);
     }
 }
