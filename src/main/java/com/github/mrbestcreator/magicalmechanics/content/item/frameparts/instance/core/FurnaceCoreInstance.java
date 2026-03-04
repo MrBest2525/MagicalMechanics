@@ -61,7 +61,7 @@ public class FurnaceCoreInstance implements CoreInstance {
         burningItem = ItemStack.parse(provider, coreTag.getCompound("burningItem")).orElse(ItemStack.EMPTY);
         lastBurningItem = ItemStack.parse(provider, coreTag.getCompound("lastBurningItem")).orElse(ItemStack.EMPTY);
         if (coreTag.contains("inventory", Tag.TAG_COMPOUND)) {
-            inventory.deserializeNBT(provider, coreTag.getCompound("fuelSlot"));
+            inventory.deserializeNBT(provider, coreTag.getCompound("inventory"));
         }
         fireThermal = coreTag.getFloat("fireThermal");
         lastFireThermal = coreTag.getFloat("lastFireThermal");

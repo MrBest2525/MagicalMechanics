@@ -135,7 +135,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
             int i = slot.index - 1;
             float offsetX = -80 + (18 * (i % 9));
-            float offsetY = -37 + (18 * ((float) i / 9));
+            float offsetY = -37 + (18 * (i / 9));
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(targetX, targetY, 0);
             guiGraphics.pose().translate(offsetX, offsetY, 0);
@@ -174,7 +174,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float targetY = GUI_LAYOUT.getPointY(inventoryY);
             int i = slot.index - 1;
             finalX = targetX + (-80 + (18 * (i % 9))) + 8;
-            finalY = targetY + (-37 + (18 * ((float) i / 9))) + 8;
+            finalY = targetY + (-37 + (18 * ( i / 9))) + 8;
             
         } else if (slot.index >= 28 && slot.index <= 36) {
             // --- ケース3: ホットバー ---
@@ -217,7 +217,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
                 float targetY = GUI_LAYOUT.getPointY(inventoryY);
                 int i = slot.index - 1;
                 finalX = targetX + (-80 + (18 * (i % 9)));
-                finalY = targetY + (-37 + (18 * ((float) i / 9)));
+                finalY = targetY + (-37 + (18 * (i / 9)));
                 
             } else if (slot.index >= 28 && slot.index <= 36) {
                 // --- ケース3: ホットバー ---
