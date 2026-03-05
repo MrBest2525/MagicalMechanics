@@ -34,33 +34,29 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         this.data = containerData;
         this.addDataSlots(containerData);
         
-        // 1. 燃料スロット (Index 0)
+        // 1. プレイヤーインベントリ (Index 0 ~ 26) & ホットバー (Index 27 ~ 35)
+        for (int i = 9; i <= 35; i++) {
+            this.addSlot(new Slot(playerInventory, i, 0, 0));
+        }
+        for (int i = 0; i <= 8; i++) {
+            this.addSlot(new Slot(playerInventory, i, 0, 0));
+        }
+        // 2. 燃料スロット (Index 36)
         this.addSlot(new FuelSlot(dataInventory, 0, 0, 0));
 
-        // 2. 燃焼中アイテム同期用スロット (Index 1)
+        // 3. 燃焼中アイテム同期用スロット (Index 37)
         // 画面外(x=-1000)に配置し、プレイヤーの操作を完全に禁止する
         this.addSlot(new SlotItemHandler(dataInventory, 1, -1000, -1000) {
             @Override public boolean mayPickup(@NotNull Player player) { return false; }
             @Override public boolean mayPlace(@NotNull ItemStack stack) { return false; }
         });
 
-        // 3. 前回燃焼アイテム同期用スロット (Index 2)
+        // 3. 前回燃焼アイテム同期用スロット (Index 38)
         this.addSlot(new SlotItemHandler(dataInventory, 2, -1000, -1000) {
             @Override public boolean mayPickup(@NotNull Player player) { return false; }
             @Override public boolean mayPlace(@NotNull ItemStack stack) { return false; }
         });
         
-        // 4. プレイヤーインベントリ (Index 3 ~ 30)
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 0, 0));
-            }
-        }
-        
-        // 5. ホットバー (Index 31 ~ 39)
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 0, 0));
-        }
     }
     
     // --- サーバー側 ---
@@ -83,15 +79,27 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         ItemStack copyStack = sourceStack.copy();
         
         // 0番(マシン)からプレイヤーへ
-        if (index < 1) {
-            if (!moveItemStackTo(sourceStack, 3, 39, true)) {
+        if (index >= 36) {
+            if (!moveItemStackTo(sourceStack, 0, 36, true)) {
                 return ItemStack.EMPTY;
             }
         }
         // プレイヤーから 0番(マシン)へ
         else {
-            if (!moveItemStackTo(sourceStack, 0, 1, false)) {
-                return ItemStack.EMPTY;
+            // 燃料かどうかチェックしてマシンへ送る試行
+            if (sourceStack.getBurnTime(RecipeType.SMELTING) > 0) {
+                // マシンの 36番スロット (Fuel) へ試行
+                if (!moveItemStackTo(sourceStack, 36, 37, false)) {
+                    // マシンがいっぱいなら、プレイヤーインベントリ内での移動に回す
+                    if (!moveWithinPlayerInventory(sourceStack, index)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else {
+                // 燃料でないなら、プレイヤーインベントリ内（ホットバー ↔ メイン）で移動
+                if (!moveWithinPlayerInventory(sourceStack, index)) {
+                    return ItemStack.EMPTY;
+                }
             }
         }
         
@@ -104,6 +112,15 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlockState().getBlock());
+    }
+    
+    // ヘルパーメソッド: プレイヤーのメインインベントリとホットバー間の移動
+    private boolean moveWithinPlayerInventory(ItemStack stack, int index) {
+        if (index < 27) { // メインインベントリ -> ホットバー
+            return moveItemStackTo(stack, 27, 36, false);
+        } else { // ホットバー -> メインインベントリ
+            return moveItemStackTo(stack, 0, 27, false);
+        }
     }
     
     private static ItemStackHandler getInventory(FrameBlockEntity be) {
