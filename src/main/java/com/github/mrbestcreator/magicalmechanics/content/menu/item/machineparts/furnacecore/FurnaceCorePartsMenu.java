@@ -3,6 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
+import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -35,12 +36,8 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         this.addDataSlots(containerData);
         
         // 1. プレイヤーインベントリ (Index 0 ~ 26) & ホットバー (Index 27 ~ 35)
-        for (int i = 9; i <= 35; i++) {
-            this.addSlot(new Slot(playerInventory, i, 0, 0));
-        }
-        for (int i = 0; i <= 8; i++) {
-            this.addSlot(new Slot(playerInventory, i, 0, 0));
-        }
+        PlayerInventoryUtil.setPlayerInventorySlot(this, playerInventory);
+        
         // 2. 燃料スロット (Index 36)
         this.addSlot(new FuelSlot(dataInventory, 0, 0, 0));
 
@@ -91,13 +88,13 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
                 // マシンの 36番スロット (Fuel) へ試行
                 if (!moveItemStackTo(sourceStack, 36, 37, false)) {
                     // マシンがいっぱいなら、プレイヤーインベントリ内での移動に回す
-                    if (!moveWithinPlayerInventory(sourceStack, index)) {
+                    if (!PlayerInventoryUtil.moveWithinPlayerInventory(this, sourceStack, index)) {
                         return ItemStack.EMPTY;
                     }
                 }
             } else {
                 // 燃料でないなら、プレイヤーインベントリ内（ホットバー ↔ メイン）で移動
-                if (!moveWithinPlayerInventory(sourceStack, index)) {
+                if (!PlayerInventoryUtil.moveWithinPlayerInventory(this, sourceStack, index)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -112,15 +109,6 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlockState().getBlock());
-    }
-    
-    // ヘルパーメソッド: プレイヤーのメインインベントリとホットバー間の移動
-    private boolean moveWithinPlayerInventory(ItemStack stack, int index) {
-        if (index < 27) { // メインインベントリ -> ホットバー
-            return moveItemStackTo(stack, 27, 36, false);
-        } else { // ホットバー -> メインインベントリ
-            return moveItemStackTo(stack, 0, 27, false);
-        }
     }
     
     private static ItemStackHandler getInventory(FrameBlockEntity be) {

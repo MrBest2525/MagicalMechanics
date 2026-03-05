@@ -2,6 +2,7 @@ package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
+import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -36,12 +37,14 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     private final float inventoryX = 0.5f;
     private final float inventoryY = 0.65f;
     private final List<Particles> particlesList = new ArrayList<>();
+    private final PlayerInventoryUtil.PlayerInventory playerInventory;
     
     public FurnaceCorePartsScreen(FurnaceCorePartsMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         for (int i = 0; i < 100; i++) {
             particlesList.add(new Particles(fireX, fireY));
         }
+        this.playerInventory = new PlayerInventoryUtil.PlayerInventory(GUI_LAYOUT.getPointX(inventoryX), GUI_LAYOUT.getPointY(inventoryY));
     }
     
     @Override
@@ -50,6 +53,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         this.imageHeight = this.height;
         super.init();
         GUI_LAYOUT.updateSize(this.width, this.height);
+        playerInventory.update(GUI_LAYOUT.getPointX(inventoryX), GUI_LAYOUT.getPointY(inventoryY));
     }
     
     @Override
@@ -121,26 +125,9 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     @Override
     protected void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
-        if (slot.index <= 26) {
-            float targetX = GUI_LAYOUT.getPointX(inventoryX);
-            float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index;
-            int offsetX = -80 + (18 * (i % 9));
-            int offsetY = -37 + (18 * (i / 9));
+        if (slot.index <= 35) {
             guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(targetX, targetY, 0);
-            guiGraphics.pose().translate(offsetX, offsetY, 0);
-            super.renderSlot(guiGraphics, slot);
-            guiGraphics.pose().popPose();
-        } else if (slot.index <= 35) {
-            float targetX = GUI_LAYOUT.getPointX(inventoryX);
-            float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index;
-            int offsetX = -80 + (18 * (i % 9));
-            int offsetY = -37 + 18 * 3 + 4;
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(targetX, targetY, 0);
-            guiGraphics.pose().translate(offsetX, offsetY , 0);
+            playerInventory.renderTranslate(guiGraphics, slot);
             super.renderSlot(guiGraphics, slot);
             guiGraphics.pose().popPose();
         } else if (slot.index == 36) {
@@ -164,20 +151,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         float finalX, finalY;
         float currentScale = 1.0f;
         
-        if (slot.index <= 26) {
-            // --- 1. メインインベントリ ---
-            float targetX = GUI_LAYOUT.getPointX(inventoryX);
-            float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index;
-            finalX = targetX + (-80 + (18 * (i % 9))) + 8;
-            finalY = targetY + (-37 + (18 * ( i / 9))) + 8;
-        } else if (slot.index <= 35) {
-            // --- 2. ホットバー ---
-            float targetX = GUI_LAYOUT.getPointX(inventoryX);
-            float targetY = GUI_LAYOUT.getPointY(inventoryY);
-            int i = slot.index;
-            finalX = targetX + (-80 + (18 * (i % 9))) + 8;
-            finalY = targetY + (-37 + 18 * 3 + 4) + 8;
+        if (slot.index <= 35) {
+            return playerInventory.isHovering(slot, mouseX, mouseY);
         } else if (slot.index == 36) {
             // --- 3. 燃料スロット (Scaleあり) ---
             currentScale = (float) GUI_LAYOUT.getScale(fuelSlotScale);
@@ -204,20 +179,9 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float finalX, finalY;
             float currentScale = 1.0f;
             
-            if (slot.index <= 26) {
-                // --- 1. メインインベントリ ---
-                float targetX = GUI_LAYOUT.getPointX(inventoryX);
-                float targetY = GUI_LAYOUT.getPointY(inventoryY);
-                int i = slot.index;
-                finalX = targetX + (-80 + (18 * (i % 9)));
-                finalY = targetY + (-37 + (18 * (i / 9)));
-            } else if (slot.index <= 35) {
-                // --- 2. ホットバー ---
-                float targetX = GUI_LAYOUT.getPointX(inventoryX);
-                float targetY = GUI_LAYOUT.getPointY(inventoryY);
-                int i = slot.index;
-                finalX = targetX + (-80 + (18 * (i % 9)));
-                finalY = targetY + (-37 + 18 * 3 + 4);
+            if (slot.index <= 35) {
+                playerInventory.renderSlotHighlight(guiGraphics, slot, mouseX, mouseY, partialTick);
+                return;
             } else if (slot.index == 36) {
                 // --- ケース1: 燃料スロット (Scaleあり) ---
                 currentScale = (float) GUI_LAYOUT.getScale(fuelSlotScale);
