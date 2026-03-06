@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 public interface CoreInstance {
     void save(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     void load(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
-    void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity);
+    boolean tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity);
+    
+    void onAttached(FrameBlockEntity frame);
+    void onDetached(FrameBlockEntity frame);
     
     default AbstractContainerMenu getMenu(int id, Inventory inventory, FrameBlockEntity blockEntity) {return null;}
     
