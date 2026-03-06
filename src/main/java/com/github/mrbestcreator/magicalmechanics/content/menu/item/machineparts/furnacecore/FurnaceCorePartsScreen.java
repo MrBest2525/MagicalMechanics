@@ -78,8 +78,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         
         ContainerData data = this.menu.data;
         
-        float minTemp = 0f;
-        float maxTemp = 1000f;
+        float minTemp = 500f;
+        float maxTemp = 20000f;
         int color = calculateColor(Mth.clamp((Float.intBitsToFloat(data.get(1)) - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
         
         guiGraphics.pose().pushPose();
@@ -108,6 +108,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             particlesList.forEach(particles -> particles.render(guiGraphics, Float.intBitsToFloat(data.get(1))));
             
         }
+        // TODO デバッグ用なため削除を忘れずに
         guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
         
         guiGraphics.pose().pushPose();
@@ -149,7 +150,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     @Override
     public boolean isHovering(@NotNull Slot slot, double mouseX, double mouseY) {
         float finalX, finalY;
-        float currentScale = 1.0f;
+        float currentScale;
         
         if (slot.index <= 35) {
             return playerInventory.isHovering(slot, mouseX, mouseY);
@@ -177,7 +178,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             // --- ここで isHovering と同じ finalX, finalY, currentScale を算出 ---
             // (コードの重複を避けるなら、座標算出部分をメソッドに切り出すと楽です)
             float finalX, finalY;
-            float currentScale = 1.0f;
+            float currentScale;
             
             if (slot.index <= 35) {
                 playerInventory.renderSlotHighlight(guiGraphics, slot, mouseX, mouseY, partialTick);
@@ -249,7 +250,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         int r, g, b;
         float randomOffset = (float)(Math.random() * 0.6); // 20%程度の個体差
         
-        if (ratio < 0.5f) { // 低温〜中温 (赤〜オレンジ)
+        if (ratio < 0.75f) { // 低温〜中温 (赤〜オレンジ)
             r = 200 + (int)(55 * ratio);
             g = (int)(200 * (ratio + randomOffset));
             b = (int)(50 * ratio);
@@ -303,8 +304,8 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             
             // 色の計算
             
-            float minTemp = 0f;
-            float maxTemp = 1000f;
+            float minTemp = 500f;
+            float maxTemp = 20000f;
             // 0.0 ~ 1.0 の範囲に正規化
             colorRatio = Mth.clamp((thermal - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f);
             

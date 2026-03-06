@@ -129,12 +129,10 @@ public class FurnaceCoreInstance implements CoreInstance {
         Level level = frame.getLevel();
         BlockPos pos = frame.getBlockPos();
         if (level != null && !level.isClientSide) {
-            // インベントリと燃焼中アイテムをドロップ
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack stack = inventory.getStackInSlot(i);
-                if (!stack.isEmpty()) {
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
-                }
+            // 燃焼待ちアイテムをドロップ
+            ItemStack stack = inventory.getStackInSlot(0);
+            if (!stack.isEmpty()) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
             }
         }
     }
