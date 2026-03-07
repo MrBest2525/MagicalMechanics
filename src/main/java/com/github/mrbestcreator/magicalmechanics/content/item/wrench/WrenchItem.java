@@ -30,6 +30,10 @@ public class WrenchItem extends Item {
         else itemStack.set(ModItemDataComponents.WRENCH_DATA, new WrenchData(WrenchMode.SIDE));
     }
     
+    public static void setMode(ItemStack itemStack, WrenchMode wrenchMode) {
+        itemStack.set(ModItemDataComponents.WRENCH_DATA, new WrenchData(wrenchMode));
+    }
+    
     @Override
     public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
         Level level = context.getLevel();
