@@ -2,6 +2,9 @@ package com.github.mrbestcreator.magicalmechanics.content.item;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
+import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
+import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
+import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchMode;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -27,9 +30,21 @@ public class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
             CREATIVE_MODE_TABS.register("tools_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.magicalmechanics.tools"))
-                    .icon(() -> new ItemStack(ModItems.WRENCH.get()))
+                    .icon(() -> new ItemStack(ModItems.IRON_MAYURANT.get()))
                     .displayItems(((itemDisplayParameters, output) -> {
                         output.accept(ModItems.WRENCH);
+                        ItemStack coreModeWrench = new ItemStack(ModItems.WRENCH.get());
+                        if (coreModeWrench.getItem() instanceof WrenchItem wrenchItem) {
+                            wrenchItem.setMode(coreModeWrench, WrenchMode.CORE);
+                            output.accept(coreModeWrench);
+                        }
+                        
+                        output.accept(ModItems.IRON_MAYURANT);
+                        ItemStack fullMayurant = new ItemStack(ModItems.IRON_MAYURANT.get());
+                        if (fullMayurant.getItem() instanceof MayurantItem mayurant) {
+                            mayurant.setMagicPower(fullMayurant, ModItems.MAYURANT_MAX_MAGIC_POWER);
+                            output.accept(fullMayurant);
+                        }
                     }))
                     .build());
     

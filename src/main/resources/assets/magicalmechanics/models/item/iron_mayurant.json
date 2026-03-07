@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magicalmechanics:item/tool/mayurant/iron_mayurant"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "magicalmechanics:magic_power": 1
+      },
+      "model": "magicalmechanics:item/iron_mayurant_active"
+    }
+  ]
+}
