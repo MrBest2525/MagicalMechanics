@@ -8,7 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +24,12 @@ import java.util.List;
  * <p>マユラント(Mayurant)アイテム</p>
  */
 public class MayurantItem extends DiggerItem {
+    
+    public static final TagKey<Block> MINEABLE_MAYURANT = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "mineable/mayurant")
+    );
+    
     private final int maxMagicPower;
     private final int minMagicPower;
     
@@ -29,9 +40,26 @@ public class MayurantItem extends DiggerItem {
      * @param minMagicPower int<p>MagicPowerの最小値を設定</p>
      */
     public MayurantItem(Tier tier, Properties properties, int maxMagicPower, int minMagicPower) {
-        super(tier, TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "mineable/mayurant")), properties);
+        super(tier, MINEABLE_MAYURANT, properties);
         this.maxMagicPower = maxMagicPower;
         this.minMagicPower = minMagicPower;
+    }
+    
+    public static @NotNull ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {
+        return ItemAttributeModifiers.builder()
+                // 攻撃ダメージ (1.0 + Tierボーナス + ベースダメージ)
+                .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(
+                                BASE_ATTACK_DAMAGE_ID,
+                                (attackDamage + tier.getAttackDamageBonus()),
+                                AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND)
+                // 攻撃速度 (基準値4.0に加算されるため、ツルハシなら -2.8 程度を指定)
+                .add(Attributes.ATTACK_SPEED, new AttributeModifier(
+                                BASE_ATTACK_SPEED_ID,
+                                attackSpeed,
+                                AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND)
+                .build();
     }
     
     /**
