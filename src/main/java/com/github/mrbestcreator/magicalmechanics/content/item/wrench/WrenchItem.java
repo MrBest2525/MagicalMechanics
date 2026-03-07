@@ -24,13 +24,13 @@ public class WrenchItem extends Item {
         else return wrenchData.mode();
     }
     
-    public static void toggleMode(ItemStack itemStack) {
+    public void toggleMode(ItemStack itemStack) {
         WrenchMode lastMode = getMode(itemStack);
         if (lastMode.equals(WrenchMode.SIDE)) itemStack.set(ModItemDataComponents.WRENCH_DATA, new WrenchData(WrenchMode.CORE));
         else itemStack.set(ModItemDataComponents.WRENCH_DATA, new WrenchData(WrenchMode.SIDE));
     }
     
-    public static void setMode(ItemStack itemStack, WrenchMode wrenchMode) {
+    public void setMode(ItemStack itemStack, WrenchMode wrenchMode) {
         itemStack.set(ModItemDataComponents.WRENCH_DATA, new WrenchData(wrenchMode));
     }
     
