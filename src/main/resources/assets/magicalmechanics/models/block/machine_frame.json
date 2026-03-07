@@ -1,7 +1,33 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/block",
   "textures": {
     "all": "magicalmechanics:block/machine_frame"
   },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "north"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "east"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "south"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "west"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "up"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "down"}
+      }
+    },
+    {
+      "from": [15.998, 0.002, 0.002],
+      "to": [0.002, 15.998, 15.998],
+      "faces": {
+        "north": {"uv": [16, 0, 0, 16], "texture": "#all"},
+        "east": {"uv": [16, 0, 0, 16], "texture": "#all"},
+        "south": {"uv": [16, 0, 0, 16], "texture": "#all"},
+        "west": {"uv": [16, 0, 0, 16], "texture": "#all"},
+        "up": {"uv": [16, 0, 0, 16], "texture": "#all"},
+        "down": {"uv": [16, 0, 0, 16], "texture": "#all"}
+      }
+    }
+  ],
   "render_type": "minecraft:translucent"
 }
