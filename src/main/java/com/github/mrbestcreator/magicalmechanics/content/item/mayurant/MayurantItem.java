@@ -3,18 +3,12 @@ package com.github.mrbestcreator.magicalmechanics.content.item.mayurant;
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -110,36 +104,5 @@ public class MayurantItem extends DiggerItem {
     public boolean isCorrectToolForDrops(@NotNull ItemStack stack, @NotNull BlockState state) {
         // つるはしの上位互換としての挙動（タグ判定などは後ほど調整可能）
         return super.isCorrectToolForDrops(stack, state);
-    }
-    
-    @Override
-    public boolean mineBlock(@NotNull ItemStack stack, @NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, @NotNull LivingEntity miner) {
-        // サーバー側かつ、サバイバルモードのプレイヤーが壊した時のみ処理
-        if (!level.isClientSide && miner instanceof Player player && !player.getAbilities().instabuild) {
-            
-            // 1. ブロックの硬さ（採掘速度の基準値）を取得
-            float destroySpeed = state.getDestroySpeed(level, pos);
-            
-            // 2. 消費する魔力量を計算 (例: 硬さ 1.5 の石なら 15 消費、硬さ 50 の黒曜石なら 500 消費など)
-            // 係数（10.0fなど）はバランスを見て調整してください
-            int cost = Math.max(1, (int) (destroySpeed * 10.0f));
-            // 計算を合わせる
-            cost *= 1000;
-            
-            // 3. 現在の魔力を取得して減らす
-            int currentPower = getMagicPower(stack);
-            if (currentPower > minMagicPower) {
-                // 魔力が足りない場合は minMagicPower に、足りる場合は計算分を引く
-                subtractMagicPower(stack, cost);
-                
-                // 魔力を使い果たした時のフィードバック（音など）を入れると親切
-                if (getMagicPower(stack) == minMagicPower) {
-                    level.playSound(null, miner.getX(), miner.getY(), miner.getZ(),
-                            SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.PLAYERS, 0.5f, 1.2f);
-                }
-            }
-        }
-        
-        return super.mineBlock(stack, level, state, pos, miner);
     }
 }
