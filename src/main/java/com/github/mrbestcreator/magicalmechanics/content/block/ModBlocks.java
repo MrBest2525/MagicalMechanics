@@ -23,7 +23,6 @@ public class ModBlocks {
                                     .sound(SoundType.METAL)
                                     .requiresCorrectToolForDrops()
                                     .mapColor(MapColor.METAL)
-                                    .sound(SoundType.METAL)
                                     .noOcclusion()
                                     .isViewBlocking((state, level, pos) -> false)
                                     .isSuffocating((state, level, pos) -> false)
