@@ -3,6 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.content.block;
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
@@ -18,7 +19,11 @@ public class ModBlocks {
                     "machine_frame",
                     () -> new FrameBlock(
                             BlockBehaviour.Properties.of()
+                                    .strength(2.5f, 5)
+                                    .sound(SoundType.METAL)
+                                    .requiresCorrectToolForDrops()
                                     .mapColor(MapColor.METAL)
+                                    .sound(SoundType.METAL)
                                     .noOcclusion()
                                     .isViewBlocking((state, level, pos) -> false)
                                     .isSuffocating((state, level, pos) -> false)
