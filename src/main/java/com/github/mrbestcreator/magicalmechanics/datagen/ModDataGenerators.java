@@ -2,6 +2,8 @@ package com.github.mrbestcreator.magicalmechanics.datagen;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.datagen.client.item.MayurantItemModelProvider;
+import com.github.mrbestcreator.magicalmechanics.datagen.client.lang.EnUsLanguageProvider;
+import com.github.mrbestcreator.magicalmechanics.datagen.client.lang.JaJpLanguageProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +26,10 @@ public class ModDataGenerators {
                 event.includeClient(),
                 new MayurantItemModelProvider(output, existingFileHelper)
         );
+        
+        // == 翻訳ファイル ==
+        generator.addProvider(event.includeClient(), new EnUsLanguageProvider(output));
+        generator.addProvider(event.includeClient(), new JaJpLanguageProvider(output));
         
         // 【サーバー側データ】
     }
