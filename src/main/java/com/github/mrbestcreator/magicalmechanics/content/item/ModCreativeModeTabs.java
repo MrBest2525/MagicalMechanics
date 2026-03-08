@@ -8,9 +8,11 @@ import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchMode;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModCreativeModeTabs {
@@ -30,7 +32,7 @@ public class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
             CREATIVE_MODE_TABS.register("tools_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.magicalmechanics.tools"))
-                    .icon(() -> new ItemStack(ModItems.IRON_MAYURANT.get()))
+                    .icon(() -> new ItemStack(ModItems.DIAMOND_MAYURANT.get()))
                     .displayItems(((itemDisplayParameters, output) -> {
                         output.accept(ModItems.WRENCH);
                         ItemStack coreModeWrench = new ItemStack(ModItems.WRENCH.get());
@@ -38,12 +40,14 @@ public class ModCreativeModeTabs {
                             wrenchItem.setMode(coreModeWrench, WrenchMode.CORE);
                             output.accept(coreModeWrench);
                         }
-                        
-                        output.accept(ModItems.IRON_MAYURANT);
-                        ItemStack fullMayurant = new ItemStack(ModItems.IRON_MAYURANT.get());
-                        if (fullMayurant.getItem() instanceof MayurantItem mayurant) {
-                            mayurant.setMagicPower(fullMayurant, ModItems.MAYURANT_MAX_MAGIC_POWER);
-                            output.accept(fullMayurant);
+                        // Mayurantのクリエイティブタブ登録
+                        for (DeferredItem<Item> mayurantItem: ModItems.MAYURANT_ITEMS) {
+                            output.accept(mayurantItem);
+                            ItemStack fullMayurant = new ItemStack(mayurantItem.get());
+                            if (fullMayurant.getItem() instanceof MayurantItem mayurant) {
+                                mayurant.setMagicPower(fullMayurant, mayurant.getMaxMagicPower());
+                                output.accept(fullMayurant);
+                            }
                         }
                     }))
                     .build());

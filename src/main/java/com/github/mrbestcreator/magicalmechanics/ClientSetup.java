@@ -8,11 +8,13 @@ import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.fram
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsScreen;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 @EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
 public class ClientSetup {
@@ -24,22 +26,26 @@ public class ClientSetup {
     
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            ItemProperties.register(
-                    ModItems.IRON_MAYURANT.get(), // 登録したアイテム
-                    ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "magic_power"), // JSONのpredicateで使う名前
-                    (stack, level, entity, seed) -> {
-                        // コンポーネントから値を取得
-                        int power;
-                        if (stack.getItem() instanceof MayurantItem mayurantItem) {
-                            power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), mayurantItem.getMinMagicPower());
-                        } else {
-                            power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), 0);
+        for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS) {
+            event.enqueueWork(() -> {
+                ItemProperties.register(
+                        mayurant.get(), // 登録したアイテム
+                        ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "magic_power"), // JSONのpredicateで使う名前
+                        (stack, level, entity, seed) -> {
+                            // コンポーネントから値を取得
+                            int power;
+                            int minPower = 0;
+                            if (stack.getItem() instanceof MayurantItem mayurantItem) {
+                                power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), mayurantItem.getMinMagicPower());
+                                minPower = mayurantItem.getMinMagicPower();
+                            } else {
+                                power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), 0);
+                            }
+                            // MagicPowerが空でないなら1.0Fを返す
+                            return power > minPower ? 1.0F : 0.0F;
                         }
-                        // 1以上なら 1.0F（アクティブ）、0なら 0.0F（通常）を返す
-                        return power > 0 ? 1.0F : 0.0F;
-                    }
-            );
-        });
+                );
+            });
+        }
     }
 }

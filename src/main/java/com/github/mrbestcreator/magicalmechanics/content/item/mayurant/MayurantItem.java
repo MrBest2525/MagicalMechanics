@@ -34,15 +34,13 @@ public class MayurantItem extends DiggerItem {
     private final int minMagicPower;
     
     /**
-     * @param tier Tire
+     * @param tier MayurantTier
      * @param properties Properties
-     * @param maxMagicPower int<p>MagicPowerの最大値を設定</p>
-     * @param minMagicPower int<p>MagicPowerの最小値を設定</p>
      */
-    public MayurantItem(Tier tier, Properties properties, int maxMagicPower, int minMagicPower) {
+    public MayurantItem(MayurantTier tier, Properties properties) {
         super(tier, MINEABLE_MAYURANT, properties);
-        this.maxMagicPower = maxMagicPower;
-        this.minMagicPower = minMagicPower;
+        this.maxMagicPower = tier.getMaxMagicPower();
+        this.minMagicPower = tier.getMinMagicPower();
     }
     
     public static @NotNull ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magicalmechanics:item/tool/mayurant/golden_mayurant",
+    "layer1": "magicalmechanics:item/tool/mayurant/mayurant_magic_layer"
+  }
+}
