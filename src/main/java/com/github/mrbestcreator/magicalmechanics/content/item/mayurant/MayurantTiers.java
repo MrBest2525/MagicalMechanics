@@ -15,7 +15,7 @@ public enum MayurantTiers implements MayurantTier {
     STONE(197, 6.0F, 1.5F, 8, () -> Ingredient.of(ItemTags.STONE_TOOL_MATERIALS), 0, 500_000),
     IRON(375, 9.0F, 3.0F, 21, () -> Ingredient.of(Items.IRON_INGOT), 0, 1_000_000),
     GOLD(48, 18.0F, 0.5F, 33, () -> Ingredient.of(Items.GOLD_NUGGET), 0, 50_000_000),
-    DIAMOND(2341, 12.0F, 1.5F, 15, () -> Ingredient.of(Items.DIAMOND), 0, 5_000_000),
+    DIAMOND(2341, 12.0F, 4.5F, 15, () -> Ingredient.of(Items.DIAMOND), 0, 5_000_000),
     NETHERITE(3046, 13.5F, 6.0F, 22, () -> Ingredient.of(Items.NETHERITE_INGOT), 0, 10_000_000);
     
     private final int uses;

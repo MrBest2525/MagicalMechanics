@@ -1,6 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.wrench;
 
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
+import com.github.mrbestcreator.magicalmechanics.util.MMLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -41,7 +42,7 @@ public class WrenchItem extends Item {
         
         if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
             toggleMode(context.getItemInHand());
-            context.getPlayer().displayClientMessage(Component.translatable("actionbar.item.wrench.modeChange", getMode(context.getItemInHand()).toString()), true);
+            context.getPlayer().displayClientMessage(Component.translatable(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, getMode(context.getItemInHand()).toString()), true);
             return InteractionResult.CONSUME;
         }
         

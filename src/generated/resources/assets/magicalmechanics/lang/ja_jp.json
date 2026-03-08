@@ -1,0 +1,20 @@
+{
+  "block.magicalmechanics.machine_frame": "マシーンフレーム",
+  "item.magicalmechanics.diamond_mayurant": "ダイヤモンドのマユラント",
+  "item.magicalmechanics.furnace_core": "ファーネスコア",
+  "item.magicalmechanics.golden_mayurant": "金のマユラント",
+  "item.magicalmechanics.iron_mayurant": "鉄のマユラント",
+  "item.magicalmechanics.netherite_mayurant": "ネザライトのマユラント",
+  "item.magicalmechanics.stone_mayurant": "石のマユラント",
+  "item.magicalmechanics.wooden_mayurant": "木のマユラント",
+  "item.magicalmechanics.wrench": "レンチ",
+  "itemGroup.magicalmechanics.machine_frames": "マシーンのフレーム",
+  "itemGroup.magicalmechanics.machines": "マシーン",
+  "itemGroup.magicalmechanics.tools": "ツール",
+  "msg.magicalmechanics.actionbar.wrench.modeChange": "レンチモード: %s",
+  "tooltip.item.magicalmechanics.mayurant.magic_power_empty": "核は冷たく、静まり返っている。",
+  "tooltip.item.magicalmechanics.mayurant.magic_power_faint": "かすかな魔力の光が、内部でゆらめいている。",
+  "tooltip.item.magicalmechanics.mayurant.magic_power_full": "核から、制御しきれぬ魔力が溢れ出している！",
+  "tooltip.item.magicalmechanics.mayurant.magic_power_stable": "魔力は一定のリズムで穏やかに流れている。",
+  "tooltip.item.magicalmechanics.mayurant.magic_power_vibrant": "力強いエネルギーが、柄を通じて脈動している。"
+}

@@ -2,6 +2,7 @@ package com.github.mrbestcreator.magicalmechanics.content.item.mayurant;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
+import com.github.mrbestcreator.magicalmechanics.util.MMLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -113,15 +114,15 @@ public class MayurantItem extends DiggerItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         float ratio = Mth.clamp(((float) getMagicPower(stack) - minMagicPower) / (maxMagicPower - minMagicPower), 0.0f, 1.0f);
         if (ratio == 0) {
-            tooltip.add(Component.translatable("tooltip.item.magicalmechanics.mayurant.magic_power_empty").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_EMPTY).withStyle(ChatFormatting.GRAY));
         } else if (ratio <= 0.3){
-            tooltip.add(Component.translatable("tooltip.item.magicalmechanics.mayurant.magic_power_faint").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FAINT).withStyle(ChatFormatting.DARK_AQUA));
         } else if (ratio <= 0.6) {
-            tooltip.add(Component.translatable("tooltip.item.magicalmechanics.mayurant.magic_power_stable").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_STABLE).withStyle(ChatFormatting.DARK_AQUA));
         } else if (ratio < 1) {
-            tooltip.add(Component.translatable("tooltip.item.magicalmechanics.mayurant.magic_power_vibrant").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_VIBRANT).withStyle(ChatFormatting.DARK_AQUA));
         } else {
-            tooltip.add(Component.translatable("tooltip.item.magicalmechanics.mayurant.magic_power_overflowing").withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FULL).withStyle(ChatFormatting.AQUA));
         }
         super.appendHoverText(stack, context, tooltip, flag);
     }
