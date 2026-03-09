@@ -26,8 +26,8 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         addMaterial("furnace", "かまど");
         addMaterial("core", "コア");
         addMaterial("side", "サイド");
-        addMaterial("machine", "マシーン");
-        addMaterial("machines", "マシーン");
+        addMaterial("machine", "マシン");
+        addMaterial("machines", "マシン");
         addMaterial("frame", "フレーム");
         addMaterial("frames", "フレーム");
         addMaterial("mayurant", "マユラント");
