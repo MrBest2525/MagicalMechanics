@@ -26,6 +26,7 @@ public class ModBlocks {
                                     .noOcclusion()
                                     .isViewBlocking((state, level, pos) -> false)
                                     .isSuffocating((state, level, pos) -> false)
+                                    .lightLevel((state) -> 1)
                     )
             );
     
