@@ -27,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class FrameBlockEntity extends BlockEntity implements WrenchInteractable {
+public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
     
-    private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
+    private final Map<MachineFrameSlot, ItemStack> parts = new EnumMap<>(MachineFrameSlot.class);
     public CoreInstance coreInstance;
     public SideInstance sideInstance;
     
@@ -38,12 +38,12 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         public int get(int index) {
             return switch (index) {
                 case 0 -> {
-                    if (FrameBlockEntity.this.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
+                    if (MachineFrameBlockEntity.this.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
                         yield furnaceCoreInstance.isBurning() ? 1 : 0;
                     }
                     yield 0;
                 }
-                case 1 -> Float.floatToIntBits(FrameBlockEntity.this.coreInstance.getThermal());
+                case 1 -> Float.floatToIntBits(MachineFrameBlockEntity.this.coreInstance.getThermal());
                 default -> 0;
             };
         }
@@ -59,19 +59,19 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
     };
     
-    public FrameBlockEntity(BlockPos pos, BlockState blockState) {
+    public MachineFrameBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);
-        for (FrameSlot slot : FrameSlot.values()) {
+        for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             parts.put(slot, ItemStack.EMPTY);
         }
     }
     
-    public void setPart(FrameSlot slot, ItemStack item) {
+    public void setPart(MachineFrameSlot slot, ItemStack item) {
         parts.put(slot, item);
         setChangeData();
     }
     
-    public ItemStack getPart(FrameSlot slot) {
+    public ItemStack getPart(MachineFrameSlot slot) {
         return parts.get(slot);
     }
     
@@ -89,7 +89,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
         
         CompoundTag partsTag = new CompoundTag();
-        for (Map.Entry<FrameSlot, ItemStack> entry : parts.entrySet()) {
+        for (Map.Entry<MachineFrameSlot, ItemStack> entry : parts.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 partsTag.put(entry.getKey().name(), entry.getValue().save(provider));
             }
@@ -104,7 +104,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         parts.clear();
         CompoundTag partsTag = tag.getCompound("Parts");
-        for (FrameSlot slot : FrameSlot.values()) {
+        for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             if (partsTag.contains(slot.name())) {
                 parts.put(slot, ItemStack.parse(provider, partsTag.getCompound(slot.name())).orElse(ItemStack.EMPTY));
             } else {
@@ -113,12 +113,12 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
         
         // CoreのLoad
-        if (parts.get(FrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
+        if (parts.get(MachineFrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
             coreInstance = frameCore.createInstance();
             coreInstance.load(tag, provider);
         }
         // SideのLoad
-        if (parts.get(FrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
+        if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
             sideInstance = frameParts.createInstance();
             sideInstance.load(tag, provider);
         }
@@ -149,7 +149,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
     }
     
-    public boolean tryInsert(FrameSlot slot, ItemStack stack) {
+    public boolean tryInsert(MachineFrameSlot slot, ItemStack stack) {
         if (stack.isEmpty()) return false;
         
         ItemStack current = parts.get(slot);
@@ -189,7 +189,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         return true;
     }
     
-    public ItemStack tryExtract(FrameSlot slot) {
+    public ItemStack tryExtract(MachineFrameSlot slot) {
         ItemStack current = parts.get(slot);
         if (current.isEmpty()) return ItemStack.EMPTY;
         
@@ -228,13 +228,13 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         if (!offhandItem.is(ModTags.Items.WRENCH_ITEMS)) {
             
             inserted = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryInsert(FrameSlot.SIDE, offhandItem);
-                case CORE -> tryInsert(FrameSlot.CORE, offhandItem);
+                case SIDE -> tryInsert(MachineFrameSlot.SIDE, offhandItem);
+                case CORE -> tryInsert(MachineFrameSlot.CORE, offhandItem);
             };
         } else {
             ItemStack out = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryExtract(FrameSlot.SIDE);
-                case CORE -> tryExtract(FrameSlot.CORE);
+                case SIDE -> tryExtract(MachineFrameSlot.SIDE);
+                case CORE -> tryExtract(MachineFrameSlot.CORE);
             };
             if (!out.isEmpty()) {
                 if (!player.getInventory().add(out)) {

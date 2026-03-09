@@ -17,7 +17,7 @@ public class MMLang {
     public static class ItemGroup {
         private static final String BASE = join("itemGroup", MODID);
         
-        public static final String MACHINES = join(BASE, "machines");
+        public static final String MACHINE_PARTS = join(BASE, "machine_parts");
         public static final String MACHINE_FRAMES = join(BASE, "machine_frames");
         public static final String TOOLS = join(BASE, "tools");
     }

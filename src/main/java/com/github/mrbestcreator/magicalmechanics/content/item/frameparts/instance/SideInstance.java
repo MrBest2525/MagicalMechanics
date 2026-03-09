@@ -1,6 +1,6 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance;
 
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -16,8 +16,8 @@ public interface SideInstance {
     void load(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     boolean tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity);
     
-    void onAttached(FrameBlockEntity frame);
-    void onDetached(FrameBlockEntity frame);
+    void onAttached(MachineFrameBlockEntity frame);
+    void onDetached(MachineFrameBlockEntity frame);
     
-    default AbstractContainerMenu getMenu(int id, Inventory inventory, FrameBlockEntity blockEntity) {return null;}
+    default AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {return null;}
 }

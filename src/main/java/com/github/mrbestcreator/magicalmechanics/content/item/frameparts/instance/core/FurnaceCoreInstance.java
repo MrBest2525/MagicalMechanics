@@ -1,6 +1,6 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core;
 
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsMenu;
 import net.minecraft.core.BlockPos;
@@ -121,11 +121,11 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
-    public void onAttached(FrameBlockEntity frame) {
+    public void onAttached(MachineFrameBlockEntity frame) {
     }
     
     @Override
-    public void onDetached(FrameBlockEntity frame) {
+    public void onDetached(MachineFrameBlockEntity frame) {
         Level level = frame.getLevel();
         BlockPos pos = frame.getBlockPos();
         if (level != null && !level.isClientSide) {
@@ -138,7 +138,7 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
-    public AbstractContainerMenu getMenu(int id, Inventory inventory, FrameBlockEntity blockEntity) {
+    public AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {
         return new FurnaceCorePartsMenu(id, inventory, blockEntity);
     }
     

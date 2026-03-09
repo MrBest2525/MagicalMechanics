@@ -30,6 +30,8 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         addMaterial("machines", "マシン");
         addMaterial("frame", "フレーム");
         addMaterial("frames", "フレーム");
+        addMaterial("part", "パーツ");
+        addMaterial("parts", "パーツ");
         addMaterial("mayurant", "マユラント");
     }
     
@@ -57,5 +59,8 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         
         add(ModItems.FURNACE_CORE.get(), "ファーネスコア");
         add(ModBlocks.MACHINE_FRAME.get(), "マシーンフレーム");
+        
+        add(MMLang.ItemGroup.MACHINE_PARTS, "マシンパーツ");
+        add(MMLang.ItemGroup.MACHINE_FRAMES, "マシンフレーム");
     }
 }

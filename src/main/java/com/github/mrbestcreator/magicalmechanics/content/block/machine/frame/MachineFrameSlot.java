@@ -1,5 +1,5 @@
 package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 
-public enum FrameSlot {
+public enum MachineFrameSlot {
     SIDE, CORE
 }

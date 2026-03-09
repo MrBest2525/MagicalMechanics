@@ -22,11 +22,11 @@ public class ModCreativeModeTabs {
     
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINES_TAB =
-            CREATIVE_MODE_TABS.register("machines_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable(MMLang.ItemGroup.MACHINES))
+            CREATIVE_MODE_TABS.register("machine_parts_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable(MMLang.ItemGroup.MACHINE_PARTS))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM);
+                        output.accept(ModItems.FURNACE_CORE);
                     })
                     .build());
     
@@ -54,11 +54,11 @@ public class ModCreativeModeTabs {
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINE_FRAMES_TAB =
-            CREATIVE_MODE_TABS.register("machine_frame_tab", () -> CreativeModeTab.builder()
+            CREATIVE_MODE_TABS.register("machine_frames_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable(MMLang.ItemGroup.MACHINE_FRAMES))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModItems.FURNACE_CORE);
+                        output.accept(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM);
                     })
                     .build());
     

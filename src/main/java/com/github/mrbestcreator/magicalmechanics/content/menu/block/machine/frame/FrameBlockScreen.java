@@ -1,7 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameSlot;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameSlot;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbestcreator.magicalmechanics.network.packet.menu.OpenFramePartPayload;
 import com.mojang.math.Axis;
@@ -224,7 +224,7 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
         guiGraphics.pose().translate(sideXPos, sideYPos, 1);
         guiGraphics.pose().scale(sideItemScale, sideItemScale, sideItemScale);
         guiGraphics.pose().translate(-8, -8, 0);
-        guiGraphics.renderFakeItem(this.menu.blockEntity.getPart(FrameSlot.SIDE), 0, 0);
+        guiGraphics.renderFakeItem(this.menu.blockEntity.getPart(MachineFrameSlot.SIDE), 0, 0);
         guiGraphics.pose().popPose();
         
         // Core
@@ -232,7 +232,7 @@ public class FrameBlockScreen extends AbstractContainerScreen<FrameBlockMenu> {
         guiGraphics.pose().translate(coreXPos, coreYPos, 1);
         guiGraphics.pose().scale(coreItemScale, coreItemScale, coreItemScale);
         guiGraphics.pose().translate(-8, -8, 0);
-        guiGraphics.renderFakeItem(this.menu.blockEntity.getPart(FrameSlot.CORE), 0, 0);
+        guiGraphics.renderFakeItem(this.menu.blockEntity.getPart(MachineFrameSlot.CORE), 0, 0);
         guiGraphics.pose().popPose();
         
         

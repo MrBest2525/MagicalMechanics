@@ -22,20 +22,20 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FrameBlock extends TransparentBlock implements EntityBlock {
-    public FrameBlock(Properties properties) {
+public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
+    public MachineFrameBlock(Properties properties) {
         super(properties);
     }
     
     @Override
     public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
-        return new  FrameBlockEntity(blockPos, blockState);
+        return new MachineFrameBlockEntity(blockPos, blockState);
     }
     
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
         return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
-                ? (lvl, pos, st, be) -> ((FrameBlockEntity) be).tick(lvl, pos, st)
+                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
                 : null;
     }
     
@@ -50,7 +50,7 @@ public class FrameBlock extends TransparentBlock implements EntityBlock {
         }
         
         BlockEntity be = level.getBlockEntity(blockPos);
-        if (be instanceof FrameBlockEntity FBe) {
+        if (be instanceof MachineFrameBlockEntity FBe) {
             player.openMenu(new SimpleMenuProvider(
                     (id, inv, player1) -> new FrameBlockMenu(id, inv, FBe),
                     Component.literal("Frame")

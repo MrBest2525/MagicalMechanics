@@ -1,6 +1,6 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame;
 
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class FrameBlockMenu extends AbstractContainerMenu {
     
-    public final FrameBlockEntity blockEntity;
+    public final MachineFrameBlockEntity blockEntity;
     private final Level level;
     
     // --- サーバー側 ---
-    public FrameBlockMenu(int containerId, Inventory playerInventory, FrameBlockEntity blockEntity) {
+    public FrameBlockMenu(int containerId, Inventory playerInventory, MachineFrameBlockEntity blockEntity) {
         super(ModMenus.MACHINE_FRAME_MENU.get(), containerId);
         this.blockEntity = blockEntity;
         this.level = playerInventory.player.level();
@@ -26,7 +26,7 @@ public class FrameBlockMenu extends AbstractContainerMenu {
     public FrameBlockMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         this(containerId,
                 playerInventory,
-                (FrameBlockEntity) playerInventory.player.level()
+                (MachineFrameBlockEntity) playerInventory.player.level()
                         .getBlockEntity(buf.readBlockPos()));
     }
     

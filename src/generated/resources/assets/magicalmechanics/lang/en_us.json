@@ -9,7 +9,7 @@
   "item.magicalmechanics.wooden_mayurant": "Wooden Mayurant",
   "item.magicalmechanics.wrench": "Wrench",
   "itemGroup.magicalmechanics.machine_frames": "Machine Frames",
-  "itemGroup.magicalmechanics.machines": "Machines",
+  "itemGroup.magicalmechanics.machine_parts": "Machine Parts",
   "itemGroup.magicalmechanics.tools": "Tools",
   "msg.magicalmechanics.actionbar.wrench.modeChange": "Wrench Mode: %s",
   "tooltip.item.magicalmechanics.mayurant.magic_power_empty": "The core is cold and silent.",
