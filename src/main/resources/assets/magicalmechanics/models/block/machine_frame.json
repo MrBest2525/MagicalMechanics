@@ -1,6 +1,5 @@
 {
   "parent": "minecraft:block/block",
-  "render_type": "minecraft:translucent",
   "textures": {
     "all": "magicalmechanics:block/machine_frame",
     "particle": "magicalmechanics:block/machine_frame"
