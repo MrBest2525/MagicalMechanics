@@ -24,8 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
     
@@ -73,6 +72,10 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     
     public ItemStack getPart(MachineFrameSlot slot) {
         return parts.get(slot);
+    }
+    
+    public List<ItemStack> getParts() {
+        return List.copyOf(parts.values());
     }
     
     @Override
@@ -251,6 +254,17 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         return inserted
                 ? InteractionResult.CONSUME
                 : InteractionResult.PASS;
+    }
+    
+    public void onRemove() {
+        if (coreInstance != null) {
+            coreInstance.onDetached(this);
+            coreInstance = null;
+        }
+        if (sideInstance != null) {
+            sideInstance.onDetached(this);
+            sideInstance = null;
+        }
     }
     
     @Override

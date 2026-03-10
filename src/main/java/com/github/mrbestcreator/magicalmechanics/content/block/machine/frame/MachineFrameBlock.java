@@ -6,6 +6,7 @@ import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -67,6 +68,22 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
         }
         
         return ItemInteractionResult.CONSUME;
+    }
+    
+    @Override
+    protected void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState newBlockState, boolean isMoving) {
+        if (!blockState.is(newBlockState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(blockPos);
+            if (be instanceof MachineFrameBlockEntity machineFrameBlockEntity) {
+                for (ItemStack itemStack: machineFrameBlockEntity.getParts()) {
+                    if (!itemStack.isEmpty()) {
+                        Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack);
+                    }
+                }
+                machineFrameBlockEntity.onRemove();
+            }
+            super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
+        }
     }
     
     @Override
