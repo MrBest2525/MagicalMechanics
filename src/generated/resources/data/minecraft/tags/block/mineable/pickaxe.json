@@ -1,7 +1,5 @@
 {
-  "replace": false,
   "values": [
-    "#minecraft:mineable/pickaxe",
     "magicalmechanics:machine_frame"
   ]
 }

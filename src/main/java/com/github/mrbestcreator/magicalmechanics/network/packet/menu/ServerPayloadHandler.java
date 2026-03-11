@@ -3,7 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.network.packet.menu;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameSlot;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
-import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameParts;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameSide;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -23,8 +23,8 @@ public class ServerPayloadHandler {
                 // 例: 0=SIDE, 1=CORE, 2=FRAME
                 switch (payload.partId()) {
                     case 0:
-                        if (machineFrameBlockEntity.getPart(MachineFrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
-                            var instance = frameParts.createInstance();
+                        if (machineFrameBlockEntity.getPart(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
+                            var instance = frameSide.createInstance();
                             var menu = instance.getMenu(0, player.getInventory(), machineFrameBlockEntity);
                             
                             if (menu != null) {

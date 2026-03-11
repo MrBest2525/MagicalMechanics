@@ -36,6 +36,11 @@ public class EnUsLanguageProvider extends AbstractModLanguageProvider {
         add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_VIBRANT, "Powerful energy surges through the handle.");
         add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FULL, "The core is overflowing with magic!");
         
+        add(MMLang.Tooltip.Item.MachineFrame.SHIFT_FOR_INFO, "Press SHIFT to view details");
+        add(MMLang.Tooltip.Item.MachineFrame.CONTENTS, "Incorporated Parts");
+        add(MMLang.Tooltip.Item.MachineFrame.CORE_SLOT, "Core: %s");
+        add(MMLang.Tooltip.Item.MachineFrame.SIDE_SLOT, "Side: %s");
+        
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "Wrench Mode: %s");
         
         

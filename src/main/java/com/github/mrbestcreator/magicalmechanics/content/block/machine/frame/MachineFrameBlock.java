@@ -3,15 +3,19 @@ package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
+import com.github.mrbestcreator.magicalmechanics.datagen.common.tag.item.ModItemTagsProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -24,9 +28,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     
@@ -71,19 +79,41 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     }
     
     @Override
-    protected void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState newBlockState, boolean isMoving) {
-        if (!blockState.is(newBlockState.getBlock())) {
-            BlockEntity be = level.getBlockEntity(blockPos);
-            if (be instanceof MachineFrameBlockEntity machineFrameBlockEntity) {
-                for (ItemStack itemStack: machineFrameBlockEntity.getParts()) {
-                    if (!itemStack.isEmpty()) {
-                        Containers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack);
+    public @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.@NotNull Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        
+        // 1. 破壊に使ったツールと、BEを取得
+        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
+        BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        
+        if (be instanceof MachineFrameBlockEntity frameBe) {
+            // 2. マユラントで掘った場合：ドロップするアイテムにBEの全データを書き込む
+            if (tool.is(ModItemTagsProvider.MAYURANTS)) {
+                for (ItemStack drop : drops) {
+                    if (drop.is(this.asItem())) {
+                        // BEの全データをNBTとして取得
+                        CompoundTag tag = new CompoundTag();
+                        frameBe.saveAdditional(tag, builder.getLevel().registryAccess());
+                        tag.putString("id", BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(be.getType()).toString());
+                        
+                        // アイテムの block_entity_data コンポーネントに流し込む
+                        drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
                     }
                 }
-                machineFrameBlockEntity.onRemove();
             }
-            super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
+            // 3. マユラント以外で掘った場合：地面にパーツをぶちまける
+            else {
+                for (ItemStack part : frameBe.getParts()) {
+                    if (!part.isEmpty()) {
+                        // getDropsの中で直接ドロップリストに追加
+                        drops.add(part.copy());
+                    }
+                }
+                // BlockEntity側の中身を空にする（onRemoveでの二重ドロップ防止）
+                frameBe.clearContent();
+            }
         }
+        return drops;
     }
     
     @Override

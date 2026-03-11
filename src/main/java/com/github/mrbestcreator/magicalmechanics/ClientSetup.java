@@ -1,7 +1,9 @@
 package com.github.mrbestcreator.magicalmechanics;
 
 import com.github.mrbestcreator.magicalmechanics.client.block.ber.MachineFrameBER;
+import com.github.mrbestcreator.magicalmechanics.client.item.bewlr.ModClientExtensions;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
@@ -17,6 +19,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 @EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
@@ -55,5 +59,19 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_FRAME.get(), MachineFrameBER::new);
+    }
+    
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        // ここで特定のアイテムに対して、レンダラー（拡張）を紐付ける
+        event.registerItem(
+                new IClientItemExtensions() {
+                    @Override
+                    public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                        return ModClientExtensions.getMachineFrameItemRenderer();
+                    }
+                },
+                ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get() // 対象のアイテム
+        );
     }
 }

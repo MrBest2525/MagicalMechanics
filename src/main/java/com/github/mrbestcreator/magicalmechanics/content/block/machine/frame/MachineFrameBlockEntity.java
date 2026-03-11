@@ -3,7 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
-import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameParts;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameSide;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.SideInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
@@ -121,8 +121,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
             coreInstance.load(tag, provider);
         }
         // SideのLoad
-        if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
-            sideInstance = frameParts.createInstance();
+        if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
+            sideInstance = frameSide.createInstance();
             sideInstance.load(tag, provider);
         }
     }
@@ -160,10 +160,10 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         
         switch (slot) {
             case SIDE:
-                if (!stack.is(ModTags.Items.FRAME_SIDE_PARTS)) return false;
+                if (!(stack.getItem() instanceof FrameSide)) return false;
                 break;
             case CORE:
-                if (!stack.is(ModTags.Items.FRAME_CORE_PARTS)) return false;
+                if (!(stack.getItem() instanceof FrameCore)) return false;
                 break;
         }
         
@@ -182,8 +182,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
                 }
                 break;
             case SIDE:
-                if (parts.get(slot).getItem() instanceof FrameParts frameParts) {
-                    sideInstance = frameParts.createInstance();
+                if (parts.get(slot).getItem() instanceof FrameSide frameSide) {
+                    sideInstance = frameSide.createInstance();
                     sideInstance.onAttached(this);
                 }
                 break;
@@ -265,6 +265,10 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
             sideInstance.onDetached(this);
             sideInstance = null;
         }
+    }
+    
+    public void clearContent() {
+        parts.clear();
     }
     
     @Override

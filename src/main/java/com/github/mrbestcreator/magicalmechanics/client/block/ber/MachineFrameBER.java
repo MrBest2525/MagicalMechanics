@@ -27,24 +27,28 @@ public class MachineFrameBER implements BlockEntityRenderer<MachineFrameBlockEnt
         float rotation = facing.toYRot();
         // COREの表示
         ItemStack coreStack = machineFrameBlockEntity.getPart(MachineFrameSlot.CORE);
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.scale(2, 2, 2);
-        poseStack.scale(0.998f, 0.998f, 0.998f);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-rotation));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        this.itemRenderer.renderStatic(coreStack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, multiBufferSource, machineFrameBlockEntity.getLevel(), 0);
-        poseStack.popPose();
+        if (coreStack != null && !coreStack.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.scale(2, 2, 2);
+            poseStack.scale(0.998f, 0.998f, 0.998f);
+            poseStack.mulPose(Axis.YP.rotationDegrees(-rotation));
+            poseStack.mulPose(Axis.YP.rotationDegrees(180));
+            this.itemRenderer.renderStatic(coreStack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, multiBufferSource, machineFrameBlockEntity.getLevel(), 0);
+            poseStack.popPose();
+        }
         
         // SIDEの表示
         ItemStack sideStack = machineFrameBlockEntity.getPart(MachineFrameSlot.SIDE);
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.scale(2, 2, 2);
-        poseStack.scale(0.998f, 0.998f, 0.998f);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-rotation));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        this.itemRenderer.renderStatic(sideStack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, multiBufferSource, machineFrameBlockEntity.getLevel(), 0);
-        poseStack.popPose();
+        if (sideStack != null && !sideStack.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.scale(2, 2, 2);
+            poseStack.scale(0.998f, 0.998f, 0.998f);
+            poseStack.mulPose(Axis.YP.rotationDegrees(-rotation));
+            poseStack.mulPose(Axis.YP.rotationDegrees(180));
+            this.itemRenderer.renderStatic(sideStack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, multiBufferSource, machineFrameBlockEntity.getLevel(), 0);
+            poseStack.popPose();
+        }
     }
 }

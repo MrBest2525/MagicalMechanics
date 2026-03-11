@@ -1,5 +1,5 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance;
 
-public interface FrameParts {
+public interface FrameSide {
     SideInstance createInstance();
 }

@@ -55,6 +55,11 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_VIBRANT, "力強いエネルギーが、柄を通じて脈動している。");
         add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FULL, "核から、制御しきれぬ魔力が溢れ出している！");
         
+        add(MMLang.Tooltip.Item.MachineFrame.SHIFT_FOR_INFO, "SHIFTキーを押下して詳細を表示");
+        add(MMLang.Tooltip.Item.MachineFrame.CONTENTS, "組み込まれたパーツ");
+        add(MMLang.Tooltip.Item.MachineFrame.CORE_SLOT, "コア: %s");
+        add(MMLang.Tooltip.Item.MachineFrame.SIDE_SLOT, "サイド: %s");
+        
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "レンチモード: %s");
         
         add(ModItems.FURNACE_CORE.get(), "ファーネスコア");

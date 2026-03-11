@@ -51,6 +51,17 @@ public class MMLang {
                 public static final String MAGIC_POWER_VIBRANT = join(BASE, "magic_power_vibrant");
                 public static final String MAGIC_POWER_FULL = join(BASE, "magic_power_full");
             }
+            
+            public static class MachineFrame {
+                private static final String BASE = join(Item.BASE, "machine_frame");
+                
+                public static final String SHIFT_FOR_INFO = join(BASE, "shift_for_info");
+                public static final String CONTENTS = join(BASE, "contents");
+                
+                public static final String CORE_SLOT = join(BASE, "core_slot_name");
+                public static final String SIDE_SLOT = join(BASE, "side_slot_name");
+                
+            }
         }
     }
 }
