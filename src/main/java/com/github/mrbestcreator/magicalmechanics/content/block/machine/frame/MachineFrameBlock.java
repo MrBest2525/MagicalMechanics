@@ -103,6 +103,7 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
             }
             // 3. マユラント以外で掘った場合：地面にパーツをぶちまける
             else {
+                frameBe.onRemove();
                 for (ItemStack part : frameBe.getParts()) {
                     if (!part.isEmpty()) {
                         // getDropsの中で直接ドロップリストに追加
