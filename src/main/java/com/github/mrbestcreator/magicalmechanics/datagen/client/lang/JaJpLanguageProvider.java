@@ -49,23 +49,27 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
     
     @Override
     protected void buildTranslations() {
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_EMPTY, "核は冷たく、静まり返っている。");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FAINT, "かすかな魔力の光が、内部でゆらめいている。");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_STABLE, "魔力は一定のリズムで穏やかに流れている。");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_VIBRANT, "力強いエネルギーが、柄を通じて脈動している。");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FULL, "核から、制御しきれぬ魔力が溢れ出している！");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_EMPTY, "核は冷たく、静まり返っている。");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_FAINT, "かすかな魔力の光が、内部でゆらめいている。");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_STABLE, "魔力は一定のリズムで穏やかに流れている。");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_VIBRANT, "力強いエネルギーが、柄を通じて脈動している。");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_FULL, "核から、制御しきれぬ魔力が溢れ出している！");
         
-        add(MMLang.Tooltip.Item.MachineFrame.SHIFT_FOR_INFO, "SHIFTキーを押下して詳細を表示");
-        add(MMLang.Tooltip.Item.MachineFrame.CONTENTS, "組み込まれたパーツ");
-        add(MMLang.Tooltip.Item.MachineFrame.CORE_SLOT, "コア: %s");
-        add(MMLang.Tooltip.Item.MachineFrame.SIDE_SLOT, "サイド: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SHIFT_FOR_INFO, "Shiftで詳細を表示");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CONTENTS, "組み込まれたパーツ");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CORE_SLOT, "コア: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SIDE_SLOT, "サイド: %s");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "レンチモード: %s");
         
+        add(ModBlocks.MACHINE_FRAME.get(), "マシンフレーム");
         add(ModItems.FURNACE_CORE.get(), "ファーネスコア");
-        add(ModBlocks.MACHINE_FRAME.get(), "マシーンフレーム");
+        add(ModItems.FURNACE_SIDE.get(), "ファーネスサイド");
         
-        add(MMLang.ItemGroup.MACHINE_PARTS, "マシンパーツ");
-        add(MMLang.ItemGroup.MACHINE_FRAMES, "マシンフレーム");
+        add(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS, "マシンパーツ");
+        add(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES, "マシンフレーム");
+        
+        add("tag.item.magicalmechanics.frame_core_parts", "コアパーツ");
+        add("tag.item.magicalmechanics.frame_side_parts", "サイドパーツ");
     }
 }

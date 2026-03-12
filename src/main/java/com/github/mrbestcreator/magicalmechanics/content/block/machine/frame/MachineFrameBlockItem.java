@@ -34,7 +34,7 @@ public class MachineFrameBlockItem extends BlockItem {
                 if (tag.contains("Parts", Tag.TAG_COMPOUND)) {
                     CompoundTag partsTag = tag.getCompound("Parts");
                     
-                    tooltip.add(Component.translatable(MMLang.Tooltip.Item.MachineFrame.CONTENTS).withStyle(ChatFormatting.GRAY));
+                    tooltip.add(Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CONTENTS).withStyle(ChatFormatting.GRAY));
                     
                     String[] slots = {"CORE", "SIDE"};
                     for (String slotKey : slots) {
@@ -54,7 +54,7 @@ public class MachineFrameBlockItem extends BlockItem {
                     }
                 }
             } else {
-                tooltip.add(Component.translatable(MMLang.Tooltip.Item.MachineFrame.SHIFT_FOR_INFO).withStyle(ChatFormatting.YELLOW));
+                tooltip.add(Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SHIFT_FOR_INFO).withStyle(ChatFormatting.YELLOW));
             }
         }
         
@@ -63,8 +63,8 @@ public class MachineFrameBlockItem extends BlockItem {
     
     private String getTranslate(String slot) {
         return switch (slot) {
-            case "CORE" -> MMLang.Tooltip.Item.MachineFrame.CORE_SLOT;
-            case "SIDE" -> MMLang.Tooltip.Item.MachineFrame.SIDE_SLOT;
+            case "CORE" -> MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CORE_SLOT;
+            case "SIDE" -> MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SIDE_SLOT;
             default -> "";
         };
     }

@@ -3,7 +3,6 @@ package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
-import com.github.mrbestcreator.magicalmechanics.datagen.common.tag.item.ModItemTagsProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -88,7 +87,7 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
         
         if (be instanceof MachineFrameBlockEntity frameBe) {
             // 2. マユラントで掘った場合：ドロップするアイテムにBEの全データを書き込む
-            if (tool.is(ModItemTagsProvider.MAYURANTS)) {
+            if (tool.is(ModTags.Items.MAYURANT_ITEMS)) {
                 for (ItemStack drop : drops) {
                     if (drop.is(this.asItem())) {
                         // BEの全データをNBTとして取得

@@ -15,11 +15,15 @@ public class MMLang {
     }
     
     public static class ItemGroup {
-        private static final String BASE = join("itemGroup", MODID);
+        private static final String BASE = join("itemGroup");
         
-        public static final String MACHINE_PARTS = join(BASE, "machine_parts");
-        public static final String MACHINE_FRAMES = join(BASE, "machine_frames");
-        public static final String TOOLS = join(BASE, "tools");
+        public static class MagicalMechanics {
+            private static final String BASE = join(ItemGroup.BASE, MODID);
+            
+            public static final String MACHINE_PARTS = join(BASE, "machine_parts");
+            public static final String MACHINE_FRAMES = join(BASE, "machine_frames");
+            public static final String TOOLS = join(BASE, "tools");
+        }
     }
     
     public static class Msg {
@@ -36,31 +40,52 @@ public class MMLang {
         }
     }
     
+    public static class Tag {
+        private static final String BASE = "tag";
+        
+        public static class Item {
+            private static final String BASE = join(Tag.BASE, "item");
+            
+            public static class MagicalMechanics {
+                private static final String BASE = join(Item.BASE, MODID);
+                
+                public static String FRAME_CORE_PARTS = join(BASE, "frame_core_parts");
+                public static String FRAME_SIDE_PARTS = join(BASE, "frame_side_parts");
+                public static String MAYURANT = join(BASE, "mayurant");
+                public static String WRENCH = join(BASE, "wrench");
+            }
+        }
+    }
+    
     public static class Tooltip {
         private static final String BASE = "tooltip";
         
         public static class Item {
-            private static final String BASE = join(Tooltip.BASE, "item", MODID);
+            private static final String BASE = join(Tooltip.BASE, "item");
             
-            public static class Mayurant {
-                private static final String BASE = join(Item.BASE, "mayurant");
+            public static class MagicalMechanics {
+                private static final String BASE = join(Item.BASE, MODID);
                 
-                public static final String MAGIC_POWER_EMPTY = join(BASE, "magic_power_empty");
-                public static final String MAGIC_POWER_FAINT = join(BASE, "magic_power_faint");
-                public static final String MAGIC_POWER_STABLE = join(BASE, "magic_power_stable");
-                public static final String MAGIC_POWER_VIBRANT = join(BASE, "magic_power_vibrant");
-                public static final String MAGIC_POWER_FULL = join(BASE, "magic_power_full");
-            }
-            
-            public static class MachineFrame {
-                private static final String BASE = join(Item.BASE, "machine_frame");
+                public static class Mayurant {
+                    private static final String BASE = join(MagicalMechanics.BASE, "mayurant");
+                    
+                    public static final String MAGIC_POWER_EMPTY = join(BASE, "magic_power_empty");
+                    public static final String MAGIC_POWER_FAINT = join(BASE, "magic_power_faint");
+                    public static final String MAGIC_POWER_STABLE = join(BASE, "magic_power_stable");
+                    public static final String MAGIC_POWER_VIBRANT = join(BASE, "magic_power_vibrant");
+                    public static final String MAGIC_POWER_FULL = join(BASE, "magic_power_full");
+                }
                 
-                public static final String SHIFT_FOR_INFO = join(BASE, "shift_for_info");
-                public static final String CONTENTS = join(BASE, "contents");
-                
-                public static final String CORE_SLOT = join(BASE, "core_slot_name");
-                public static final String SIDE_SLOT = join(BASE, "side_slot_name");
-                
+                public static class MachineFrame {
+                    private static final String BASE = join(MagicalMechanics.BASE, "machine_frame");
+                    
+                    public static final String SHIFT_FOR_INFO = join(BASE, "shift_for_info");
+                    public static final String CONTENTS = join(BASE, "contents");
+                    
+                    public static final String CORE_SLOT = join(BASE, "core_slot_name");
+                    public static final String SIDE_SLOT = join(BASE, "side_slot_name");
+                    
+                }
             }
         }
     }

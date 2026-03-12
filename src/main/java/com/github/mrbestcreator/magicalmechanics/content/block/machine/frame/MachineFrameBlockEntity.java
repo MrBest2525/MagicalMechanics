@@ -81,7 +81,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
-        
+        // TODO PartsのTagをPartsTags.(Core | Side)に保存するように(それぞれのタグを渡すように)した方がいいかも？
         // CoreのSave
         if (coreInstance != null) {
             coreInstance.save(tag, provider);

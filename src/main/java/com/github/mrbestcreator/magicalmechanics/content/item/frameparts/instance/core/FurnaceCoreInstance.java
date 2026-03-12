@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +29,9 @@ public class FurnaceCoreInstance implements CoreInstance {
 //    private ItemStack burningItem = ItemStack.EMPTY;
 //    private ItemStack lastBurningItem = ItemStack.EMPTY;
     private boolean burning = false;
-    private boolean isBurningRequired = true; //TODO テストで有効化 無効化忘れずに
+    private boolean isBurningRequired = true; // TODO テストで有効化 無効化忘れずに
     
-    public ItemStackHandler inventory = new ItemStackHandler(3);
+    public ItemStackHandler inventory = new ItemStackHandler(3); // TODO 1,2は単独のItemStackで保持して必要であれば同期するべき
     // 0 -> 燃料追加スロット
     // 1 -> 現在燃えているアイテムを表示するスロット
     // 2 -> 前回燃えていたアイテムを保持するスロット
@@ -73,7 +72,7 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
-    public boolean tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+    public boolean tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull MachineFrameBlockEntity blockEntity) {
         float lastThermal = thermal;
         // 初期化
         if (!isBiomeThermal) {
@@ -121,11 +120,11 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     @Override
-    public void onAttached(MachineFrameBlockEntity frame) {
+    public void onAttached(@NotNull MachineFrameBlockEntity frame) {
     }
     
     @Override
-    public void onDetached(MachineFrameBlockEntity frame) {
+    public void onDetached(@NotNull MachineFrameBlockEntity frame) {
         Level level = frame.getLevel();
         BlockPos pos = frame.getBlockPos();
         if (level != null && !level.isClientSide) {

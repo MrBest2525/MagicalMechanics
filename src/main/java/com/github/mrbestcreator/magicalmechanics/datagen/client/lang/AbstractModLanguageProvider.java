@@ -3,6 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.datagen.client.lang;
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlocks;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
+import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import com.github.mrbestcreator.magicalmechanics.util.MMLang;
 import com.mojang.logging.LogUtils;
 import net.minecraft.data.CachedOutput;
@@ -136,9 +137,26 @@ public abstract class AbstractModLanguageProvider extends LanguageProvider {
     }
     
     private void scanForRequiredKeys() {
+        
+        String modId = MagicalMechanics.MODID;
+        
         // A. レジストリから自動取得（アイテム・ブロック）
         ModItems.ITEMS.getEntries().forEach(entry -> requiredKeys.add(entry.get().getDescriptionId()));
         ModBlocks.BLOCKS.getEntries().forEach(entry -> requiredKeys.add(entry.get().getDescriptionId()));
+        
+        // アイテムタグのスキャン
+        ModTags.Items.ALL_TAGS.forEach((name, tag) -> {
+            if (tag.location().getNamespace().equals(modId)) {
+                requiredKeys.add("tag.item." + modId + "." + tag.location().getPath().replace('/', '.'));
+            }
+        });
+        
+        // ブロックタグが必要な場合も同様に
+        ModTags.Blocks.ALL_TAGS.forEach((name, tag) -> {
+            if (tag.location().getNamespace().equals(modId)) {
+                requiredKeys.add("tag.block." + modId + "." + tag.location().getPath().replace('/', '.'));
+            }
+        });
         
         // B. MMLang クラスから手動定義分を全取得（再帰スキャン）
         scanConstantsRecursively(MMLang.class);

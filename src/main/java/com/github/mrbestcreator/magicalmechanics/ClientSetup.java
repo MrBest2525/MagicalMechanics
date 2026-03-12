@@ -10,6 +10,8 @@ import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantI
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockScreen;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsScreen;
+import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsScreen;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -22,6 +24,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
 public class ClientSetup {
@@ -29,11 +32,12 @@ public class ClientSetup {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.MACHINE_FRAME_MENU.get(), FrameBlockScreen::new);
         event.register(ModMenus.FURNACE_CORE_PARTS_MENU.get(), FurnaceCorePartsScreen::new);
+        event.register(ModMenus.FURNACE_SIDE_PARTS_MENU.get(), FurnaceSidePartsScreen::new);
     }
     
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS) {
+        for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS.values()) {
             event.enqueueWork(() -> {
                 ItemProperties.register(
                         mayurant.get(), // 登録したアイテム
@@ -67,7 +71,7 @@ public class ClientSetup {
         event.registerItem(
                 new IClientItemExtensions() {
                     @Override
-                    public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
                         return ModClientExtensions.getMachineFrameItemRenderer();
                     }
                 },

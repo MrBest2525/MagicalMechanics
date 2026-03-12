@@ -30,18 +30,21 @@ public class EnUsLanguageProvider extends AbstractModLanguageProvider {
     @Override
     protected void buildTranslations() {
         // MMLangの定数を使った登録
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_EMPTY, "The core is cold and silent.");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FAINT, "A faint magical light flickers within.");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_STABLE, "The magic flows with a steady rhythm.");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_VIBRANT, "Powerful energy surges through the handle.");
-        add(MMLang.Tooltip.Item.Mayurant.MAGIC_POWER_FULL, "The core is overflowing with magic!");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_EMPTY, "The core is cold and silent.");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_FAINT, "A faint magical light flickers within.");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_STABLE, "The magic flows with a steady rhythm.");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_VIBRANT, "Powerful energy surges through the handle.");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Mayurant.MAGIC_POWER_FULL, "The core is overflowing with magic!");
         
-        add(MMLang.Tooltip.Item.MachineFrame.SHIFT_FOR_INFO, "Press SHIFT to view details");
-        add(MMLang.Tooltip.Item.MachineFrame.CONTENTS, "Incorporated Parts");
-        add(MMLang.Tooltip.Item.MachineFrame.CORE_SLOT, "Core: %s");
-        add(MMLang.Tooltip.Item.MachineFrame.SIDE_SLOT, "Side: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SHIFT_FOR_INFO, "Press SHIFT to view details");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CONTENTS, "Incorporated Parts");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CORE_SLOT, "Core: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SIDE_SLOT, "Side: %s");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "Wrench Mode: %s");
+        
+        add("tag.item.magicalmechanics.frame_core_parts", "Core Parts");
+        add("tag.item.magicalmechanics.frame_side_parts", "Side Parts");
         
         
         // Item, Blockを使った登録（もし ModItems に登録済みなら）
