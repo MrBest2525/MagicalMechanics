@@ -140,13 +140,13 @@ public class FurnaceSideInstance implements SideInstance {
                 cookingProgres++;
             }
             
-        } else if (coreInstance.getThermal() > requiredTempMax) {
+        } else if (coreInstance.getThermal() > requiredTempMax && !(cookingProgres >= remainingCookingTime)) {
             // 温度が高過ぎたら処理を行わない
             sideState = State.HIGH_TEMPERATURE;
             return true;
             
-        } else if (coreInstance.getThermal() < requiredTempMin) {
-            // 温度が低い場合
+        } else if (coreInstance.getThermal() < requiredTempMin && !(cookingProgres >= remainingCookingTime)) {
+            // 温度が低い場合 & 調理が完了していない場合
             sideState = State.LOW_TEMPERATURE;
             // FurnaceCoreなら着火処理を行う
             if (coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
