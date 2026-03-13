@@ -12,6 +12,7 @@ import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -282,6 +283,20 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         // サーバーからクライアントへ送るパケットを生成
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+    
+    @Override
+    public void onDataPacket(@NotNull Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
+        // サーバーからパケットが届いた時にNBTを読み込む
+        CompoundTag tag = pkt.getTag();
+        this.loadAdditional(tag, lookupProvider);
+    }
+    
+    // 念のためこちらも（チャンク読み込み時などの同期）
+    @Override
+    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
+        super.handleUpdateTag(tag, lookupProvider);
+        this.loadAdditional(tag, lookupProvider);
     }
     
     private void setChangeData() {

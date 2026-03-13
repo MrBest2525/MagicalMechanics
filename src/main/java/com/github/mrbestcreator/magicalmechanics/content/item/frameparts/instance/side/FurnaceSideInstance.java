@@ -27,7 +27,7 @@ public class FurnaceSideInstance implements SideInstance {
     
     // 1 = input
     // 2 = output
-    private ItemStackHandler inventory = new ItemStackHandler(2);
+    public ItemStackHandler inventory = new ItemStackHandler(2);
     private ItemStack cookingItem = ItemStack.EMPTY;
     private ItemStack cookingResultItem = ItemStack.EMPTY;
     private int remainingCookingTime = 0;
@@ -165,6 +165,7 @@ public class FurnaceSideInstance implements SideInstance {
                 
                 // 初期化処理
                 cookingResultItem = ItemStack.EMPTY;
+                cookingItem = ItemStack.EMPTY;
                 cookingProgres = 0;
                 cookingItemXp = 0;
                 
@@ -204,6 +205,10 @@ public class FurnaceSideInstance implements SideInstance {
         float xp = this.totalCookingXp;
         this.totalCookingXp = 0; // 引き出したのでリセット
         return xp;
+    }
+    
+    public ItemStack getCookingItem() {
+        return cookingItem;
     }
     
     private enum State{

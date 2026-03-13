@@ -29,7 +29,7 @@ public class FurnaceCoreInstance implements CoreInstance {
 //    private ItemStack burningItem = ItemStack.EMPTY;
 //    private ItemStack lastBurningItem = ItemStack.EMPTY;
     private boolean burning = false;
-    private boolean isBurningRequired = true; // TODO テストで有効化 無効化忘れずに
+    private boolean isBurningRequired = false;
     
     public ItemStackHandler inventory = new ItemStackHandler(3); // TODO 1,2は単独のItemStackで保持して必要であれば同期するべき
     // 0 -> 燃料追加スロット
@@ -116,6 +116,9 @@ public class FurnaceCoreInstance implements CoreInstance {
         // 差が小さいほどさらに遅くする
         thermal += diff * k * Math.min(1.0f, Math.abs(diff) / 30.0f) * (float) (Math.min(Math.random() * 2, 1));
         
+        // 毎ティック最後に着火が必要かをリセットする
+        isBurningRequired = false;
+        
         return lastThermal != thermal;
     }
     
@@ -157,10 +160,6 @@ public class FurnaceCoreInstance implements CoreInstance {
     
     public void setBurningRequired(boolean isBurningRequired) {
         this.isBurningRequired = isBurningRequired;
-    }
-    
-    public boolean getIsBurningRequired() {
-        return isBurningRequired;
     }
     
     public ItemStack getBurningItem() {

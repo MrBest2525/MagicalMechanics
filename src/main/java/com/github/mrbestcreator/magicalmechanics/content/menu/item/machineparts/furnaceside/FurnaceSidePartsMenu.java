@@ -2,7 +2,6 @@ package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts
 
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.SideInstance;
-import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.side.FurnaceSideInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
@@ -28,21 +27,21 @@ import java.util.Optional;
 public class FurnaceSidePartsMenu extends AbstractContainerMenu {
     
     public final MachineFrameBlockEntity blockEntity;
-    public final FurnaceSideInstance furnaceSide;
     public final Level level;
     public final ContainerData data;
     
     public FurnaceSidePartsMenu(int containerId, Inventory playerInventory, IItemHandler dataInventory, ContainerData containerData, MachineFrameBlockEntity blockEntity) {
         super(ModMenus.FURNACE_SIDE_PARTS_MENU.get(), containerId);
         this.blockEntity = blockEntity;
+        this.level = playerInventory.player.level();
+        this.data = containerData;
+        this.addDataSlots(containerData);
+        
+        
         FurnaceSideInstance furnaceSide = new FurnaceSideInstance();
         if (blockEntity.sideInstance instanceof FurnaceSideInstance furnaceSideInstance) {
             furnaceSide = furnaceSideInstance;
         }
-        this.furnaceSide = furnaceSide;
-        this.level = playerInventory.player.level();
-        this.data = containerData;
-        this.addDataSlots(containerData);
         
         // 1. プレイヤーインベントリ (Index 0 ~ 26) & ホットバー (Index 27 ~ 35)
         PlayerInventoryUtil.setPlayerInventorySlot(this, playerInventory);
@@ -56,7 +55,6 @@ public class FurnaceSidePartsMenu extends AbstractContainerMenu {
     // --- サーバー側 ---
     public FurnaceSidePartsMenu(int containerId, Inventory playerInventory, MachineFrameBlockEntity blockEntity) {
         this(containerId, playerInventory, getInventory(blockEntity), blockEntity.data, blockEntity);
-        
     }
     
     // --- クライアント側 ---
@@ -112,8 +110,8 @@ public class FurnaceSidePartsMenu extends AbstractContainerMenu {
     }
     
     private static ItemStackHandler getInventory(MachineFrameBlockEntity be) {
-        if (be.coreInstance instanceof FurnaceCoreInstance furnaceCore) {
-            return furnaceCore.inventory;
+        if (be.sideInstance instanceof FurnaceSideInstance furnaceside) {
+            return furnaceside.inventory;
         }
         // nullを返すと呼び出し先でエラーになる可能性があるため、空のハンドラーを返す
         return new ItemStackHandler(2);
