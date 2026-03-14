@@ -50,17 +50,15 @@ jobs:
       # Discord通知ステップ
       - name: Discord notification
         if: always()
-        uses: rtCamp/action-discord-notifier@master
-        env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
-          # タイトル部分も修正：シングルクォートに変更
-          MSG_TITLE: "${{ job.status == 'success' && '✅ Build Success' || '❌ Build Failed' }}: ${{ github.repository }}"
-          MSG_MESSAGE: |
+        uses: appleboy/discord-action@master
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          username: "Magical Mechanics Bot"
+          # 通知内容をカスタマイズ
+          message: |
+            **${{ job.status == 'success' && '✅ Build Success' || '❌ Build Failed' }}: ${{ github.repository }}**
             **Event:** `${{ github.event_name }}`
             **Branch/Tag:** `${{ github.ref_name }}`
             **Commit:** ${{ github.event.head_commit.message }}
             ${{ startsWith(github.ref, 'refs/tags/') && '📝 **Draft Release Created! Check GitHub.**' || '' }}
             [View Build Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          # 色指定部分：外側をダブルクォート、内側をシングルクォートに
-          MSG_COLOR: "${{ job.status == 'success' && '#2ECC71' || (job.status == 'failure' && '#E74C3C' || '#95A5A6') }}"
-          MSG_USERNAME: "Magical Mechanics Bot"
