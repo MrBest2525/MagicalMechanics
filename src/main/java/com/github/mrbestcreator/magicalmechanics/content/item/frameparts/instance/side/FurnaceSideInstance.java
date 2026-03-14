@@ -211,6 +211,14 @@ public class FurnaceSideInstance implements SideInstance {
         return cookingItem;
     }
     
+    public int getCookingProgres() {
+        return cookingProgres;
+    }
+    
+    public int getRemainingCookingTime() {
+        return remainingCookingTime;
+    }
+    
     private enum State{
         HIGH_TEMPERATURE,
         LOW_TEMPERATURE,

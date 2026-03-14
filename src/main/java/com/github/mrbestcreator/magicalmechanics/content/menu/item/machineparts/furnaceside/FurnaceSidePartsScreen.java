@@ -1,19 +1,24 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnaceside;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.side.FurnaceSideInstance;
+import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.util.furnace.ThermalUtil;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSidePartsMenu> {
     
@@ -123,18 +128,32 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         float x = GUI_LAYOUT.getPointX(fireX);
         float y = GUI_LAYOUT.getPointY(fireY);
         scale = (float) GUI_LAYOUT.getScale(fireScale);
-        for (int j = 1; j < 5; j++) {
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(x, y, 0);
-            guiGraphics.pose().translate(-(16 * scale * (j - 2)), 0, 0);
-            guiGraphics.pose().scale(scale, scale, scale);
-            guiGraphics.pose().translate(0, -8, 0);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            guiGraphics.blit(FIRE_1, 0, 0, 0, 0, 16, 16, 16, 16);
-            RenderSystem.disableBlend();
-            guiGraphics.pose().popPose();
+        float minTemp = 500f;
+        float maxTemp = 20000f;
+        float thermal = this.menu.blockEntity.coreInstance.getThermal();
+        int color = 0xFF333333;
+        if (this.menu.blockEntity.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
+            if (furnaceCoreInstance.isBurning()) {
+                color = ThermalUtil.calculateColor(Mth.clamp((thermal - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
+            }
+        } else {
+            color = ThermalUtil.calculateColor(Mth.clamp((thermal - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
+        }
+        
+        for (int k = 0; k < 1; k++) {
+            for (int j = 1; j < 5; j++) {
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate(x, y, 0);
+                guiGraphics.pose().translate(-(16 * scale * (j - 2)), 0, 0);
+                guiGraphics.pose().scale(scale, scale, scale);
+                guiGraphics.pose().translate(0, -8, 0);
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                blitWithGradient(guiGraphics, FIRE_1, 0, 0, 0, 0, 16, 16, 16, 16, color);
+                RenderSystem.disableBlend();
+                guiGraphics.pose().popPose();
+            }
         }
         
         // 中華鍋？の表示
@@ -145,8 +164,15 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         guiGraphics.pose().translate(-8, -4, 0);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        float progress = 0f;
+        if (this.menu.blockEntity.sideInstance instanceof FurnaceSideInstance furnaceSideInstance) {
+            // 1. 進捗を取得 (0.0 ~ 1.0)
+            progress = (float) furnaceSideInstance.getCookingProgres() / furnaceSideInstance.getRemainingCookingTime();
+        }
+        float r = 0.2f + (progress * 0.7f);
+        RenderSystem.setShaderColor(r, 0.2f, 0.2f, 1.0F);
         guiGraphics.blit(WOK_1, 0, 0, 0, 0, 16, 16, 16, 16);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();
     }
@@ -245,5 +271,34 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
             
             guiGraphics.pose().popPose();
         }
+    }
+    
+    public void blitWithGradient(GuiGraphics guiGraphics, ResourceLocation texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color) {
+        Matrix4f matrix = guiGraphics.pose().last().pose();
+        VertexConsumer buffer = guiGraphics.bufferSource().getBuffer(RenderType.entityTranslucent(texture));
+        
+        float u0 = u / (float)textureWidth;
+        float v0 = v / (float)textureHeight;
+        float u1 = (u + (float)width) / (float)textureWidth;
+        float v1 = (v + (float)height) / (float)textureHeight;
+        
+        // 頂点定義のヘルパー
+        addVertex(buffer, matrix, (float)x, (float)y, u0, v0, color); // 左上(白)
+        addVertex(buffer, matrix, (float)x, (float)(y + height), u0, v1, color);   // 左下(変色)
+        addVertex(buffer, matrix, (float)(x + width), (float)(y + height), u1, v1, color); // 右下(変色)
+        addVertex(buffer, matrix, (float)(x + width), (float)y, u1, v0, color); // 右上(白)
+        
+        // 即時反映させるためにflushを呼ぶ（任意ですが安全です）
+        guiGraphics.flush();
+    }
+    
+    
+    private void addVertex(VertexConsumer buffer, Matrix4f matrix, float x, float y, float u, float v, int color) {
+        buffer.addVertex(matrix, x, y, 0.0F)
+                .setColor(color)
+                .setUv(u, v)
+                .setUv1(0, 10)  // これを追加
+                .setUv2(240, 240)                 // フルブライトのライトマップ値
+                .setNormal(0.0F, 0.0F, 1.0F);      // 正面を向く法線
     }
 }
