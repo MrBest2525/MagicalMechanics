@@ -1,0 +1,67 @@
+name: build_and_release
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # リリース作成（タグがプッシュされた時のみ実行）
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          # 下書き(Draft)として作成
+          draft: true
+          # コミット履歴から自動でリリースノートのベースを生成
+          generate_release_notes: true
+          # mainならRelease、それ以外ならDev
+          name: ${{ github.ref_name == 'main' && 'Release' || 'Dev' }} ${{ github.ref_name }}
+          # main以外のタグはPre-release扱い
+          prerelease: ${{ github.ref_name != 'main' }}
+          tag_name: ${{ github.ref_name }}
+          # build/libs 内の全JARファイルを添付
+          files: |
+            build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Discord通知ステップ
+      - name: Discord notification
+        if: always()
+        uses: appleboy/discord-action@master
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          username: "Magical Mechanics Bot"
+          # 通知内容をカスタマイズ
+          message: |
+            **${{ job.status == 'success' && '✅ Build Success' || '❌ Build Failed' }}: ${{ github.repository }}**
+            **Event:** `${{ github.event_name }}`
+            **Branch/Tag:** `${{ github.ref_name }}`
+            **Commit:** ${{ github.event.head_commit.message }}
+            ${{ startsWith(github.ref, 'refs/tags/') && '📝 **Draft Release Created! Check GitHub.**' || '' }}
+            [View Build Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
