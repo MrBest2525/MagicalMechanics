@@ -30,11 +30,11 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
     
     private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
-    private final float inputSlotX = 0.3f;
-    private final float inputSlotY = 0.3f;
+    private final float inputSlotX = 0.35f;
+    private final float inputSlotY = 0.35f;
     
-    private final float outputSlotX = 0.7f;
-    private final float outputSlotY = 0.3f;
+    private final float outputSlotX = 0.65f;
+    private final float outputSlotY = 0.35f;
     
     private final float cookingItemX = 0.5f;
     private final float cookingItemY = 0.2f;

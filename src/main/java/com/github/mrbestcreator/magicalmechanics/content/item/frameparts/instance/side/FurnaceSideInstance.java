@@ -94,7 +94,7 @@ public class FurnaceSideInstance implements SideInstance {
         Optional<RecipeHolder<SmeltingRecipe>> recipe = level.getRecipeManager()
                 .getRecipeFor(RecipeType.SMELTING, container, level);
         if (cookingItem.isEmpty() && !inventory.getStackInSlot(0).isEmpty() && recipe.isPresent()) {
-            cookingItem = inventory.getStackInSlot(0);
+            cookingItem = inventory.getStackInSlot(0).copy();
             inventory.setStackInSlot(0, ItemStack.EMPTY);
             
             // 温度設定
@@ -125,8 +125,8 @@ public class FurnaceSideInstance implements SideInstance {
                 cookingItemXp = holder.value().getExperience() * count;
                 
                 // 調理後のアイテムのキャッシュ
-                cookingResultItem = holder.value().getResultItem(level.registryAccess());
-                cookingResultItem.setCount(count);
+                cookingResultItem = holder.value().getResultItem(level.registryAccess()).copy();
+                cookingResultItem.setCount(cookingItem.getCount());
                 
                 // 焼き時間の進行
                 cookingProgres = 0;
@@ -159,8 +159,8 @@ public class FurnaceSideInstance implements SideInstance {
         
         // remainingCookingTime <= cookingProgresなら調理を終わりにし取得経験値量を増やす
         if (remainingCookingTime <= cookingProgres) {
-            if (!cookingResultItem.isEmpty() && inventory.getStackInSlot(1).isEmpty()) {
-                inventory.setStackInSlot(1, cookingResultItem);
+            if (inventory.getStackInSlot(1).isEmpty()) {
+                inventory.setStackInSlot(1, cookingResultItem.copy());
                 totalCookingXp += cookingItemXp;
                 
                 // 初期化処理
@@ -191,8 +191,10 @@ public class FurnaceSideInstance implements SideInstance {
                 if (!stack.isEmpty()) {
                     Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
                 }
+            }if (!cookingItem.isEmpty()) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), cookingItem);
+                this.cookingItem = ItemStack.EMPTY; // 安全策
             }
-            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), cookingItem);
         }
     }
     
@@ -208,7 +210,7 @@ public class FurnaceSideInstance implements SideInstance {
     }
     
     public ItemStack getCookingItem() {
-        return cookingItem;
+        return cookingItem.copy();
     }
     
     public int getCookingProgres() {

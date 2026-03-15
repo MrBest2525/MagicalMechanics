@@ -163,6 +163,6 @@ public class FurnaceCoreInstance implements CoreInstance {
     }
     
     public ItemStack getBurningItem() {
-        return inventory.getStackInSlot(1);
+        return inventory.getStackInSlot(1).copy();
     }
 }
