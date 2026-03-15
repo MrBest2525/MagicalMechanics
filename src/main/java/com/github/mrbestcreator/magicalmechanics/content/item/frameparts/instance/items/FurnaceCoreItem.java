@@ -1,4 +1,4 @@
-package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.parts;
+package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.items;
 
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;

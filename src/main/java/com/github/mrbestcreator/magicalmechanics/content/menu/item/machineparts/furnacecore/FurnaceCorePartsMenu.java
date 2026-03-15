@@ -1,6 +1,6 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore;
 
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
@@ -18,12 +18,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     
-    public final FrameBlockEntity blockEntity;
+    public final MachineFrameBlockEntity blockEntity;
     public final FurnaceCoreInstance furnaceCore;
     public final Level level;
     public final ContainerData data;
     
-    public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, IItemHandler dataInventory, ContainerData containerData, FrameBlockEntity blockEntity) {
+    public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, IItemHandler dataInventory, ContainerData containerData, MachineFrameBlockEntity blockEntity) {
         super(ModMenus.FURNACE_CORE_PARTS_MENU.get(), containerId);
         this.blockEntity = blockEntity;
         FurnaceCoreInstance furnaceCore = new FurnaceCoreInstance();
@@ -57,14 +57,14 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
     }
     
     // --- サーバー側 ---
-    public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, FrameBlockEntity blockEntity) {
+    public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, MachineFrameBlockEntity blockEntity) {
         this(containerId, playerInventory, getInventory(blockEntity), blockEntity.data, blockEntity);
         
     }
     
     // --- クライアント側 ---
     public FurnaceCorePartsMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(containerId, playerInventory, new ItemStackHandler(3), new SimpleContainerData(2), (FrameBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()));
+        this(containerId, playerInventory, new ItemStackHandler(3), new SimpleContainerData(2), (MachineFrameBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()));
     }
     
     @Override
@@ -111,7 +111,7 @@ public class FurnaceCorePartsMenu extends AbstractContainerMenu {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlockState().getBlock());
     }
     
-    private static ItemStackHandler getInventory(FrameBlockEntity be) {
+    private static ItemStackHandler getInventory(MachineFrameBlockEntity be) {
         if (be.coreInstance instanceof FurnaceCoreInstance furnaceCore) {
             return furnaceCore.inventory;
         }

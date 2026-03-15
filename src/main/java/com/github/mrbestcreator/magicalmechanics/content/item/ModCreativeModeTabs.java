@@ -22,17 +22,18 @@ public class ModCreativeModeTabs {
     
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINES_TAB =
-            CREATIVE_MODE_TABS.register("machines_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable(MMLang.ItemGroup.MACHINES))
+            CREATIVE_MODE_TABS.register("machine_parts_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM);
+                        output.accept(ModItems.FURNACE_CORE);
+                        output.accept(ModItems.FURNACE_SIDE);
                     })
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
             CREATIVE_MODE_TABS.register("tools_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable(MMLang.ItemGroup.TOOLS))
+                    .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.TOOLS))
                     .icon(() -> new ItemStack(ModItems.DIAMOND_MAYURANT.get()))
                     .displayItems(((itemDisplayParameters, output) -> {
                         output.accept(ModItems.WRENCH);
@@ -42,7 +43,7 @@ public class ModCreativeModeTabs {
                             output.accept(coreModeWrench);
                         }
                         // Mayurantのクリエイティブタブ登録
-                        for (DeferredItem<Item> mayurantItem: ModItems.MAYURANT_ITEMS) {
+                        for (DeferredItem<Item> mayurantItem: ModItems.MAYURANT_ITEMS.values()) {
                             output.accept(mayurantItem);
                             ItemStack fullMayurant = new ItemStack(mayurantItem.get());
                             if (fullMayurant.getItem() instanceof MayurantItem mayurant) {
@@ -54,11 +55,11 @@ public class ModCreativeModeTabs {
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINE_FRAMES_TAB =
-            CREATIVE_MODE_TABS.register("machine_frame_tab", () -> CreativeModeTab.builder()
-                    .title(Component.translatable(MMLang.ItemGroup.MACHINE_FRAMES))
+            CREATIVE_MODE_TABS.register("machine_frames_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModItems.FURNACE_CORE);
+                        output.accept(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM);
                     })
                     .build());
     

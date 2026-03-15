@@ -1,6 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
+import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.util.furnace.ThermalUtil;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbestcreator.magicalmechanics.content.menu.util.PlayerInventoryUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -80,7 +81,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         
         float minTemp = 500f;
         float maxTemp = 20000f;
-        int color = calculateColor(Mth.clamp((Float.intBitsToFloat(data.get(1)) - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
+        int color = ThermalUtil.calculateColor(Mth.clamp((Float.intBitsToFloat(data.get(1)) - minTemp) / (maxTemp - minTemp), 0.0f, 1.0f), 255);
         
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
@@ -246,27 +247,27 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
                 .setNormal(0.0F, 0.0F, 1.0F);      // 正面を向く法線
     }
     
-    private int calculateColor(float ratio, int alpha) {
-        int r, g, b;
-        float randomOffset = (float)(Math.random() * 0.6); // 20%程度の個体差
-        
-        if (ratio < 0.75f) { // 低温〜中温 (赤〜オレンジ)
-            r = 200 + (int)(55 * ratio);
-            g = (int)(200 * (ratio + randomOffset));
-            b = (int)(50 * ratio);
-        } else { // 高温 (白〜青)
-            r = (int)(255 * (1.0f - ratio + randomOffset));
-            g = (int)(255 * (0.8f + randomOffset * 0.5f));
-            b = 255;
-        }
-        
-        // clampして0-255に収める
-        r = Mth.clamp(r, 0, 255);
-        g = Mth.clamp(g, 0, 255);
-        b = Mth.clamp(b, 0, 255);
-        
-        return (alpha << 24) | (r << 16) | (g << 8) | b;
-    }
+//    private int calculateColor(float ratio, int alpha) {
+//        int r, g, b;
+//        float randomOffset = (float)(Math.random() * 0.6); // 20%程度の個体差
+//
+//        if (ratio < 0.75f) { // 低温〜中温 (赤〜オレンジ)
+//            r = 200 + (int)(55 * ratio);
+//            g = (int)(200 * (ratio + randomOffset));
+//            b = (int)(50 * ratio);
+//        } else { // 高温 (白〜青)
+//            r = (int)(255 * (1.0f - ratio + randomOffset));
+//            g = (int)(255 * (0.8f + randomOffset * 0.5f));
+//            b = 255;
+//        }
+//
+//        // clampして0-255に収める
+//        r = Mth.clamp(r, 0, 255);
+//        g = Mth.clamp(g, 0, 255);
+//        b = Mth.clamp(b, 0, 255);
+//
+//        return (alpha << 24) | (r << 16) | (g << 8) | b;
+//    }
     
     private class Particles {
         private boolean isFast = true;
@@ -332,7 +333,7 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             float lifeRatio = ((float) (maxAge - time) / life / 2);
             int alpha = (int) (lifeRatio * 255);
             
-            int color = calculateColor(colorRatio, alpha);
+            int color = ThermalUtil.calculateColor(colorRatio, alpha);
             
             offsetX *= 0.9f;
             vy -= 0.000001f;

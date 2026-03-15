@@ -17,7 +17,7 @@ public class MayurantItemModelProvider extends ItemModelProvider {
     
     @Override
     protected void registerModels() {
-        for (DeferredItem<Item> mayurantItem: ModItems.MAYURANT_ITEMS) {
+        for (DeferredItem<Item> mayurantItem: ModItems.MAYURANT_ITEMS.values()) {
             generateMayurantModel(mayurantItem);
         }
     }

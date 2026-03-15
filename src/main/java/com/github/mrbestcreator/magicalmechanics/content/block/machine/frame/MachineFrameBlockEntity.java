@@ -3,7 +3,7 @@ package com.github.mrbestcreator.magicalmechanics.content.block.machine.frame;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
-import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameParts;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameSide;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.SideInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
@@ -12,6 +12,7 @@ import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,12 +25,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
-public class FrameBlockEntity extends BlockEntity implements WrenchInteractable {
+public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
     
-    private final Map<FrameSlot, ItemStack> parts = new EnumMap<>(FrameSlot.class);
+    private final Map<MachineFrameSlot, ItemStack> parts = new EnumMap<>(MachineFrameSlot.class);
     public CoreInstance coreInstance;
     public SideInstance sideInstance;
     
@@ -38,12 +38,12 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         public int get(int index) {
             return switch (index) {
                 case 0 -> {
-                    if (FrameBlockEntity.this.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
+                    if (MachineFrameBlockEntity.this.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
                         yield furnaceCoreInstance.isBurning() ? 1 : 0;
                     }
                     yield 0;
                 }
-                case 1 -> Float.floatToIntBits(FrameBlockEntity.this.coreInstance.getThermal());
+                case 1 -> Float.floatToIntBits(MachineFrameBlockEntity.this.coreInstance.getThermal());
                 default -> 0;
             };
         }
@@ -59,26 +59,30 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
     };
     
-    public FrameBlockEntity(BlockPos pos, BlockState blockState) {
+    public MachineFrameBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.MACHINE_FRAME.get(), pos, blockState);
-        for (FrameSlot slot : FrameSlot.values()) {
+        for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             parts.put(slot, ItemStack.EMPTY);
         }
     }
     
-    public void setPart(FrameSlot slot, ItemStack item) {
+    public void setPart(MachineFrameSlot slot, ItemStack item) {
         parts.put(slot, item);
         setChangeData();
     }
     
-    public ItemStack getPart(FrameSlot slot) {
+    public ItemStack getPart(MachineFrameSlot slot) {
         return parts.get(slot);
+    }
+    
+    public List<ItemStack> getParts() {
+        return List.copyOf(parts.values());
     }
     
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
-        
+        // TODO PartsのTagをPartsTags.(Core | Side)に保存するように(それぞれのタグを渡すように)した方がいいかも？
         // CoreのSave
         if (coreInstance != null) {
             coreInstance.save(tag, provider);
@@ -89,7 +93,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
         
         CompoundTag partsTag = new CompoundTag();
-        for (Map.Entry<FrameSlot, ItemStack> entry : parts.entrySet()) {
+        for (Map.Entry<MachineFrameSlot, ItemStack> entry : parts.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 partsTag.put(entry.getKey().name(), entry.getValue().save(provider));
             }
@@ -104,7 +108,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         parts.clear();
         CompoundTag partsTag = tag.getCompound("Parts");
-        for (FrameSlot slot : FrameSlot.values()) {
+        for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             if (partsTag.contains(slot.name())) {
                 parts.put(slot, ItemStack.parse(provider, partsTag.getCompound(slot.name())).orElse(ItemStack.EMPTY));
             } else {
@@ -113,13 +117,13 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
         
         // CoreのLoad
-        if (parts.get(FrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
+        if (parts.get(MachineFrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
             coreInstance = frameCore.createInstance();
             coreInstance.load(tag, provider);
         }
         // SideのLoad
-        if (parts.get(FrameSlot.SIDE).getItem() instanceof FrameParts frameParts) {
-            sideInstance = frameParts.createInstance();
+        if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
+            sideInstance = frameSide.createInstance();
             sideInstance.load(tag, provider);
         }
     }
@@ -149,7 +153,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         }
     }
     
-    public boolean tryInsert(FrameSlot slot, ItemStack stack) {
+    public boolean tryInsert(MachineFrameSlot slot, ItemStack stack) {
         if (stack.isEmpty()) return false;
         
         ItemStack current = parts.get(slot);
@@ -157,10 +161,10 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         
         switch (slot) {
             case SIDE:
-                if (!stack.is(ModTags.Items.FRAME_SIDE_PARTS)) return false;
+                if (!(stack.getItem() instanceof FrameSide)) return false;
                 break;
             case CORE:
-                if (!stack.is(ModTags.Items.FRAME_CORE_PARTS)) return false;
+                if (!(stack.getItem() instanceof FrameCore)) return false;
                 break;
         }
         
@@ -179,8 +183,8 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
                 }
                 break;
             case SIDE:
-                if (parts.get(slot).getItem() instanceof FrameParts frameParts) {
-                    sideInstance = frameParts.createInstance();
+                if (parts.get(slot).getItem() instanceof FrameSide frameSide) {
+                    sideInstance = frameSide.createInstance();
                     sideInstance.onAttached(this);
                 }
                 break;
@@ -189,7 +193,7 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         return true;
     }
     
-    public ItemStack tryExtract(FrameSlot slot) {
+    public ItemStack tryExtract(MachineFrameSlot slot) {
         ItemStack current = parts.get(slot);
         if (current.isEmpty()) return ItemStack.EMPTY;
         
@@ -228,13 +232,13 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
         if (!offhandItem.is(ModTags.Items.WRENCH_ITEMS)) {
             
             inserted = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryInsert(FrameSlot.SIDE, offhandItem);
-                case CORE -> tryInsert(FrameSlot.CORE, offhandItem);
+                case SIDE -> tryInsert(MachineFrameSlot.SIDE, offhandItem);
+                case CORE -> tryInsert(MachineFrameSlot.CORE, offhandItem);
             };
         } else {
             ItemStack out = switch (WrenchItem.getMode(itemStack)) {
-                case SIDE -> tryExtract(FrameSlot.SIDE);
-                case CORE -> tryExtract(FrameSlot.CORE);
+                case SIDE -> tryExtract(MachineFrameSlot.SIDE);
+                case CORE -> tryExtract(MachineFrameSlot.CORE);
             };
             if (!out.isEmpty()) {
                 if (!player.getInventory().add(out)) {
@@ -253,6 +257,21 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
                 : InteractionResult.PASS;
     }
     
+    public void onRemove() {
+        if (coreInstance != null) {
+            coreInstance.onDetached(this);
+            coreInstance = null;
+        }
+        if (sideInstance != null) {
+            sideInstance.onDetached(this);
+            sideInstance = null;
+        }
+    }
+    
+    public void clearContent() {
+        parts.clear();
+    }
+    
     @Override
     public @NotNull CompoundTag getUpdateTag(@NotNull HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
@@ -264,6 +283,20 @@ public class FrameBlockEntity extends BlockEntity implements WrenchInteractable 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         // サーバーからクライアントへ送るパケットを生成
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+    
+    @Override
+    public void onDataPacket(@NotNull Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider lookupProvider) {
+        // サーバーからパケットが届いた時にNBTを読み込む
+        CompoundTag tag = pkt.getTag();
+        this.loadAdditional(tag, lookupProvider);
+    }
+    
+    // 念のためこちらも（チャンク読み込み時などの同期）
+    @Override
+    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider lookupProvider) {
+        super.handleUpdateTag(tag, lookupProvider);
+        this.loadAdditional(tag, lookupProvider);
     }
     
     private void setChangeData() {

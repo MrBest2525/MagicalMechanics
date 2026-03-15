@@ -1,11 +1,17 @@
 package com.github.mrbestcreator.magicalmechanics;
 
+import com.github.mrbestcreator.magicalmechanics.client.block.ber.MachineFrameBER;
+import com.github.mrbestcreator.magicalmechanics.client.item.bewlr.ModClientExtensions;
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockScreen;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsScreen;
+import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsScreen;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -13,8 +19,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
 public class ClientSetup {
@@ -22,11 +32,12 @@ public class ClientSetup {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.MACHINE_FRAME_MENU.get(), FrameBlockScreen::new);
         event.register(ModMenus.FURNACE_CORE_PARTS_MENU.get(), FurnaceCorePartsScreen::new);
+        event.register(ModMenus.FURNACE_SIDE_PARTS_MENU.get(), FurnaceSidePartsScreen::new);
     }
     
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS) {
+        for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS.values()) {
             event.enqueueWork(() -> {
                 ItemProperties.register(
                         mayurant.get(), // 登録したアイテム
@@ -47,5 +58,24 @@ public class ClientSetup {
                 );
             });
         }
+    }
+    
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_FRAME.get(), MachineFrameBER::new);
+    }
+    
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        // ここで特定のアイテムに対して、レンダラー（拡張）を紐付ける
+        event.registerItem(
+                new IClientItemExtensions() {
+                    @Override
+                    public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                        return ModClientExtensions.getMachineFrameItemRenderer();
+                    }
+                },
+                ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get() // 対象のアイテム
+        );
     }
 }

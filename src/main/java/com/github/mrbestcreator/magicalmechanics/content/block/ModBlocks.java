@@ -1,7 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.block;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.FrameBlock;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -17,7 +17,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> MACHINE_FRAME =
             BLOCKS.register(
                     "machine_frame",
-                    () -> new FrameBlock(
+                    () -> new MachineFrameBlock(
                             BlockBehaviour.Properties.of()
                                     .strength(2.5f, 5)
                                     .sound(SoundType.METAL)
