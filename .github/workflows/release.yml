@@ -28,7 +28,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          TAG_NAME=${{ github.ref_name }}
+          VERSION=${TAG_NAME#v}
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "Building version: $VERSION"
+            ./gradlew build -Pversion=$VERSION
+          else
+            echo "Building dev version"
+            ./gradlew build
+          fi
 
       # リリース作成（タグがプッシュされた時のみ実行）
       - name: Create Release
