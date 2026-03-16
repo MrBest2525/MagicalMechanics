@@ -2,6 +2,7 @@ package com.github.mrbestcreator.magicalmechanics.content.item;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameTiers;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchMode;
@@ -59,7 +60,16 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get()))
                     .displayItems((itemDisplayParameters, output) -> {
+                        output.accept(ModBlockItems.BASE_FRAME_ITEM);
                         output.accept(ModBlockItems.MACHINE_FRAME_BLOCK_ITEM);
+                        
+                        // MachineFrames
+                        for (MachineFrameTiers tier : MachineFrameTiers.values()) {
+                            var itemHolder = ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(tier.getMachineFrameId());
+                            if (itemHolder != null) {
+                                output.accept(itemHolder.get());
+                            }
+                        }
                     })
                     .build());
     

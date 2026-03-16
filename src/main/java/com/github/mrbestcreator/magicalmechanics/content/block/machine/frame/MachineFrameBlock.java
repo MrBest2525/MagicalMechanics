@@ -37,11 +37,16 @@ import java.util.List;
 
 public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     
+    private final IMachineFrameTier machineFrameTier;
+    
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     
-    public MachineFrameBlock(Properties properties) {
-        super(properties);
+    public MachineFrameBlock(IMachineFrameTier tier) {
+        // TODO Tireも受け取るように変更すること！！！
+        super(tier.getBlockProperties());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        
+        this.machineFrameTier = tier;
     }
     
     @Override
@@ -130,5 +135,9 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         // プレイヤーの向いている方向の逆にセット（正面を向かせる）
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+    
+    public IMachineFrameTier getMachineFrameTier() {
+        return machineFrameTier;
     }
 }
