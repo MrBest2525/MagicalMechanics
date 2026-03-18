@@ -1,5 +1,6 @@
 package com.github.mrbestcreator.magicalmechanics.datagen.client.lang;
 
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlocks;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
 import com.github.mrbestcreator.magicalmechanics.util.MMLang;
@@ -15,9 +16,11 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
     @Override
     protected void setupMaterialDictionary() {
         addMaterial("wooden", "木");
+        addMaterial("wood", "木");
         addMaterial("stone", "石");
         addMaterial("iron", "鉄");
         addMaterial("golden", "金");
+        addMaterial("gold", "金");
         addMaterial("diamond", "ダイヤモンド");
         addMaterial("netherite", "ネザライト");
         addMaterial("wrench", "レンチ");
@@ -33,6 +36,7 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         addMaterial("part", "パーツ");
         addMaterial("parts", "パーツ");
         addMaterial("mayurant", "マユラント");
+        addMaterial("base", "基礎");
     }
     
     @Override
@@ -69,7 +73,9 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS, "マシンパーツ");
         add(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES, "マシンフレーム");
         
-        add("tag.item.magicalmechanics.frame_core_parts", "コアパーツ");
-        add("tag.item.magicalmechanics.frame_side_parts", "サイドパーツ");
+        add(ModBlockItems.BASE_FRAME_ITEM.get(), "基礎フレーム");
+        
+        add(MMLang.Tag.Item.MagicalMechanics.FRAME_CORE_PARTS, "コアパーツ");
+        add(MMLang.Tag.Item.MagicalMechanics.FRAME_SIDE_PARTS, "サイドパーツ");
     }
 }

@@ -4,6 +4,7 @@ import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.IMachineFrameTier;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlock;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameTiers;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.base.BaseFrameBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -22,7 +23,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> BASE_FRAME =
             BLOCKS.register(
                     "base_frame",
-                    () -> new Block(
+                    () -> new BaseFrameBlock(
                             BlockBehaviour.Properties.of()
                                     .strength(0.0f, 15f)
                                     .sound(SoundType.WOOD)
