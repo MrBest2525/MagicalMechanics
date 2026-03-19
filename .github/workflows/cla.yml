@@ -24,12 +24,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_TOKEN }}
         with:
-          # 先ほど作成したGistのIDをここに貼ります
-          remote-gist-id: "23711cf943dee70556684bccb2e46dae"
-          remote-repository-name: "signatures.json"
+          # 【重要】remote-gist-id ではなく、こちらに Gist ID を入れます
+          remote-repository-name: "23711cf943dee70556684bccb2e46dae"
+          
+          # Gist内にあるファイル名
           path-to-signatures: "signatures.json"
+          
+          # リポジトリのメインブランチ（masterエラー回避のため明示）
           branch: "main"
-          # 同意させるライセンスへのリンク
+          
+          # ライセンスファイルへのリンク
           path-to-document: "https://github.com/${{ github.repository }}/blob/main/LICENSE.md"
+          
           # PR時にBotが投稿するメッセージ
           custom-notsigned-prcomment: "MagicalMechanics への貢献ありがとうございます！<br/>本プロジェクトへ寄与いただくには、[LICENSE.md](https://github.com/${{ github.repository }}/blob/main/LICENSE.md) への同意が必要です。<br/><br/>内容を確認し、同意いただける場合は以下のフレーズを**そのままコメント**してください：<br/><br/>I have read the CLA and agree to its terms"
