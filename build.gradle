@@ -165,3 +165,18 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.named('processResources', ProcessResources) {
+    // すでにリソース処理がある場合、重複を許容する設定
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    from(rootProject.file('LICENSE.md')) {
+        into 'META-INF'
+    }
+
+    if (rootProject.file('ENGLISH_LICENSE.md').exists()) {
+        from(rootProject.file('ENGLISH_LICENSE.md')) {
+            into 'META-INF'
+        }
+    }
+}
