@@ -1,7 +1,7 @@
 name: "CLA Assistant Lite"
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited] # 編集も監視して再チェックを走らせる
   pull_request_target:
     types: [opened, closed, synchronize]
 
@@ -17,18 +17,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "CLA Assistant Lite"
-        # ?. body のように、イベントが存在しない場合にエラーにならないよう考慮
-        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA and agree to its terms') || github.event_name == 'pull_request_target'
+        # コメントが正しいフレーズか、またはPRの更新時に実行
+        if: (github.event.issue.pull_request && (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA and agree to its terms')) || github.event_name == 'pull_request_target'
         uses: contributor-assistant/github-action@v2.5.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_TOKEN }}
         with:
-          # 先ほど作成したGistのIDをここに貼ります
           remote-gist-id: "23711cf943dee70556684bccb2e46dae"
           remote-repo-name: "signatures.json"
           path-to-signatures: "signatures.json"
-          # 同意させるライセンスへのリンク
           path-to-cla: "https://github.com/${{ github.repository }}/blob/main/LICENSE.md"
-          # PR時にBotが投稿するメッセージ
-          custom-notsigned-prcomment: "MagicalMechanics への貢献ありがとうございます！<br/>本プロジェクトへ寄与いただくには、[LICENSE.md](https://github.com/${{ github.repository }}/blob/main/LICENSE.md) への同意が必要です。<br/><br/>内容を確認し、同意いただける場合は以下のフレーズを**そのままコメント**してください：<br/><br/>I have read the CLA and agree to its terms"
+          
+          # 未署名時のメッセージ（少し厳格に）
+          custom-notsigned-prcomment: "⚠️ **MagicalMechanics への貢献には認証が必要です** ⚠️<br/>[LICENSE.md](https://github.com/${{ github.repository }}/blob/main/LICENSE.md) を確認し、同意する場合は以下のフレーズを**そのままコメント**してください。認証されるまでマージは許可されません。<br/><br/>I have read the CLA and agree to its terms"
+          
+          # 署名完了時のメッセージ
+          custom-allsigned-prcomment: "✅ **認証完了**<br/>ライセンスへの同意を確認しました。ありがとうございます。"
