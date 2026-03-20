@@ -125,5 +125,24 @@ public class ModRecipeProvider extends RecipeProvider {
         
             }
         }
+        
+        // Wrench
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.WRENCH)
+                .pattern(" N ")
+                .pattern(" IN")
+                .pattern("I  ")
+                .define('I', Items.IRON_INGOT)
+                .define('N', Items.IRON_NUGGET)
+                .unlockedBy("has_" + Items.IRON_INGOT + "_material", has(Items.IRON_INGOT))
+                .save(output);
+        
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.WRENCH)
+                .pattern(" N ")
+                .pattern("NI ")
+                .pattern("  I")
+                .define('I', Items.IRON_INGOT)
+                .define('N', Items.IRON_NUGGET)
+                .unlockedBy("has_" + Items.IRON_INGOT + "_material", has(Items.IRON_INGOT))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.WRENCH.getId().getPath() + "_mirrored"));
     }
 }

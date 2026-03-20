@@ -1,9 +1,11 @@
 package com.github.mrbestcreator.magicalmechanics;
 
 import com.github.mrbestcreator.magicalmechanics.client.block.ber.MachineFrameBER;
+import com.github.mrbestcreator.magicalmechanics.client.item.bewlr.MachineFrameItemRenderer;
 import com.github.mrbestcreator.magicalmechanics.client.item.bewlr.ModClientExtensions;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlockItems;
+import com.github.mrbestcreator.magicalmechanics.content.block.ModBlocks;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItemDataComponents;
 import com.github.mrbestcreator.magicalmechanics.content.item.ModItems;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
@@ -11,6 +13,7 @@ import com.github.mrbestcreator.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockScreen;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsScreen;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +31,10 @@ import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
 public class ClientSetup {
+    
+    // インスタンスを保持する変数（シングルトン用）
+    private static MachineFrameItemRenderer MACHINE_FRAME_RENDERER;
+    
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.MACHINE_FRAME_MENU.get(), FrameBlockScreen::new);
@@ -67,6 +74,25 @@ public class ClientSetup {
     
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        
+        Minecraft mc = Minecraft.getInstance();
+        MACHINE_FRAME_RENDERER = new MachineFrameItemRenderer(
+                mc.getBlockEntityRenderDispatcher(),
+                mc.getEntityModels()
+        );
+        
+        // MACHINE_FRAMES Map内のすべてのアイテムにレンダラーを登録
+        ModBlocks.MACHINE_FRAMES.values().forEach(blockHolder -> {
+            event.registerItem(new IClientItemExtensions() {
+                @Override
+                public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                    // ここで作成したRendererのインスタンスを返す
+                    // 必要に応じてシングルトンとして保持しておくと効率的です
+                    return MACHINE_FRAME_RENDERER;
+                }
+            }, blockHolder.asItem());
+        });
+        
         // ここで特定のアイテムに対して、レンダラー（拡張）を紐付ける
         event.registerItem(
                 new IClientItemExtensions() {

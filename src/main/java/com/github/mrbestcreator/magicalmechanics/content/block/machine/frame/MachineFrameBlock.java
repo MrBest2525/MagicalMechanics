@@ -54,11 +54,19 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
         return new MachineFrameBlockEntity(blockPos, blockState);
     }
     
+    @SuppressWarnings("unchecked")
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
+            BlockEntityType<A> actualType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+        return expectedType == actualType ? (BlockEntityTicker<A>) ticker : null;
+    }
+    
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-        return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
-                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
-                : null;
+//        return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
+//                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
+//                : null;
+        return createTickerHelper(blockEntityType, ModBlockEntities.MACHINE_FRAME.get(),
+                (lvl, pos, st, be) -> be.tick(lvl, pos, st));
     }
     
     @Override
