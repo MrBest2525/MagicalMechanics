@@ -6,7 +6,6 @@ import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +26,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         
         var mayurantTag = this.tag(ModTags.Items.MAYURANT_ITEMS);
         ModItems.MAYURANT_ITEMS.values().forEach((deferredItem) -> mayurantTag.add(deferredItem.get()));
-        this.tag(ItemTags.PICKAXES).addTag(ModTags.Items.MAYURANT_ITEMS);
         
         var machineCorePartsTag = this.tag(ModTags.Items.FRAME_CORE_PARTS);
         ModItems.MACHINE_CORE_PARTS.values().forEach((deferredItem -> machineCorePartsTag.add(deferredItem.get())));

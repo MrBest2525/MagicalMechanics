@@ -1,10 +1,10 @@
 {
   "values": [
-    "magicalmechanics:netherite_mayurant",
     "magicalmechanics:golden_mayurant",
     "magicalmechanics:wooden_mayurant",
     "magicalmechanics:stone_mayurant",
     "magicalmechanics:diamond_mayurant",
-    "magicalmechanics:iron_mayurant"
+    "magicalmechanics:iron_mayurant",
+    "magicalmechanics:netherite_mayurant"
   ]
 }

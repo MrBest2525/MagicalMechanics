@@ -37,16 +37,11 @@ import java.util.List;
 
 public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     
-    private final IMachineFrameTier machineFrameTier;
-    
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     
-    public MachineFrameBlock(IMachineFrameTier tier) {
-        // TODO Tireも受け取るように変更すること！！！
-        super(tier.getBlockProperties());
+    public MachineFrameBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-        
-        this.machineFrameTier = tier;
     }
     
     @Override
@@ -54,19 +49,11 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
         return new MachineFrameBlockEntity(blockPos, blockState);
     }
     
-    @SuppressWarnings("unchecked")
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
-            BlockEntityType<A> actualType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == actualType ? (BlockEntityTicker<A>) ticker : null;
-    }
-    
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-//        return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
-//                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
-//                : null;
-        return createTickerHelper(blockEntityType, ModBlockEntities.MACHINE_FRAME.get(),
-                (lvl, pos, st, be) -> be.tick(lvl, pos, st));
+        return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
+                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
+                : null;
     }
     
     @Override
@@ -143,9 +130,5 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         // プレイヤーの向いている方向の逆にセット（正面を向かせる）
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-    }
-    
-    public IMachineFrameTier getMachineFrameTier() {
-        return machineFrameTier;
     }
 }

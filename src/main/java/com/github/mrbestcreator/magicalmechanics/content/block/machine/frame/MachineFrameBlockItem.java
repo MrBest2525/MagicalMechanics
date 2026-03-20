@@ -19,10 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class MachineFrameBlockItem extends BlockItem {
-    private IMachineFrameTier machineFrameTier;
-    public MachineFrameBlockItem(Block block, IMachineFrameTier tier) {
-        super(block, tier.getItemProperties());
-        this.machineFrameTier = tier;
+    public MachineFrameBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
     
     @Override

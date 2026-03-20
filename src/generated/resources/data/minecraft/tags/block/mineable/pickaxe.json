@@ -1,11 +1,5 @@
 {
   "values": [
-    "magicalmechanics:machine_frame",
-    "magicalmechanics:wood_machine_frame",
-    "magicalmechanics:netherite_machine_frame",
-    "magicalmechanics:stone_machine_frame",
-    "magicalmechanics:diamond_machine_frame",
-    "magicalmechanics:iron_machine_frame",
-    "magicalmechanics:gold_machine_frame"
+    "magicalmechanics:machine_frame"
   ]
 }

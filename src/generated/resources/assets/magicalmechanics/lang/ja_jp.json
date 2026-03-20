@@ -1,12 +1,5 @@
 {
-  "block.magicalmechanics.base_frame": "基礎フレーム",
-  "block.magicalmechanics.diamond_machine_frame": "ダイヤモンドのマシンのフレーム",
-  "block.magicalmechanics.gold_machine_frame": "金のマシンのフレーム",
-  "block.magicalmechanics.iron_machine_frame": "鉄のマシンのフレーム",
   "block.magicalmechanics.machine_frame": "マシンフレーム",
-  "block.magicalmechanics.netherite_machine_frame": "ネザライトのマシンのフレーム",
-  "block.magicalmechanics.stone_machine_frame": "石のマシンのフレーム",
-  "block.magicalmechanics.wood_machine_frame": "木のマシンのフレーム",
   "item.magicalmechanics.diamond_mayurant": "ダイヤモンドのマユラント",
   "item.magicalmechanics.furnace_core": "ファーネスコア",
   "item.magicalmechanics.furnace_side": "ファーネスサイド",

@@ -1,12 +1,5 @@
 {
-  "block.magicalmechanics.base_frame": "Base Frame",
-  "block.magicalmechanics.diamond_machine_frame": "Diamond Machine Frame",
-  "block.magicalmechanics.gold_machine_frame": "Gold Machine Frame",
-  "block.magicalmechanics.iron_machine_frame": "Iron Machine Frame",
   "block.magicalmechanics.machine_frame": "Machine Frame",
-  "block.magicalmechanics.netherite_machine_frame": "Netherite Machine Frame",
-  "block.magicalmechanics.stone_machine_frame": "Stone Machine Frame",
-  "block.magicalmechanics.wood_machine_frame": "Wood Machine Frame",
   "item.magicalmechanics.diamond_mayurant": "Diamond Mayurant",
   "item.magicalmechanics.furnace_core": "Furnace Core",
   "item.magicalmechanics.furnace_side": "Furnace Side",

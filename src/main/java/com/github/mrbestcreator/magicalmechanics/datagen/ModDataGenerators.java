@@ -1,12 +1,10 @@
 package com.github.mrbestcreator.magicalmechanics.datagen;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
-import com.github.mrbestcreator.magicalmechanics.datagen.client.block.MachineFramesBlockModelProvider;
-import com.github.mrbestcreator.magicalmechanics.datagen.client.item.ModItemModelProvider;
+import com.github.mrbestcreator.magicalmechanics.datagen.client.item.MayurantItemModelProvider;
 import com.github.mrbestcreator.magicalmechanics.datagen.client.lang.EnUsLanguageProvider;
 import com.github.mrbestcreator.magicalmechanics.datagen.client.lang.JaJpLanguageProvider;
 import com.github.mrbestcreator.magicalmechanics.datagen.common.loot.ModLootTableProvider;
-import com.github.mrbestcreator.magicalmechanics.datagen.common.recipe.ModRecipeProvider;
 import com.github.mrbestcreator.magicalmechanics.datagen.common.tag.block.ModBlockTagsProvider;
 import com.github.mrbestcreator.magicalmechanics.datagen.common.tag.item.ModItemTagsProvider;
 import net.minecraft.core.HolderLookup;
@@ -30,17 +28,11 @@ public class ModDataGenerators {
         
         // 【クライアント側データ】
         
-        // == BLOCK ==
-        generator.addProvider(
-                event.includeClient(),
-                new MachineFramesBlockModelProvider(output, existingFileHelper)
-        );
         // == ITEM ==
         generator.addProvider(
                 event.includeClient(),
-                new ModItemModelProvider(output, existingFileHelper)
+                new MayurantItemModelProvider(output, existingFileHelper)
         );
-        
         
         // == 翻訳ファイル ==
         generator.addProvider(event.includeClient(), new EnUsLanguageProvider(output));
@@ -57,8 +49,5 @@ public class ModDataGenerators {
         
         // == BlockDropLoot ==
         generator.addProvider(event.includeServer(), ModLootTableProvider.create(output, lookupProvider));
-        
-        // == Recipe ==
-        generator.addProvider(event.includeServer(), new ModRecipeProvider(output, lookupProvider));
     }
 }

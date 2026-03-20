@@ -62,21 +62,21 @@ public class ModItems {
     
     
     // Mayurant
-    public static final DeferredItem<Item> WOODEN_MAYURANT = ITEMS.register(MayurantTiers.WOOD.getId(), () -> new MayurantItem(MayurantTiers.WOOD, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.WOOD, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> STONE_MAYURANT = ITEMS.register(MayurantTiers.STONE.getId(), () -> new MayurantItem(MayurantTiers.STONE, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.STONE, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> IRON_MAYURANT = ITEMS.register(MayurantTiers.IRON.getId(), () -> new MayurantItem(MayurantTiers.IRON, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.IRON, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> GOLDEN_MAYURANT = ITEMS.register(MayurantTiers.GOLD.getId(), () -> new MayurantItem(MayurantTiers.GOLD, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.GOLD, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> DIAMOND_MAYURANT = ITEMS.register(MayurantTiers.DIAMOND.getId(), () -> new MayurantItem(MayurantTiers.DIAMOND, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.DIAMOND, 1.0f, -2.8f))));
-    public static final DeferredItem<Item> NETHERITE_MAYURANT = ITEMS.register(MayurantTiers.NETHERITE.getId(), () -> new MayurantItem(MayurantTiers.NETHERITE, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.NETHERITE, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> WOODEN_MAYURANT = ITEMS.register("wooden_mayurant", () -> new MayurantItem(MayurantTiers.WOOD, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.WOOD, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> STONE_MAYURANT = ITEMS.register("stone_mayurant", () -> new MayurantItem(MayurantTiers.STONE, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.STONE, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> IRON_MAYURANT = ITEMS.register("iron_mayurant", () -> new MayurantItem(MayurantTiers.IRON, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.IRON, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> GOLDEN_MAYURANT = ITEMS.register("golden_mayurant", () -> new MayurantItem(MayurantTiers.GOLD, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.GOLD, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> DIAMOND_MAYURANT = ITEMS.register("diamond_mayurant", () -> new MayurantItem(MayurantTiers.DIAMOND, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.DIAMOND, 1.0f, -2.8f))));
+    public static final DeferredItem<Item> NETHERITE_MAYURANT = ITEMS.register("netherite_mayurant", () -> new MayurantItem(MayurantTiers.NETHERITE, new Item.Properties().component(ModItemDataComponents.MAGIC_POWER, 0).stacksTo(1).component(DataComponents.ATTRIBUTE_MODIFIERS, MayurantItem.createAttributes(MayurantTiers.NETHERITE, 1.0f, -2.8f))));
     
     public static final Map<String, DeferredItem<Item>> MAYURANT_ITEMS = new HashMap<>();
     static {
-        MAYURANT_ITEMS.put(MayurantTiers.WOOD.getId(), WOODEN_MAYURANT);
-        MAYURANT_ITEMS.put(MayurantTiers.STONE.getId(), STONE_MAYURANT);
-        MAYURANT_ITEMS.put(MayurantTiers.IRON.getId(), IRON_MAYURANT);
-        MAYURANT_ITEMS.put(MayurantTiers.GOLD.getId(), GOLDEN_MAYURANT);
-        MAYURANT_ITEMS.put(MayurantTiers.DIAMOND.getId(), DIAMOND_MAYURANT);
-        MAYURANT_ITEMS.put(MayurantTiers.NETHERITE.getId(), NETHERITE_MAYURANT);
+        MAYURANT_ITEMS.put(WOODEN_MAYURANT.getRegisteredName(), WOODEN_MAYURANT);
+        MAYURANT_ITEMS.put(STONE_MAYURANT.getRegisteredName(), STONE_MAYURANT);
+        MAYURANT_ITEMS.put(IRON_MAYURANT.getRegisteredName(), IRON_MAYURANT);
+        MAYURANT_ITEMS.put(GOLDEN_MAYURANT.getRegisteredName(), GOLDEN_MAYURANT);
+        MAYURANT_ITEMS.put(DIAMOND_MAYURANT.getRegisteredName(), DIAMOND_MAYURANT);
+        MAYURANT_ITEMS.put(NETHERITE_MAYURANT.getRegisteredName(), NETHERITE_MAYURANT);
     }
     
     

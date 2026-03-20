@@ -20,9 +20,6 @@ public class BlockDropLootProvider extends BlockLootSubProvider {
         // TODO マユラントで壊したときにBlockEntityのデータ保持
         // TODO あまりうまくいかないならBlockやBlockEntity側での実装にする(時間かけてキレイよりも後で直すことにして確実に実装できる方を優先する)
         this.dropSelf(ModBlocks.MACHINE_FRAME.get());
-        
-        this.dropSelf(ModBlocks.BASE_FRAME.get());
-        ModBlocks.MACHINE_FRAMES.values().forEach((block) -> this.dropSelf(block.get()));
     }
     
     @Override
