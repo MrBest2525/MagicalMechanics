@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "magicalmechanics:block/machine_frame/base_frame",
+    "all": "magicalmechanics:block/machine_frame/base_frame"
+  }
+}

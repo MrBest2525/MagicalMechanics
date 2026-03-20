@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "magicalmechanics:wood_machine_frame"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "magicalmechanics:blocks/wood_machine_frame"
+}
