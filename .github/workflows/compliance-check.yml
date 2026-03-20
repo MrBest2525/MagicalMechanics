@@ -1,0 +1,40 @@
+name: "Compliance Check"
+
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]
+
+jobs:
+  check-agreement:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Agreement Checkboxes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.pull_request.body;
+            if (!body) {
+              core.setFailed("PRの本文が空です。テンプレートに従って同意事項にチェックを入れてください。");
+              return;
+            }
+            
+            // 文末まで厳格に一致するかを判定
+            const requiredChecks = [
+              /-\s*\[x\]\s*本PRの内容は自分が作成したもの、または適切に許可されたコードのみを含みます/i,
+              /-\s*\[x\]\s*第三者のコードを含む場合、そのライセンスはMIT\/BSD\/ISCであり、出典とライセンスを明記しています/i,
+              /-\s*\[x\]\s*GPL等のコピーレフトライセンスのコードを含んでいません/i,
+              /-\s*\[x\]\s*本プロジェクトのライセンスおよび寄与条件に同意します/i
+            ];
+            
+            let missing = [];
+            requiredChecks.forEach((re, index) => {
+              if (!re.test(body)) {
+                missing.push(`項目 ${index + 1}`);
+              }
+            });
+            
+            if (missing.length > 0) {
+              core.setFailed(`⚠️ 同意事項がテンプレートの原文と一致しない、またはチェックが漏れています。 (${missing.join(", ")})`);
+            } else {
+              console.log("✅ すべての同意事項が原文通りに確認されました。");
+            }

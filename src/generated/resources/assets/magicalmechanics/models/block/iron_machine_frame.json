@@ -1,0 +1,7 @@
+{
+  "parent": "magicalmechanics:block/machine_frame",
+  "textures": {
+    "all": "magicalmechanics:block/machine_frame/iron_machine_frame",
+    "particle": "magicalmechanics:block/machine_frame/iron_machine_frame"
+  }
+}

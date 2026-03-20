@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "M": {
+      "tag": "minecraft:planks"
+    },
+    "P": {
+      "item": "minecraft:wooden_pickaxe"
+    }
+  },
+  "pattern": [
+    "P  ",
+    " A ",
+    "  M"
+  ],
+  "result": {
+    "count": 1,
+    "id": "magicalmechanics:wooden_mayurant"
+  }
+}

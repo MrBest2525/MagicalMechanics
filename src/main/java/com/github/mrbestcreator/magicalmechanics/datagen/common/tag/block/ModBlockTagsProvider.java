@@ -2,6 +2,8 @@ package com.github.mrbestcreator.magicalmechanics.datagen.common.tag.block;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.block.ModBlocks;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.IMachineFrameTier;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlock;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,5 +34,22 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         // ツルハシかマユラントで掘れるようにする
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.MACHINE_FRAME.get());
         this.tag(MINEABLE_WITH_MAYURANT).add(ModBlocks.MACHINE_FRAME.get());
+        
+        
+        var pickaxeTag = this.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        
+        for (DeferredBlock<Block> block : ModBlocks.MACHINE_FRAMES.values()) {
+            pickaxeTag.add(block.get());
+            
+            if (block.get() instanceof MachineFrameBlock machineFrameBlock) {
+                IMachineFrameTier tier = machineFrameBlock.getMachineFrameTier();
+                if (tier.getToolLevelTag() != null) {
+                    tag(tier.getToolLevelTag()).add(block.get());
+                }
+            }
+        }
+        
+        // マユラントはつるはしを継承する
+        this.tag(MINEABLE_WITH_MAYURANT).addTag(BlockTags.MINEABLE_WITH_PICKAXE);
     }
 }
