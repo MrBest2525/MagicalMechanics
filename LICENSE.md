@@ -2,7 +2,7 @@
 
 Copyright (c) 2026 Mr. Best (MrBest2525)
 
-English version: [ENGLISH_LISENSE.md](./ENGLISH_LISENSE.md)
+English version: [ENGLISH_LICENSE.md](./ENGLISH_LICENSE.md)
 
 本ライセンスは、MagicalMechanics バージョン R0.2.0 以降に適用されます。
 
