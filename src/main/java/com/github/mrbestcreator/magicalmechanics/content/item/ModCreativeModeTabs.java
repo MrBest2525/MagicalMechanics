@@ -21,14 +21,18 @@ public class ModCreativeModeTabs {
     
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MagicalMechanics.MODID);
     
-    
+    // マシーンパーツタブ
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINES_TAB =
             CREATIVE_MODE_TABS.register("machine_parts_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS))
                     .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.STONE.getMachineFrameId()).get()))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModItems.FURNACE_CORE);
-                        output.accept(ModItems.FURNACE_SIDE);
+                        for (DeferredItem<Item> item : ModItems.MACHINE_CORE_PARTS.values()) {
+                            output.accept(item.get());
+                        }
+                        for (DeferredItem<Item> item : ModItems.MACHINE_SIDE_PARTS.values()) {
+                            output.accept(item.get());
+                        }
                     })
                     .build());
     

@@ -8,16 +8,21 @@ import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instanc
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchItem;
+import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsMenu;
 import com.github.mrbestcreator.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,9 +30,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
+    
+    public final SettingPartsManager settingParts = new SettingPartsManager();
     
     private final Map<MachineFrameSlot, ItemStack> parts = new EnumMap<>(MachineFrameSlot.class);
     public CoreInstance coreInstance;
@@ -64,6 +73,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             parts.put(slot, ItemStack.EMPTY);
         }
+        // TODO 削除忘れずに
+        settingParts.addPart(new ItemStack(Items.GLASS));
     }
     
     public void setPart(MachineFrameSlot slot, ItemStack item) {
@@ -83,14 +94,24 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         // TODO PartsのTagをPartsTags.(Core | Side)に保存するように(それぞれのタグを渡すように)した方がいいかも？
+        CompoundTag partsData = new CompoundTag();
+        
+        partsData.put("SettingPartsData", settingParts.save(provider));
+        
         // CoreのSave
         if (coreInstance != null) {
-            coreInstance.save(tag, provider);
+            CompoundTag coreTag = new CompoundTag();
+            coreInstance.save(coreTag, provider);
+            partsData.put("CoreData", coreTag);
         }
         // SideのSave
         if (sideInstance != null) {
-            sideInstance.save(tag, provider);
+            CompoundTag sideTag = new CompoundTag();
+            sideInstance.save(sideTag, provider);
+            partsData.put("SideData", sideTag);
         }
+        
+        tag.put("PartsData", partsData);
         
         CompoundTag partsTag = new CompoundTag();
         for (Map.Entry<MachineFrameSlot, ItemStack> entry : parts.entrySet()) {
@@ -116,15 +137,23 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
             }
         }
         
+        CompoundTag partsData = tag.getCompound("PartsData");
+        
+        if (partsData.contains("SettingPartsData", Tag.TAG_LIST)) {
+            this.settingParts.load(partsData.getList("SettingPartsData", Tag.TAG_COMPOUND), provider);
+        }
+        
         // CoreのLoad
         if (parts.get(MachineFrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
             coreInstance = frameCore.createInstance();
-            coreInstance.load(tag, provider);
+            CompoundTag coreTag = partsData.getCompound("CoreData");
+            coreInstance.load(coreTag, provider);
         }
         // SideのLoad
         if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
             sideInstance = frameSide.createInstance();
-            sideInstance.load(tag, provider);
+            CompoundTag sideTag = partsData.getCompound("SideData");
+            sideInstance.load(sideTag, provider);
         }
     }
     
@@ -136,6 +165,9 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         if (level.isClientSide()) {
         
         } else {
+            
+            settingParts.getPreTickParts().forEach(settingPartsInstance -> settingPartsInstance.tick(level, pos, state, this));
+            
             if (coreInstance != null) {
                 if (coreInstance.tick(level, pos, state, this)) {
                     isChangeData = true;
@@ -146,6 +178,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
                     isChangeData = true;
                 }
             }
+            
+            settingParts.getPostTickParts().forEach(settingPartsInstance -> settingPartsInstance.tick(level, pos, state, this));
         }
         
         if (isChangeData) {
@@ -258,6 +292,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     }
     
     public void onRemove() {
+        settingParts.getInstanceList().forEach(instance -> instance.onDetached(this));
+        
         if (coreInstance != null) {
             coreInstance.onDetached(this);
             coreInstance = null;
@@ -269,6 +305,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     }
     
     public void clearContent() {
+        settingParts.clear();
         parts.clear();
     }
     
@@ -304,5 +341,16 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
         setChanged();
+    }
+    
+    public AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {
+        return new FrameBlockSettingPartsMenu(id, inventory, blockEntity);
+    }
+    
+    // ========================================
+    // SettingParts
+    // ========================================
+    public SettingPartsManager getSettingPartsManager() {
+        return this.settingParts;
     }
 }

@@ -1,10 +1,9 @@
 package com.github.mrbestcreator.magicalmechanics.network.packet.menu;
 
-import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameSlot;
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameSlot;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameCore;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.FrameSide;
-import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
@@ -50,7 +49,7 @@ public class ServerPayloadHandler {
                         break;
                     case 2:
                         player.openMenu(new SimpleMenuProvider(
-                                (id, inv, p) -> new FrameBlockMenu(id, inv, machineFrameBlockEntity),
+                                (id, inv, p) -> machineFrameBlockEntity.getMenu(id, inv, machineFrameBlockEntity),
                                 Component.literal("Frame")
                         ), blockPos);
                         break;

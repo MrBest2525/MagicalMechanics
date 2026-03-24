@@ -130,7 +130,7 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         scale = (float) GUI_LAYOUT.getScale(fireScale);
         float minTemp = 500f;
         float maxTemp = 20000f;
-        float thermal = this.menu.blockEntity.coreInstance.getThermal();
+        float thermal = this.menu.blockEntity.coreInstance != null ? this.menu.blockEntity.coreInstance.getThermal() : 25;
         int color = 0xFF333333;
         if (this.menu.blockEntity.coreInstance instanceof FurnaceCoreInstance furnaceCoreInstance) {
             if (furnaceCoreInstance.isBurning()) {

@@ -1,8 +1,11 @@
 package com.github.mrbestcreator.magicalmechanics.content.item;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.core.energy.EnergyCoreTiers;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.items.EnergyCoreItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.items.FurnaceCoreItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.items.FurnaceSideItem;
+import com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance.items.TestSettingPartsItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbestcreator.magicalmechanics.content.item.mayurant.MayurantTiers;
 import com.github.mrbestcreator.magicalmechanics.content.item.wrench.WrenchData;
@@ -27,10 +30,14 @@ public class ModItems {
             () -> new FurnaceCoreItem(new Item.Properties())
     );
     
+    public static final DeferredItem<Item> UNLIMITED_ENERGY_CORE = ITEMS.register("unlimited_energy_core", () -> new EnergyCoreItem(new Item.Properties(), EnergyCoreTiers.UNLIMITED));
+    
     public static final Map<String, DeferredItem<Item>> MACHINE_CORE_PARTS = new HashMap<>();
-    static {
-        MACHINE_CORE_PARTS.put(FURNACE_CORE.getRegisteredName(), FURNACE_CORE);
-    }
+    // ==============================
+    // SettingParts
+    // ==============================
+    public static final DeferredItem<Item> TEST_SETTING_PARTS1 =
+            ITEMS.register("test_setting_parts1", () -> new TestSettingPartsItem(new Item.Properties()));
     
     
     
@@ -44,7 +51,13 @@ public class ModItems {
     static {
         MACHINE_SIDE_PARTS.put(FURNACE_SIDE.getRegisteredName(), FURNACE_SIDE);
     }
-    
+    public static final DeferredItem<Item> TEST_SETTING_PARTS2 =
+            ITEMS.register("test_setting_parts2", () -> new TestSettingPartsItem(new Item.Properties()));
+
+    static {
+        MACHINE_CORE_PARTS.put(FURNACE_CORE.getRegisteredName(), FURNACE_CORE);
+        MACHINE_CORE_PARTS.put(UNLIMITED_ENERGY_CORE.getRegisteredName(), UNLIMITED_ENERGY_CORE);
+    }
     
     
     // Wrench

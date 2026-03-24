@@ -1,6 +1,7 @@
 package com.github.mrbestcreator.magicalmechanics.content.item.frameparts.instance;
 
 import com.github.mrbestcreator.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
+import com.github.mrbestcreator.magicalmechanics.util.math.MMLong;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public interface CoreInstance {
+    static final MMLong MMLONG_ZERO = new MMLong(0);
+    
     void save(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     void load(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     boolean tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull MachineFrameBlockEntity blockEntity);
@@ -20,10 +23,31 @@ public interface CoreInstance {
     
     default AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {return null;}
     
-    default boolean supportsEnergy() {return false;}
-    default long getEnergy() {return 0;}
-    default boolean addEnergy(long energy) {return false;}
-    default boolean consumeEnergy(long energy) {return false;}
+    /**
+     * このコアがエネルギーを扱えるかどうか
+     */
+    default boolean supportsEnergy() {return false;
+    }
+    
+    /**
+     * エネルギーを取得
+     */
+    default MMLong getEnergy() {
+        return MMLONG_ZERO;
+    }
+    
+    /**
+     * エネルギーを増やす
+     */
+    default boolean addEnergy(MMLong energy) {
+        return false;
+    }
+    
+    /**
+     * getEnergyで消費
+     */
+    default boolean consumeEnergy(MMLong energy) {
+        return false;}
     
     default boolean supportsThermal() {return false;}
     default float getThermal() {return 0;}

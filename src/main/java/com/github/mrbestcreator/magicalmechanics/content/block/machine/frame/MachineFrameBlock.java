@@ -42,7 +42,6 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     
     public MachineFrameBlock(IMachineFrameTier tier) {
-        // TODO Tireも受け取るように変更すること！！！
         super(tier.getBlockProperties());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         
@@ -62,9 +61,6 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
     
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-//        return blockEntityType == ModBlockEntities.MACHINE_FRAME.get()
-//                ? (lvl, pos, st, be) -> ((MachineFrameBlockEntity) be).tick(lvl, pos, st)
-//                : null;
         return createTickerHelper(blockEntityType, ModBlockEntities.MACHINE_FRAME.get(),
                 (lvl, pos, st, be) -> be.tick(lvl, pos, st));
     }
@@ -116,6 +112,11 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
             // 3. マユラント以外で掘った場合：地面にパーツをぶちまける
             else {
                 frameBe.onRemove();
+                frameBe.settingParts.getItemStackList().forEach(itemStack -> {
+                    if (!itemStack.isEmpty()) {
+                        drops.add(itemStack);
+                    }
+                });
                 for (ItemStack part : frameBe.getParts()) {
                     if (!part.isEmpty()) {
                         // getDropsの中で直接ドロップリストに追加

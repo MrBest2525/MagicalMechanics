@@ -97,7 +97,7 @@ public enum MachineFrameTiers implements IMachineFrameTier{
                     .strength(5.0f)
                     .sound(SoundType.NETHERITE_BLOCK).explosionResistance(1200f)
                     .requiresCorrectToolForDrops()
-                    .mapColor(MapColor.NETHER)
+                    .mapColor(MapColor.COLOR_BLACK)
                     .noOcclusion()
                     .isViewBlocking((state, level, pos) -> false)
                     .isSuffocating((state, level, pos) -> false)

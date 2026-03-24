@@ -28,13 +28,13 @@ public class FurnaceSidePartsMenu extends AbstractContainerMenu {
     
     public final MachineFrameBlockEntity blockEntity;
     public final Level level;
-    public final ContainerData data;
+//    public final ContainerData data;
     
     public FurnaceSidePartsMenu(int containerId, Inventory playerInventory, IItemHandler dataInventory, ContainerData containerData, MachineFrameBlockEntity blockEntity) {
         super(ModMenus.FURNACE_SIDE_PARTS_MENU.get(), containerId);
         this.blockEntity = blockEntity;
         this.level = playerInventory.player.level();
-        this.data = containerData;
+//        this.data = containerData;
         this.addDataSlots(containerData);
         
         

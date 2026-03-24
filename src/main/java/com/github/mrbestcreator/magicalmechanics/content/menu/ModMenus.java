@@ -2,6 +2,7 @@ package com.github.mrbestcreator.magicalmechanics.content.menu;
 
 import com.github.mrbestcreator.magicalmechanics.MagicalMechanics;
 import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
+import com.github.mrbestcreator.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsMenu;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsMenu;
 import com.github.mrbestcreator.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsMenu;
 import net.minecraft.core.registries.Registries;
@@ -18,6 +19,9 @@ public class ModMenus {
     
     public static final Supplier<MenuType<FrameBlockMenu>> MACHINE_FRAME_MENU =
             MENUS.register("machine_frame_menu", () -> IMenuTypeExtension.create(FrameBlockMenu::new));
+    public static final Supplier<MenuType<FrameBlockSettingPartsMenu>> MACHINE_FRAME_SETTING_PARTS_MENU =
+            MENUS.register("machine_frame_setting_parts_menu", () -> IMenuTypeExtension.create(FrameBlockSettingPartsMenu::new));
+    
     public static final Supplier<MenuType<FurnaceCorePartsMenu>> FURNACE_CORE_PARTS_MENU =
             MENUS.register("furnace_core_parts_menu", () -> IMenuTypeExtension.create(FurnaceCorePartsMenu::new));
     public static final Supplier<MenuType<FurnaceSidePartsMenu>> FURNACE_SIDE_PARTS_MENU =
