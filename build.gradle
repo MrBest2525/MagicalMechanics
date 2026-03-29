@@ -126,7 +126,9 @@ dependencies {
     }
 
     // SnakeYAML を shadowImplementation に入れる
+    implementation 'org.yaml:snakeyaml:2.6'
     shadowImplementation 'org.yaml:snakeyaml:2.6'
+    additionalRuntimeClasspath 'org.yaml:snakeyaml:2.6'
 }
 
 // 2. ShadowJar の設定

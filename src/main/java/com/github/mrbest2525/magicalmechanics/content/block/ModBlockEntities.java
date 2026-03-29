@@ -17,21 +17,21 @@ public class ModBlockEntities {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MagicalMechanics.MODID);
     
 //    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MachineFrameBlockEntity>> MACHINE_FRAME =
-//            BLOCK_ENTITIES.register(
+//            BLOCK_ENTITIES.registerRenderer(
 //                    "machine_frame",
 //                    () -> BlockEntityType.Builder.of(
 //                            MachineFrameBlockEntity::new,
-//                            ModBlocks.MACHINE_FRAME.get()
+//                            ModBlocks.MACHINE_FRAME.getRenderer()
 //                    ).build(null)
 //            );
 //
 //    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MachineFrameBlockEntity>> MACHINE_FRAME_BE =
-//            BLOCK_ENTITIES.register("machine_frame_be", () ->
+//            BLOCK_ENTITIES.registerRenderer("machine_frame_be", () ->
 //                    BlockEntityType.Builder.of(
 //                            MachineFrameBlockEntity::new,
 //                            // ModBlocks.MACHINE_FRAMES の Map にある全ブロックを「有効なブロック」として登録
 //                            ModBlocks.MACHINE_FRAMES.values().stream()
-//                                    .map(DeferredBlock::get)
+//                                    .map(DeferredBlock::getRenderer)
 //                                    .toArray(Block[]::new)
 //                    ).build(null)
 //            );

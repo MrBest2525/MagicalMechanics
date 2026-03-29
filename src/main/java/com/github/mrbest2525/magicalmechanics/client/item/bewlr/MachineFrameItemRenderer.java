@@ -46,7 +46,7 @@ public class MachineFrameItemRenderer extends BlockEntityWithoutLevelRenderer {
 //        }
 //
 //        // 3. アイテムのコンポーネントからデータを復元
-//        CustomData data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+//        CustomData data = stack.getRenderer(DataComponents.BLOCK_ENTITY_DATA);
 //        if (data != null) {
 //            // ここでアイテム内のNBTをダミーBEに流し込む
 //            data.loadInto(dummyBE, Minecraft.getInstance().level != null ? Minecraft.getInstance().level.registryAccess() : null);

@@ -25,10 +25,10 @@ public class ModBlockItems {
     
     public static final Map<String, DeferredItem<BlockItem>> MACHINE_FRAME_BLOCK_ITEMS = new HashMap<>();
 //    static {
-//        ModBlocks.MACHINE_FRAMES.forEach((id, deferredBlock) -> BLOCK_ITEMS.register(id, () -> {
-//            Block block = deferredBlock.get();
+//        ModBlocks.MACHINE_FRAMES.forEach((id, deferredBlock) -> BLOCK_ITEMS.registerRenderer(id, () -> {
+//            Block block = deferredBlock.getRenderer();
 //
-//            IMachineFrameTier tier = (deferredBlock.get() instanceof MachineFrameBlock machineFrameBlock)
+//            IMachineFrameTier tier = (deferredBlock.getRenderer() instanceof MachineFrameBlock machineFrameBlock)
 //                    ? machineFrameBlock.getMachineFrameTier()
 //                    : MachineFrameTiers.IRON;
 //
@@ -41,8 +41,8 @@ static {
         
         // アイテムの登録
         DeferredItem<BlockItem> registeredItem = BLOCK_ITEMS.register(id, () -> {
-            // ここで ModBlocks から対応するブロックを get() する。
-            // 実際に get() が呼ばれるのはレジストリが動く「後」なので安全。
+            // ここで ModBlocks から対応するブロックを getRenderer() する。
+            // 実際に getRenderer() が呼ばれるのはレジストリが動く「後」なので安全。
             Block block = ModBlocks.MACHINE_FRAMES.get(id).get();
             
             return new MachineFrameBlockItem(
