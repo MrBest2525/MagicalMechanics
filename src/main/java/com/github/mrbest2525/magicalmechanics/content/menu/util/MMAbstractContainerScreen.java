@@ -113,6 +113,12 @@ public abstract class MMAbstractContainerScreen<T extends AbstractContainerMenu>
     
     public abstract void addRenderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot);
     
+    protected void renderSlotBase(@NotNull GuiGraphics gui, @NotNull Slot slot) {
+        // MMAbstractContainerScreenのrenderSlotではなく、
+        // さらにその親(AbstractContainerScreen)のメソッドを直接呼ぶ
+        super.renderSlot(gui, slot);
+    }
+    
     @Override public void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(containerOffsetX, containerOffsetY, 0);
@@ -128,6 +134,10 @@ public abstract class MMAbstractContainerScreen<T extends AbstractContainerMenu>
     }
     
     protected abstract void addRenderSlotHighlight(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, int mouseX, int mouseY, float partialTick);
+    
+    protected void renderSlotHighlightBase(@NotNull GuiGraphics gui, @NotNull Slot slot, int mouseX, int mouseY, float partialTick) {
+        super.renderSlotHighlight(gui, slot, mouseX, mouseY, partialTick);
+    }
     
     @Override protected void renderSlotHighlight(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, int mouseX, int mouseY, float partialTick) {
         guiGraphics.pose().pushPose();
