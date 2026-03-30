@@ -8,6 +8,7 @@ import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.S
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchItem;
+import com.github.mrbest2525.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsMenu;
 import com.github.mrbest2525.magicalmechanics.content.util.ModTags;
 import net.minecraft.core.BlockPos;
@@ -344,7 +345,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     }
     
     public AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {
-        return new FrameBlockSettingPartsMenu(id, inventory, blockEntity);
+        return new FrameBlockSettingPartsMenu(ModMenus.MACHINE_FRAME_SETTING_PARTS_MENU.get(), id, inventory, blockEntity);
     }
     
     // ========================================

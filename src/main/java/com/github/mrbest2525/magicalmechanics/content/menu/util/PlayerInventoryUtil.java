@@ -34,6 +34,15 @@ public class PlayerInventoryUtil {
     
     public static class PlayerInventory{
         private final List<InventorySlot> slotList = new ArrayList<>();
+        
+        public List<InventorySlot> getSlotList(){
+            return List.copyOf(slotList);
+        }
+        
+        public InventorySlot getSlot(int index) {
+            return slotList.get(index);
+        }
+        
         public PlayerInventory(float centerX, float centerY) {
             update(centerX, centerY);
         }

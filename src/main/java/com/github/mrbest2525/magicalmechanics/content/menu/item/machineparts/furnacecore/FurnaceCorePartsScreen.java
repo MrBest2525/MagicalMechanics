@@ -109,8 +109,6 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
             particlesList.forEach(particles -> particles.render(guiGraphics, Float.intBitsToFloat(data.get(1))));
             
         }
-        // TODO デバッグ用なため削除を忘れずに
-        guiGraphics.drawString(this.font, "温度: " + Float.intBitsToFloat(data.get(1)) + "℃", GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.5), 0xFFFFFFFF, true);
         
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(fireX), GUI_LAYOUT.getPointY(fireY), 0);
