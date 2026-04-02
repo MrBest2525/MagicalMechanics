@@ -23,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -36,8 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
-    
-    public final SettingPartsManager settingParts = new SettingPartsManager();
+    // TODO Save&LoadでSettingPartのデータが消える(changeDataの呼び忘れかも)
+    public final SettingPartsManager settingParts = new SettingPartsManager(this);
     
     private final Map<MachineFrameSlot, ItemStack> parts = new EnumMap<>(MachineFrameSlot.class);
     public CoreInstance coreInstance;
@@ -74,8 +73,6 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         for (MachineFrameSlot slot : MachineFrameSlot.values()) {
             parts.put(slot, ItemStack.EMPTY);
         }
-        // TODO 削除忘れずに
-        settingParts.addPart(new ItemStack(Items.GLASS));
     }
     
     public void setPart(MachineFrameSlot slot, ItemStack item) {
@@ -182,6 +179,8 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
             
             settingParts.getPostTickParts().forEach(settingPartsInstance -> settingPartsInstance.tick(level, pos, state, this));
         }
+        
+        settingParts.tick(level, pos, state);
         
         if (isChangeData) {
             setChangeData();
@@ -338,6 +337,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     }
     
     private void setChangeData() {
+        // TODO sendBlockUpdated()の呼び出し条件の厳格化(クライアントに伝えなければならないものだけに制限)
         if (level != null && !level.isClientSide) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }

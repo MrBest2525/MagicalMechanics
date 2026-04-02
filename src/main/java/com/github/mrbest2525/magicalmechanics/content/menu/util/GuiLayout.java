@@ -22,8 +22,8 @@ public class GuiLayout {
      * @param value 計算元Scale
      * @return 計算後Scale
      */
-    public double getScale(double value) {
-        if (value == 0.0) return 0.0;
+    public float getScale(double value) {
+        if (value == 0.0) return 0.0f;
         
         double scaleW = screenW / BASE_WIDTH;
         double scaleH = screenH / BASE_HEIGHT;
@@ -31,7 +31,7 @@ public class GuiLayout {
         // はみ出さないよう小さい方を採用
         double factor = Math.min(scaleW, scaleH);
         
-        return value * factor;
+        return (float) (value * factor);
     }
     
     /**

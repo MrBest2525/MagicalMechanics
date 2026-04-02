@@ -38,7 +38,11 @@ public class ModItems {
     // ==============================
     public static final DeferredItem<Item> TEST_SETTING_PARTS1 =
             ITEMS.register("test_setting_parts1", () -> new TestSettingPartsItem(new Item.Properties()));
-    
+    static {
+        for (int i = 0; i < 30; i++) {
+            ITEMS.register("test_setting_parts" + (i + 3), () -> new TestSettingPartsItem(new Item.Properties()));
+        }
+    }
     
     
     // MachineSideParts

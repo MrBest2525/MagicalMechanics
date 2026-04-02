@@ -21,6 +21,10 @@ public abstract class MMAbstractContainerMenu<T extends BlockEntity> extends Abs
         addContainerSlot();
     }
     
+    public T getBlockEntity() {
+        return blockEntity;
+    }
+    
     // プレイヤーのインベントリ（36枠）を並べるメソッド
     private void addPlayerInventory(Inventory playerInventory) {
         // 1. メインインベントリ (3段 × 9列)

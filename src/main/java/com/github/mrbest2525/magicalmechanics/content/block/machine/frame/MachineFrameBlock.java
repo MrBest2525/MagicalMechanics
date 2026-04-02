@@ -106,28 +106,61 @@ public class MachineFrameBlock extends TransparentBlock implements EntityBlock {
                         
                         // アイテムの block_entity_data コンポーネントに流し込む
                         drop.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
+                        
+                        frameBe.clearContent();
                     }
                 }
             }
             // 3. マユラント以外で掘った場合：地面にパーツをぶちまける
-            else {
+//            else {
+//                frameBe.onRemove();
+//                frameBe.settingParts.getItemStackList().forEach(itemStack -> {
+//                    if (!itemStack.isEmpty()) {
+//                        drops.add(itemStack);
+//                    }
+//                });
+//                for (ItemStack part : frameBe.getParts()) {
+//                    if (!part.isEmpty()) {
+//                        // getDropsの中で直接ドロップリストに追加
+//                        drops.add(part.copy());
+//                    }
+//                }
+//                // BlockEntity側の中身を空にする（onRemoveでの二重ドロップ防止）
+//                frameBe.clearContent();
+//            }
+        }
+        return drops;
+    }
+    
+    @Override
+    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof MachineFrameBlockEntity frameBe) {
                 frameBe.onRemove();
-                frameBe.settingParts.getItemStackList().forEach(itemStack -> {
-                    if (!itemStack.isEmpty()) {
-                        drops.add(itemStack);
+                frameBe.settingParts.getItemStackList().forEach(partItemStack -> {
+                    if (!partItemStack.isEmpty()) {
+                        int total = partItemStack.getCount();
+                        ItemStack template = partItemStack.getItemStack();
+                        while (total > 0) {
+                            int dropCount = Math.min(total, 64); // 最大64個、残りが少なければ残り全部
+                            ItemStack toDrop = template.copyWithCount(dropCount);
+                            Block.popResource(level, pos, toDrop);
+                            total -= dropCount;
+                        }
                     }
                 });
                 for (ItemStack part : frameBe.getParts()) {
                     if (!part.isEmpty()) {
                         // getDropsの中で直接ドロップリストに追加
-                        drops.add(part.copy());
+                        Block.popResource(level, pos, part);
                     }
                 }
                 // BlockEntity側の中身を空にする（onRemoveでの二重ドロップ防止）
                 frameBe.clearContent();
             }
         }
-        return drops;
+        super.onRemove(state, level, pos, newState, isMoving);
     }
     
     @Override
