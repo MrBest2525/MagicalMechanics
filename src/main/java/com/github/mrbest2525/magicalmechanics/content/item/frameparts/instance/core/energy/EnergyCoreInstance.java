@@ -2,10 +2,13 @@ package com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.
 
 import com.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.CoreInstance;
+import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.energycore.EnergyCorePartMenu;
 import com.github.mrbest2525.magicalmechanics.util.math.MMLong;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +20,11 @@ public class EnergyCoreInstance implements CoreInstance {
     public EnergyCoreInstance(EnergyCoreTier tier) {
         this.tier = tier;
         this.energy = new MMLong(tier.getDefaultEnergy());
+    }
+    
+    @Override
+    public AbstractContainerMenu getMenu(int id, Inventory inventory, MachineFrameBlockEntity blockEntity) {
+        return new EnergyCorePartMenu(id, inventory, blockEntity);
     }
     
     @Override
@@ -55,6 +63,11 @@ public class EnergyCoreInstance implements CoreInstance {
     @Override
     public boolean supportsEnergy() {
         return true;
+    }
+    
+    @Override
+    public boolean supportsEnergyUnlimited() {
+        return tier.getUnlimitedEnergy();
     }
     
     @Override

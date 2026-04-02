@@ -26,7 +26,15 @@ public interface CoreInstance {
     /**
      * このコアがエネルギーを扱えるかどうか
      */
-    default boolean supportsEnergy() {return false;
+    default boolean supportsEnergy() {
+        return false;
+    }
+    
+    /**
+     * Unlimitedか
+     */
+    default boolean supportsEnergyUnlimited() {
+        return false;
     }
     
     /**
@@ -47,7 +55,8 @@ public interface CoreInstance {
      * getEnergyで消費
      */
     default boolean consumeEnergy(MMLong energy) {
-        return false;}
+        return false;
+    }
     
     default boolean supportsThermal() {return false;}
     default float getThermal() {return 0;}

@@ -3,6 +3,7 @@ package com.github.mrbest2525.magicalmechanics.content.menu;
 import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
 import com.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockMenu;
 import com.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsMenu;
+import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.energycore.EnergyCorePartMenu;
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsMenu;
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsMenu;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +27,9 @@ public class ModMenus {
             MENUS.register("furnace_core_parts_menu", () -> IMenuTypeExtension.create(FurnaceCorePartsMenu::new));
     public static final Supplier<MenuType<FurnaceSidePartsMenu>> FURNACE_SIDE_PARTS_MENU =
             MENUS.register("furnace_side_parts_menu", () -> IMenuTypeExtension.create(FurnaceSidePartsMenu::new));
+    
+    public static final Supplier<MenuType<EnergyCorePartMenu>> ENERGY_CORE_PART_MENU =
+            MENUS.register("energy_core_part_menu", () -> IMenuTypeExtension.create(EnergyCorePartMenu::new));
     
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

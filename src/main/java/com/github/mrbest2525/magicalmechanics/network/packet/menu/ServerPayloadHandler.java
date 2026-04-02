@@ -23,7 +23,7 @@ public class ServerPayloadHandler {
                 switch (payload.partId()) {
                     case 0:
                         if (machineFrameBlockEntity.getPart(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
-                            var instance = frameSide.createInstance();
+                            var instance = frameSide.createInstance(machineFrameBlockEntity);
                             var menu = instance.getMenu(0, player.getInventory(), machineFrameBlockEntity);
                             
                             if (menu != null) {
@@ -36,7 +36,7 @@ public class ServerPayloadHandler {
                         break;
                     case 1:
                         if (machineFrameBlockEntity.getPart(MachineFrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
-                            var instance = frameCore.createInstance();
+                            var instance = frameCore.createInstance(machineFrameBlockEntity);
                             var menu = instance.getMenu(0, player.getInventory(), machineFrameBlockEntity);
                             
                             if (menu != null) {

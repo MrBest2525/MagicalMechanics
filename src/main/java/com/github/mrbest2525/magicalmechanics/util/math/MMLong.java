@@ -205,6 +205,42 @@ public class MMLong {
     }
     
     // ==========================================
+    // ⚖️ 最小値 (Minimum)
+    // ==========================================
+    
+    /**
+     * staticメソッド: 2つの MMLong のうち小さい方を返す
+     */
+    public static MMLong min(MMLong a, MMLong b) {
+        return a.atLeast(b) ? b : a;
+    }
+    
+    /**
+     * staticメソッド: 2つの MMLong のうち小さい方の「複製」を返す
+     */
+    public static MMLong minCopy(MMLong a, MMLong b) {
+        return a.atLeast(b) ? b.copy() : a.copy();
+    }
+    
+    // ==========================================
+    // ⚖️ 最大値 (Maximum)
+    // ==========================================
+    
+    /**
+     * staticメソッド: 2つの MMLong のうち大きい方を返す
+     */
+    public static MMLong max(MMLong a, MMLong b) {
+        return a.atLeast(b) ? a : b;
+    }
+    
+    /**
+     * staticメソッド: 2つの MMLong のうち大きい方の「複製」を返す
+     */
+    public static MMLong maxCopy(MMLong a, MMLong b) {
+        return a.atLeast(b) ? a.copy() : b.copy();
+    }
+    
+    // ==========================================
     // 💾 保存 (NBT Serialization)
     // ==========================================
     public CompoundTag save() {

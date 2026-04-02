@@ -143,13 +143,13 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         
         // CoreのLoad
         if (parts.get(MachineFrameSlot.CORE).getItem() instanceof FrameCore frameCore) {
-            coreInstance = frameCore.createInstance();
+            coreInstance = frameCore.createInstance(this);
             CompoundTag coreTag = partsData.getCompound("CoreData");
             coreInstance.load(coreTag, provider);
         }
         // SideのLoad
         if (parts.get(MachineFrameSlot.SIDE).getItem() instanceof FrameSide frameSide) {
-            sideInstance = frameSide.createInstance();
+            sideInstance = frameSide.createInstance(this);
             CompoundTag sideTag = partsData.getCompound("SideData");
             sideInstance.load(sideTag, provider);
         }
@@ -212,13 +212,13 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
         switch (slot) {
             case CORE:
                 if (parts.get(slot).getItem() instanceof FrameCore frameCore) {
-                    coreInstance = frameCore.createInstance();
+                    coreInstance = frameCore.createInstance(this);
                     coreInstance.onAttached(this);
                 }
                 break;
             case SIDE:
                 if (parts.get(slot).getItem() instanceof FrameSide frameSide) {
-                    sideInstance = frameSide.createInstance();
+                    sideInstance = frameSide.createInstance(this);
                     sideInstance.onAttached(this);
                 }
                 break;

@@ -12,6 +12,7 @@ import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantItem
 import com.github.mrbest2525.magicalmechanics.content.menu.ModMenus;
 import com.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockScreen;
 import com.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsScreen;
+import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.energycore.EnergyCorePartScreen;
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.furnacecore.FurnaceCorePartsScreen;
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.furnaceside.FurnaceSidePartsScreen;
 import net.minecraft.client.Minecraft;
@@ -42,6 +43,7 @@ public class ClientSetup {
         event.register(ModMenus.MACHINE_FRAME_SETTING_PARTS_MENU.get(), FrameBlockSettingPartsScreen::new);
         event.register(ModMenus.FURNACE_CORE_PARTS_MENU.get(), FurnaceCorePartsScreen::new);
         event.register(ModMenus.FURNACE_SIDE_PARTS_MENU.get(), FurnaceSidePartsScreen::new);
+        event.register(ModMenus.ENERGY_CORE_PART_MENU.get(), EnergyCorePartScreen::new);
     }
     
     @SubscribeEvent

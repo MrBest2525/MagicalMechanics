@@ -1,5 +1,6 @@
 package com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items;
 
+import com.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.FrameCore;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.core.energy.EnergyCoreInstance;
@@ -15,7 +16,7 @@ public class EnergyCoreItem extends Item implements FrameCore {
     }
     
     @Override
-    public CoreInstance createInstance() {
+    public CoreInstance createInstance(MachineFrameBlockEntity blockEntity) {
         return new EnergyCoreInstance(tier);
     }
 }

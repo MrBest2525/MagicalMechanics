@@ -32,7 +32,7 @@ public class TestSettingPartsItem extends Item implements SettingParts {
         String text = "ここに非常に長い説明文が入ります...\n.\n..\n...\n....\n.....\n......\n.......\n........\n.........\n..........\n...........\n............\n.............\n..............\n...............\n................\n.................\n..................\n....................";
         var lines = font.split(Component.literal(text), width);
         for (var line : lines) {
-            guiGraphics.drawString(font, line, 0, currY, 0xAAAAAAAA, false);
+            guiGraphics.drawString(font, line, 0, currY, 0xFFFFFFFF, false);
             currY += 10;
         }
         

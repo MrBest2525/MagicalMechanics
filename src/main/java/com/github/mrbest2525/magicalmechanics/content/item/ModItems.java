@@ -2,10 +2,8 @@ package com.github.mrbest2525.magicalmechanics.content.item;
 
 import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.core.energy.EnergyCoreTiers;
-import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.EnergyCoreItem;
-import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.FurnaceCoreItem;
-import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.FurnaceSideItem;
-import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.TestSettingPartsItem;
+import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.*;
+import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.side.energy.WirelessEnergySideTiers;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantTiers;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchData;
@@ -51,9 +49,13 @@ public class ModItems {
             () -> new FurnaceSideItem(new Item.Properties())
     );
     
+    public static final DeferredItem<Item> UNLIMITED_WIRELESS_ENERGY_INTERFACE =
+            ITEMS.register("unlimited_wireless_energy_interface", () -> new WirelessEnergyInterfaceSideItem(new Item.Properties(), WirelessEnergySideTiers.UNLIMITED));
+    
     public static final Map<String, DeferredItem<Item>> MACHINE_SIDE_PARTS = new HashMap<>();
     static {
         MACHINE_SIDE_PARTS.put(FURNACE_SIDE.getRegisteredName(), FURNACE_SIDE);
+        MACHINE_SIDE_PARTS.put(UNLIMITED_WIRELESS_ENERGY_INTERFACE.getRegisteredName(), UNLIMITED_WIRELESS_ENERGY_INTERFACE);
     }
     public static final DeferredItem<Item> TEST_SETTING_PARTS2 =
             ITEMS.register("test_setting_parts2", () -> new TestSettingPartsItem(new Item.Properties()));
