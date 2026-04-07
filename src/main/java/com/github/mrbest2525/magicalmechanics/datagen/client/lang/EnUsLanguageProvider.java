@@ -1,5 +1,6 @@
 package com.github.mrbest2525.magicalmechanics.datagen.client.lang;
 
+import com.github.mrbest2525.magicalmechanics.content.item.ModItems;
 import com.github.mrbest2525.magicalmechanics.util.MMLang;
 import net.minecraft.data.PackOutput;
 
@@ -54,6 +55,9 @@ public class EnUsLanguageProvider extends AbstractModLanguageProvider {
         
         add("tag.item.magicalmechanics.frame_core_parts", "Core Parts");
         add("tag.item.magicalmechanics.frame_side_parts", "Side Parts");
+        
+        
+        add(ModItems.LINKED_STAFF.get(), "MF Linked Staff");
         
         
         // Item, Blockを使った登録（もし ModItems に登録済みなら）

@@ -81,10 +81,20 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         
         add(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS, "マシンパーツ");
         add(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES, "マシンフレーム");
-        
-        add(ModBlockItems.BASE_FRAME_ITEM.get(), "基礎フレーム");
+        add(MMLang.ItemGroup.MagicalMechanics.MACHINE_BLOCKS, "マシンブロック");
         
         add(MMLang.Tag.Item.MagicalMechanics.FRAME_CORE_PARTS, "コアパーツ");
         add(MMLang.Tag.Item.MagicalMechanics.FRAME_SIDE_PARTS, "サイドパーツ");
+        
+        add(ModBlockItems.BASE_FRAME_ITEM.get(), "基礎フレーム");
+        add(ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM.get(), "エネルギー インプット アダプター");
+        add(ModBlockItems.FE_OUTPUT_ADAPTER_BLOCK_ITEM.get(), "エネルギー アウトプット アダプター");
+        
+        add(ModItems.NORMAL_ENERGY_CORE.get(), "ノーマル エネルギー コア");
+        add(ModItems.ADVANCED_ENERGY_CORE.get(), "アドバンスド エネルギー コア");
+        add(ModItems.UNLIMITED_ENERGY_CORE.get(), "アンリミテッド エネルギー コア");
+        add(ModItems.UNLIMITED_WIRELESS_ENERGY_INTERFACE.get(), "アンリミテッド ワイアレス エネルギー インターフェース");
+        
+        add(ModItems.LINKED_STAFF.get(), "MFリンク");
     }
 }
