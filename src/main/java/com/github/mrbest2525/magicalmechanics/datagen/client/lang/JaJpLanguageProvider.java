@@ -95,6 +95,6 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(ModItems.UNLIMITED_ENERGY_CORE.get(), "アンリミテッド エネルギー コア");
         add(ModItems.UNLIMITED_WIRELESS_ENERGY_INTERFACE.get(), "アンリミテッド ワイアレス エネルギー インターフェース");
         
-        add(ModItems.LINKED_STAFF.get(), "MFリンク");
+        add(ModItems.LINKED_STAFF.get(), "MFリンクワンド");
     }
 }
