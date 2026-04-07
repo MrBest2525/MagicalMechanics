@@ -23,6 +23,9 @@ public class BlockDropLootProvider extends BlockLootSubProvider {
         
         this.dropSelf(ModBlocks.BASE_FRAME.get());
         ModBlocks.MACHINE_FRAMES.values().forEach((block) -> this.dropSelf(block.get()));
+        
+        this.dropSelf(ModBlocks.FE_INPUT_ADAPTER_BLOCK.get());
+        this.dropSelf(ModBlocks.FE_OUTPUT_ADAPTER_BLOCK.get());
     }
     
     @Override

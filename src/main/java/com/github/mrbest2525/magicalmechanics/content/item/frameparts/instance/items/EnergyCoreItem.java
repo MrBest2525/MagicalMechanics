@@ -19,4 +19,8 @@ public class EnergyCoreItem extends Item implements FrameCore {
     public CoreInstance createInstance(MachineFrameBlockEntity blockEntity) {
         return new EnergyCoreInstance(tier);
     }
+    
+    public EnergyCoreTier getTier() {
+        return tier;
+    }
 }

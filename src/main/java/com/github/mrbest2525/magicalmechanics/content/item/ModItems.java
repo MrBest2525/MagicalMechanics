@@ -6,6 +6,7 @@ import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.i
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.side.energy.WirelessEnergySideTiers;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantTiers;
+import com.github.mrbest2525.magicalmechanics.content.item.mfwirelesslinker.MFLinkedStaffItem;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchData;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchMode;
@@ -29,6 +30,8 @@ public class ModItems {
     );
     
     public static final DeferredItem<Item> UNLIMITED_ENERGY_CORE = ITEMS.register("unlimited_energy_core", () -> new EnergyCoreItem(new Item.Properties(), EnergyCoreTiers.UNLIMITED));
+    public static final DeferredItem<Item> NORMAL_ENERGY_CORE = ITEMS.register("normal_energy_core", () -> new EnergyCoreItem(new Item.Properties(), EnergyCoreTiers.NORMAL));
+    public static final DeferredItem<Item> ADVANCED_ENERGY_CORE = ITEMS.register("advanced_energy_core", () -> new EnergyCoreItem(new Item.Properties(), EnergyCoreTiers.ADVANCED));
     
     public static final Map<String, DeferredItem<Item>> MACHINE_CORE_PARTS = new HashMap<>();
     // ==============================
@@ -63,6 +66,8 @@ public class ModItems {
     static {
         MACHINE_CORE_PARTS.put(FURNACE_CORE.getRegisteredName(), FURNACE_CORE);
         MACHINE_CORE_PARTS.put(UNLIMITED_ENERGY_CORE.getRegisteredName(), UNLIMITED_ENERGY_CORE);
+        MACHINE_CORE_PARTS.put(NORMAL_ENERGY_CORE.getRegisteredName(), NORMAL_ENERGY_CORE);
+        MACHINE_CORE_PARTS.put(ADVANCED_ENERGY_CORE.getRegisteredName(), ADVANCED_ENERGY_CORE);
     }
     
     
@@ -97,6 +102,11 @@ public class ModItems {
         MAYURANT_ITEMS.put(MayurantTiers.DIAMOND.getId(), DIAMOND_MAYURANT);
         MAYURANT_ITEMS.put(MayurantTiers.NETHERITE.getId(), NETHERITE_MAYURANT);
     }
+    
+    public static final DeferredItem<Item> LINKED_STAFF = ITEMS.register("linked_staff", () -> new MFLinkedStaffItem(
+            new Item.Properties()
+                    .stacksTo(1)
+    ));
     
     
     

@@ -1,11 +1,15 @@
 package com.github.mrbest2525.magicalmechanics.content.block.machine.frame;
 
+import com.github.mrbest2525.magicalmechanics.api.SourceType;
 import com.github.mrbest2525.magicalmechanics.content.block.ModBlockEntities;
+import com.github.mrbest2525.magicalmechanics.content.block.mf.wireless.IWirelessLinkableSource;
+import com.github.mrbest2525.magicalmechanics.content.block.mf.wireless.IWirelessLinkableTarget;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.CoreInstance;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.FrameCore;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.FrameSide;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SideInstance;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.core.FurnaceCoreInstance;
+import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.side.energy.IWirelessMFProvider;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchInteractable;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbest2525.magicalmechanics.content.menu.ModMenus;
@@ -34,7 +38,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable {
+public class MachineFrameBlockEntity extends BlockEntity implements WrenchInteractable, IWirelessLinkableSource, IWirelessLinkableTarget {
     // TODO Save&LoadでSettingPartのデータが消える(changeDataの呼び忘れかも)
     public final SettingPartsManager settingParts = new SettingPartsManager(this);
     
@@ -86,6 +90,14 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     
     public List<ItemStack> getParts() {
         return List.copyOf(parts.values());
+    }
+    
+    public CoreInstance getCoreInstance() {
+        return coreInstance;
+    }
+    
+    public SideInstance getSideInstance() {
+        return sideInstance;
     }
     
     @Override
@@ -353,5 +365,32 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     // ========================================
     public SettingPartsManager getSettingPartsManager() {
         return this.settingParts;
+    }
+    
+    
+    // ========================================
+    // Linker
+    // ========================================
+    @Override
+    public boolean canAcceptLinkSource(SourceType type, Player player) {
+        return type == SourceType.MagicalFlux &&
+                sideInstance instanceof IWirelessMFProvider provider;
+    }
+    
+    @Override
+    public BlockPos getSourcePos(SourceType type) {
+        return this.worldPosition;
+    }
+    
+    @Override
+    public boolean canAcceptLinkTarget(SourceType type, BlockPos sourcePos, Player player) {
+        return type == SourceType.MagicalFlux && settingParts.getInstanceList().stream()
+                .anyMatch(instance -> instance.canAcceptTarget(this, type, sourcePos, player));
+    }
+    
+    @Override
+    public void setTargetLink(SourceType type, BlockPos pos) {
+        settingParts.getInstanceList().forEach(instance -> instance.onLinkEstablished(this, type, pos));
+        setChangeData();
     }
 }

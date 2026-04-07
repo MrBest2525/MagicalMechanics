@@ -1,8 +1,10 @@
 package com.github.mrbest2525.magicalmechanics.content.item;
 
 import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
+import com.github.mrbest2525.magicalmechanics.api.SourceType;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchData;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -24,6 +26,20 @@ public class ModItemDataComponents {
             COMPONENTS.register("magic_power", () -> DataComponentType.<Integer>builder()
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.INT)
+                    .build());
+    
+    // Linkerのリンク先情報保存
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINKED_BLOCK_POS =
+            COMPONENTS.register("linked_block_pos", () -> DataComponentType.<BlockPos>builder()
+                    .persistent(BlockPos.CODEC)
+                    .networkSynchronized(BlockPos.STREAM_CODEC)
+                    .build());
+    
+    // LinkerのSourceTypeの保持
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SourceType>> LINKED_SOURCE_TYPE =
+            COMPONENTS.register("linked_source_type", () -> DataComponentType.<SourceType>builder()
+                    .persistent(SourceType.CODEC)
+                    .networkSynchronized(SourceType.STREAM_CODEC)
                     .build());
     
     public static void register(IEventBus bus) {

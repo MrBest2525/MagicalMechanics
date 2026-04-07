@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public interface CoreInstance {
-    MMLong MMLONG_ZERO = new MMLong(0);
     
     void save(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
     void load(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
@@ -38,24 +37,31 @@ public interface CoreInstance {
     }
     
     /**
+     * 最大蓄電量
+     */
+    default MMLong getMaxEnergy(MMLong buffer) {
+        return buffer.setZero();
+    }
+    
+    /**
      * エネルギーを取得
      */
-    default MMLong getEnergy() {
-        return MMLONG_ZERO;
+    default MMLong getEnergy(MMLong buffer) {
+        return buffer.setZero();
     }
     
     /**
      * エネルギーを増やす
      */
-    default boolean addEnergy(MMLong energy) {
-        return false;
+    default MMLong addEnergy(MMLong buffer, MMLong energy, boolean simulate) {
+        return buffer.setZero();
     }
     
     /**
      * getEnergyで消費
      */
-    default boolean consumeEnergy(MMLong energy) {
-        return false;
+    default MMLong consumeEnergy(MMLong buffer, MMLong energy, boolean simulate) {
+        return buffer.setZero();
     }
     
     default boolean supportsThermal() {return false;}

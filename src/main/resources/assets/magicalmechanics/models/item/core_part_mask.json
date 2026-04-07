@@ -1,0 +1,31 @@
+{
+  "parent": "magicalmechanics:item/core_part",
+  "textures": {
+  },
+  "elements": [
+    {
+      "from": [5, 5, 5],
+      "to": [11, 11, 11],
+      "faces": {
+        "north": { "texture": "#north" },
+        "south": { "texture": "#south" },
+        "east" : { "texture": "#east"  },
+        "west" : { "texture": "#west"  },
+        "up"   : { "texture": "#up"    },
+        "down" : { "texture": "#down"  }
+      }
+    },
+    {
+      "from": [4.99, 4.99, 4.99],
+      "to": [11.01, 11.01, 11.01],
+      "faces": {
+        "north": { "texture": "#mask_north", "tintindex": 0 },
+        "south": { "texture": "#mask_south", "tintindex": 0 },
+        "east":  { "texture": "#mask_east" , "tintindex": 0 },
+        "west":  { "texture": "#mask_west" , "tintindex": 0 },
+        "up":    { "texture": "#mask_up"   , "tintindex": 0 },
+        "down":  { "texture": "#mask_down" , "tintindex": 0 }
+      }
+    }
+  ]
+}

@@ -3,6 +3,8 @@ package com.github.mrbest2525.magicalmechanics.network.packet;
 import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.OpenFramePartPayload;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.ServerPayloadHandler;
+import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.MFCorePart.MFCorePartMenuHandler;
+import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.MFCorePart.MFCorePartMenuSyncPayload;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.DeselectPartPayload;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.MachineFrameSettingPartPayloadHandler;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.SelectPartPayload;
@@ -36,22 +38,16 @@ public class ModPackets {
                 MachineFrameSettingPartPayloadHandler::handleDeselect
         );
         
-//        registrar.playToClient(
-//                DeselectPartPayload.TYPE,
-//                DeselectPartPayload.CODEC,
-//                MachineFrameSettingPartPayloadHandler::handleDeselect
-//        );
-        
         registrar.playBidirectional(
                 SelectPartPayload.TYPE,
                 SelectPartPayload.CODEC,
                 MachineFrameSettingPartPayloadHandler::handleSelect
         );
         
-//        registrar.playToClient(
-//                SelectPartPayload.TYPE,
-//                SelectPartPayload.CODEC,
-//                MachineFrameSettingPartPayloadHandler::handleSelect
-//        );
+        registrar.playToClient(
+                MFCorePartMenuSyncPayload.TYPE,
+                MFCorePartMenuSyncPayload.CODEC,
+                MFCorePartMenuHandler::handleEnergyCoreSync
+        );
     }
 }

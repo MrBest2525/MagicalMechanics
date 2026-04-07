@@ -22,6 +22,7 @@ public class MMLang {
             
             public static final String MACHINE_PARTS = join(BASE, "machine_parts");
             public static final String MACHINE_FRAMES = join(BASE, "machine_frames");
+            public static final String MACHINE_BLOCKS = join(BASE, "machine_blocks");
             public static final String TOOLS = join(BASE, "tools");
         }
     }
@@ -36,6 +37,15 @@ public class MMLang {
                 private static final String BASE = join(Actionbar.BASE, "wrench");
                 
                 public static final String MODE_CHANGE = join(BASE, "modeChange");
+            }
+            
+            public static class Linker {
+                private static final String BASE = join(Actionbar.BASE, "linker");
+                
+                public static final String SET_BLOCK_POS = join(BASE, "set_block_pos");
+                public static final String LINK_SUCCESSFUL = join(BASE, "link_successful");
+                public static final String BLOCK_POS = join(BASE, "block_pos");
+                public static final String ACCESS_FAILED = join(BASE, "access_failed");
             }
         }
     }
@@ -74,6 +84,21 @@ public class MMLang {
                     public static final String MAGIC_POWER_STABLE = join(BASE, "magic_power_stable");
                     public static final String MAGIC_POWER_VIBRANT = join(BASE, "magic_power_vibrant");
                     public static final String MAGIC_POWER_FULL = join(BASE, "magic_power_full");
+                }
+                
+                public static class Wrench {
+                    private static final String BASE = join(MagicalMechanics.BASE, "wrench");
+                    
+                    public static final String MODE = join(BASE, "mode");
+                    public static final String CORE = join(BASE, "core");
+                    public static final String SIDE = join(BASE, "side");
+                }
+                
+                public static class MFLinkedStaff {
+                    private static final String BASE = join(MagicalMechanics.BASE, "mf_linked_staff");
+                    
+                    public static final String LINKED = join(BASE, "linked");
+                    public static final String BLOCK_POS = join(BASE, "block_pos");
                 }
                 
                 public static class MachineFrame {

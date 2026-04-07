@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "magicalmechanics:fe_output_adapter"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "magicalmechanics:blocks/fe_output_adapter_block"
+}

@@ -44,7 +44,7 @@ public class FrameBlockSettingPartsMenu extends MMAbstractContainerMenu<MachineF
     
     // B. サーバー側（BEから直接呼ばれる） & Aからの転送先
     public FrameBlockSettingPartsMenu(int id, Inventory playerInv, MachineFrameBlockEntity be) {
-        super(ModMenus.MACHINE_FRAME_SETTING_PARTS_MENU.get(), id, playerInv, be);
+        this(ModMenus.MACHINE_FRAME_SETTING_PARTS_MENU.get(), id, playerInv, be);
     }
     
     @Override

@@ -17,6 +17,8 @@ public class EnergyCoreInstance implements CoreInstance {
     private final EnergyCoreTier tier;
     private final MMLong energy;
     
+    private final MMLong workBuffer = new MMLong();
+    
     public EnergyCoreInstance(EnergyCoreTier tier) {
         this.tier = tier;
         this.energy = new MMLong(tier.getDefaultEnergy());
@@ -58,7 +60,6 @@ public class EnergyCoreInstance implements CoreInstance {
     
     }
     
-    // TODO ここから下Energyの実装必須
     
     @Override
     public boolean supportsEnergy() {
@@ -71,25 +72,80 @@ public class EnergyCoreInstance implements CoreInstance {
     }
     
     @Override
-    public MMLong getEnergy() {
-        return energy.copy();
+    public MMLong getEnergy(MMLong buffer) {
+        return buffer.set(energy);
     }
     
     @Override
-    public boolean addEnergy(MMLong energy) {
-        this.energy.add(energy);
-        return true;
-    }
-    
-    @Override
-    public boolean consumeEnergy(MMLong energy) {
-        // 1. まず「足りるか」だけをチェック
-        if (this.energy.atLeast(energy)) {
-            // 2. 足りる場合のみ、実際に減算して true を返す
-            this.energy.sub(energy);
-            return true;
+    public MMLong addEnergy(MMLong resultBuffer, MMLong requestAmount, boolean simulate) {
+        // 0. バリデーション
+        if (requestAmount.isZero()) {
+            resultBuffer.setZero();
+            return resultBuffer;
         }
-        // 3. 足りなければ何もしない（falseを返すだけ）
-        return false;
+        
+        // 1. 【受け取り制限】の判定
+        if (tier.getUnlimitedInput()) {
+            // 受け取り無制限なら、要求量をそのまま採用
+            resultBuffer.set(requestAmount);
+        } else {
+            // 制限ありなら、要求量と Tier の上限のうち小さい方を採用
+            MMLong.minTo(requestAmount, tier.getMaxInput(), resultBuffer);
+        }
+        
+        // 2. 【最大量制限】の判定
+        if (!tier.getUnlimitedEnergy()) {
+            // 最大量に制限がある（有限）場合のみ、空き容量による絞り込みを行う
+            // workBuffer = Max - Current
+            workBuffer.set(tier.getMaxEnergy());
+            workBuffer.sub(this.energy);
+            
+            // 現在の resultBuffer（受け入れようとしている量）を空き容量でクランプ
+            MMLong.minTo(resultBuffer, workBuffer, resultBuffer);
+        }
+        // ※ getUnlimitedEnergy() が true なら、ここでの絞り込みをスルーして無限に溜まる
+        
+        // 3. 実行（シミュレーションでなければ内部数値に加算）
+        if (!simulate && !resultBuffer.isZero()) {
+            this.energy.add(resultBuffer);
+        }
+        return resultBuffer;
+    }
+    
+    @Override
+    public MMLong consumeEnergy(MMLong resultBuffer, MMLong requestAmount, boolean simulate) {
+        // 0. バリデーション
+        if (requestAmount.isZero()) {
+            resultBuffer.setZero();
+            return resultBuffer;
+        }
+        
+        // 1. 【取り出し制限】の判定
+        if (tier.getUnlimitedExtract()) {
+            // 取り出し無制限なら、要求量をそのまま採用
+            resultBuffer.set(requestAmount);
+        } else {
+            // 制限ありなら、要求量と Tier の上限のうち小さい方を採用
+            MMLong.minTo(requestAmount, tier.getMaxExtract(), resultBuffer);
+        }
+        
+        // 2. 【最大量（残量）制限】の判定
+        if (!tier.getUnlimitedEnergy()) {
+            // 最大量に制限がある（有限）場合、持っている分（this.energy）までしか出せない
+            MMLong.minTo(resultBuffer, this.energy, resultBuffer);
+        }
+        // ※ getUnlimitedEnergy() が true なら、残量に関わらず「無限の魔力」として要求分を出す
+        
+        // 3. 実行（シミュレーションでなければ内部数値から減算）
+        if (!simulate && !resultBuffer.isZero()) {
+            // 負の数にならないようにガードして減算
+            if (this.energy.atLeast(resultBuffer)) {
+                this.energy.sub(resultBuffer);
+            } else {
+                // 残量以上に引き出した（Unlimitedモード時など）場合は 0 で止める
+                this.energy.setZero();
+            }
+        }
+        return resultBuffer;
     }
 }

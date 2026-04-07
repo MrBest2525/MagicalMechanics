@@ -63,8 +63,17 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CONTENTS, "組み込まれたパーツ");
         add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.CORE_SLOT, "コア: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.MachineFrame.SIDE_SLOT, "サイド: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.MODE, "Mode: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.CORE, "CORE");
+        add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.SIDE, "SIDE");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.LINKED, "リンクするブロック座標: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.BLOCK_POS, "[X=%s Y=%s Z=%s]");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "レンチモード: %s");
+        add(MMLang.Msg.Actionbar.Linker.BLOCK_POS, "[X=%s Y=%s Z=%s]");
+        add(MMLang.Msg.Actionbar.Linker.LINK_SUCCESSFUL, "リンク完了: %s");
+        add(MMLang.Msg.Actionbar.Linker.SET_BLOCK_POS, "座標を記録: %s");
+        add(MMLang.Msg.Actionbar.Linker.ACCESS_FAILED, "接続に失敗しました！");
         
         add(ModBlocks.MACHINE_FRAME.get(), "マシンフレーム");
         add(ModItems.FURNACE_CORE.get(), "ファーネスコア");

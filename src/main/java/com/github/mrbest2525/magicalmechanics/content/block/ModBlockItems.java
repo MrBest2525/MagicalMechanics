@@ -24,37 +24,32 @@ public class ModBlockItems {
             BLOCK_ITEMS.register("machine_frame", () -> new MachineFrameBlockItem(ModBlocks.MACHINE_FRAME.get(), MachineFrameTiers.IRON));
     
     public static final Map<String, DeferredItem<BlockItem>> MACHINE_FRAME_BLOCK_ITEMS = new HashMap<>();
-//    static {
-//        ModBlocks.MACHINE_FRAMES.forEach((id, deferredBlock) -> BLOCK_ITEMS.registerRenderer(id, () -> {
-//            Block block = deferredBlock.getRenderer();
-//
-//            IMachineFrameTier tier = (deferredBlock.getRenderer() instanceof MachineFrameBlock machineFrameBlock)
-//                    ? machineFrameBlock.getMachineFrameTier()
-//                    : MachineFrameTiers.IRON;
-//
-//            return new MachineFrameBlockItem(block, tier);
-//        }));
-//    }
-static {
-    for (MachineFrameTiers tier : MachineFrameTiers.values()) {
-        String id = tier.getMachineFrameId();
-        
-        // アイテムの登録
-        DeferredItem<BlockItem> registeredItem = BLOCK_ITEMS.register(id, () -> {
-            // ここで ModBlocks から対応するブロックを getRenderer() する。
-            // 実際に getRenderer() が呼ばれるのはレジストリが動く「後」なので安全。
-            Block block = ModBlocks.MACHINE_FRAMES.get(id).get();
+    static {
+        for (MachineFrameTiers tier : MachineFrameTiers.values()) {
+            String id = tier.getMachineFrameId();
             
-            return new MachineFrameBlockItem(
-                    block,
-                    tier
-            );
-        });
-        
-        // Mapに入れておく（クリエタブなどで使用）
-        MACHINE_FRAME_BLOCK_ITEMS.put(id, registeredItem);
+            // アイテムの登録
+            DeferredItem<BlockItem> registeredItem = BLOCK_ITEMS.register(id, () -> {
+                // ここで ModBlocks から対応するブロックを getRenderer() する。
+                // 実際に getRenderer() が呼ばれるのはレジストリが動く「後」なので安全。
+                Block block = ModBlocks.MACHINE_FRAMES.get(id).get();
+                
+                return new MachineFrameBlockItem(
+                        block,
+                        tier
+                );
+            });
+            
+            // Mapに入れておく（クリエタブなどで使用）
+            MACHINE_FRAME_BLOCK_ITEMS.put(id, registeredItem);
+        }
     }
-}
+    
+    public static final DeferredItem<BlockItem> FE_INPUT_ADAPTER_BLOCK_ITEM =
+            BLOCK_ITEMS.register("fe_input_adapter", () -> new BlockItem(ModBlocks.FE_INPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
+    
+    public static final DeferredItem<BlockItem> FE_OUTPUT_ADAPTER_BLOCK_ITEM =
+            BLOCK_ITEMS.register("fe_output_adapter", () -> new BlockItem(ModBlocks.FE_OUTPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
     
     private ModBlockItems() {}
     

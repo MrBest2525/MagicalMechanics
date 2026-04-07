@@ -51,5 +51,10 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         
         // マユラントはつるはしを継承する
         this.tag(MINEABLE_WITH_MAYURANT).addTag(BlockTags.MINEABLE_WITH_PICKAXE);
+        
+        // つるはしで掘れるものに追加する
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(ModBlocks.FE_INPUT_ADAPTER_BLOCK.get())
+                .add(ModBlocks.FE_OUTPUT_ADAPTER_BLOCK.get());
     }
 }

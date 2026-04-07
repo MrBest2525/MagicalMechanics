@@ -25,7 +25,7 @@ public class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINES_TAB =
             CREATIVE_MODE_TABS.register("machine_parts_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_PARTS))
-                    .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.STONE.getMachineFrameId()).get()))
+                    .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.IRON.getMachineFrameId()).get()))
                     .displayItems((itemDisplayParameters, output) -> {
                         for (DeferredItem<Item> item : ModItems.MACHINE_CORE_PARTS.values()) {
                             output.accept(item.get());
@@ -36,6 +36,7 @@ public class ModCreativeModeTabs {
                     })
                     .build());
     
+    // ツールタブ
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TOOLS_TAB =
             CREATIVE_MODE_TABS.register("tools_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.TOOLS))
@@ -56,13 +57,15 @@ public class ModCreativeModeTabs {
                                 output.accept(fullMayurant);
                             }
                         }
+                        
+                        output.accept(new ItemStack(ModItems.LINKED_STAFF.get()));
                     }))
                     .build());
     
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINE_FRAMES_TAB =
             CREATIVE_MODE_TABS.register("machine_frames_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_FRAMES))
-                    .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.STONE.getMachineFrameId()).get()))
+                    .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.WOOD.getMachineFrameId()).get()))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModBlockItems.BASE_FRAME_ITEM);
                         
@@ -76,6 +79,24 @@ public class ModCreativeModeTabs {
                     })
                     .build());
     
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINE_BLOCKS_TAB =
+            CREATIVE_MODE_TABS.register("machine_blocks_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable(MMLang.ItemGroup.MagicalMechanics.MACHINE_BLOCKS))
+                    .icon(() -> new ItemStack(ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(MachineFrameTiers.STONE.getMachineFrameId()).get()))
+                    .displayItems((itemDisplayParameters, output) -> {
+                        
+                        // MachineFrames
+                        for (MachineFrameTiers tier : MachineFrameTiers.values()) {
+                            var itemHolder = ModBlockItems.MACHINE_FRAME_BLOCK_ITEMS.get(tier.getMachineFrameId());
+                            if (itemHolder != null) {
+                                output.accept(itemHolder.get());
+                            }
+                        }
+                        
+                        output.accept(ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM);
+                        output.accept(ModBlockItems.FE_OUTPUT_ADAPTER_BLOCK_ITEM);
+                    })
+                    .build());
     
     private ModCreativeModeTabs() {}
     

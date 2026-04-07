@@ -1,5 +1,8 @@
 {
   "values": [
-    "magicalmechanics:furnace_core"
+    "magicalmechanics:advanced_energy_core",
+    "magicalmechanics:furnace_core",
+    "magicalmechanics:normal_energy_core",
+    "magicalmechanics:unlimited_energy_core"
   ]
 }

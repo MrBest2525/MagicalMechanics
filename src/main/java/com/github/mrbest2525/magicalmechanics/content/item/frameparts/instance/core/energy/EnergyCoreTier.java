@@ -24,4 +24,7 @@ public interface EnergyCoreTier {
     boolean getUnlimitedExtract();
     
     MMLong getMaxExtract();
+    
+    // --- TextureColor ---
+    int getTextureColor();
 }

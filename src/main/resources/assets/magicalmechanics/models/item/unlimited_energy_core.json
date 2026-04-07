@@ -1,6 +1,0 @@
-{
-  "parent": "magicalmechanics:item/core_part",
-  "textures": {
-    "particle": "minecraft:block/red_concrete"
-  }
-}
