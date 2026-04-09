@@ -58,7 +58,7 @@ public class ModCreativeModeTabs {
                             }
                         }
                         
-                        output.accept(new ItemStack(ModItems.LINKED_STAFF.get()));
+                        output.accept(new ItemStack(ModItems.MF_LINK_STAFF.get()));
                     }))
                     .build());
     

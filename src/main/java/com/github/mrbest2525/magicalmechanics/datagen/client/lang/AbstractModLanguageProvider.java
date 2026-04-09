@@ -15,6 +15,9 @@ import org.slf4j.Logger;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class AbstractModLanguageProvider extends LanguageProvider {
     
@@ -53,16 +56,53 @@ public abstract class AbstractModLanguageProvider extends LanguageProvider {
         buildTranslations();
         
         requiredKeys.removeAll(trackedKeys);
-        for (String key :requiredKeys) {
-            String[] oldNames = key.split("\\.");
-            String oldName = oldNames[oldNames.length - 1];
-            String[] names = oldName.split("_");
-            for (int i = 0; i < names.length; i++) {
-                // Mapにキーが存在すれば値を取得、なければ元の要素を残す
-                names[i] = materialDict.getOrDefault(names[i].toLowerCase(), names[i]);
+//        for (String key :requiredKeys) {
+//            String[] oldNames = key.split("\\.");
+//            String oldName = oldNames[oldNames.length - 1];
+//            String[] names = oldName.split("_");
+//            for (int i = 0; i < names.length; i++) {
+//                // Mapにキーが存在すれば値を取得、なければ元の要素を残す
+//                names[i] = materialDict.getOrDefault(names[i].toLowerCase(), names[i]);
+//            }
+//            String name = joinNames(names);
+//            add(key, name);
+//        }
+        if (requiredKeys.isEmpty()) return;
+        
+        // --- 腕の見せ所：最強の置換パターン構築 ---
+        // 辞書のキーを長い順にソート（最長一致の鉄則）
+        List<String> sortedKeys = materialDict.keySet().stream()
+                .sorted(Comparator.comparingInt(String::length).reversed())
+                .map(Pattern::quote)
+                .toList();
+        
+        // パターン構築：(?<=^|_) (キー1|キー2|...) (?=$|_)
+        // これにより「単語の途中」での誤爆を防ぎ、かつアンダースコアを境界として認識させる
+        String patternString = sortedKeys.stream()
+                .collect(Collectors.joining("|", "(?<=^|_)(", ")(?=$|_)"));
+        Pattern pattern = Pattern.compile(patternString);
+        
+        for (String key : requiredKeys) {
+            String[] sections = key.split("\\.");
+            String internalName = sections[sections.length - 1]; // 例: "stone_machine_frame"
+            
+            Matcher matcher = pattern.matcher(internalName);
+            StringBuilder sb = new StringBuilder();
+            
+            // 辞書に一致する塊を順次置換
+            while (matcher.find()) {
+                String match = matcher.group();
+                String translated = materialDict.get(match.toLowerCase());
+                matcher.appendReplacement(sb, Matcher.quoteReplacement(translated));
             }
-            String name = joinNames(names);
-            add(key, name);
+            matcher.appendTail(sb);
+            
+            // 置換後の文字列（例: "石_マシンフレーム"）をアンダースコアで分割
+            // 置換されなかった単語はそのまま残る
+            String[] parts = sb.toString().split("_+");
+            
+            // 言語ごとの結合ルール（日本語なら「の」を挟む等）を適用
+            add(key, joinNames(parts));
         }
     }
     

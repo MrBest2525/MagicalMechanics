@@ -103,7 +103,7 @@ public class ModItems {
         MAYURANT_ITEMS.put(MayurantTiers.NETHERITE.getId(), NETHERITE_MAYURANT);
     }
     
-    public static final DeferredItem<Item> LINKED_STAFF = ITEMS.register("linked_staff", () -> new MFLinkedStaffItem(
+    public static final DeferredItem<Item> MF_LINK_STAFF = ITEMS.register("mf_link_staff", () -> new MFLinkedStaffItem(
             new Item.Properties()
                     .stacksTo(1)
     ));

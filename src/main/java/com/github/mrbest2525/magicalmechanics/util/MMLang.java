@@ -94,8 +94,8 @@ public class MMLang {
                     public static final String SIDE = join(BASE, "side");
                 }
                 
-                public static class MFLinkedStaff {
-                    private static final String BASE = join(MagicalMechanics.BASE, "mf_linked_staff");
+                public static class MFLinkStaff {
+                    private static final String BASE = join(MagicalMechanics.BASE, "mf_link_staff");
                     
                     public static final String LINKED = join(BASE, "linked");
                     public static final String BLOCK_POS = join(BASE, "block_pos");

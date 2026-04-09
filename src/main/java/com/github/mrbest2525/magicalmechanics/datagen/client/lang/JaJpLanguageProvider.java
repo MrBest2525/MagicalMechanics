@@ -37,6 +37,7 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         addMaterial("parts", "パーツ");
         addMaterial("mayurant", "マユラント");
         addMaterial("base", "基礎");
+        addMaterial("machine_frame", "マシンフレーム");
     }
     
     @Override
@@ -66,8 +67,8 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.MODE, "Mode: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.CORE, "CORE");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.SIDE, "SIDE");
-        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.LINKED, "リンクするブロック座標: %s");
-        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.BLOCK_POS, "[X=%s Y=%s Z=%s]");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINKED, "リンクするブロック座標: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.BLOCK_POS, "[X=%s Y=%s Z=%s]");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "レンチモード: %s");
         add(MMLang.Msg.Actionbar.Linker.BLOCK_POS, "[X=%s Y=%s Z=%s]");
@@ -95,6 +96,6 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(ModItems.UNLIMITED_ENERGY_CORE.get(), "アンリミテッド エネルギー コア");
         add(ModItems.UNLIMITED_WIRELESS_ENERGY_INTERFACE.get(), "アンリミテッド ワイアレス エネルギー インターフェース");
         
-        add(ModItems.LINKED_STAFF.get(), "MFリンクワンド");
+        add(ModItems.MF_LINK_STAFF.get(), "MFリンクスタッフ");
     }
 }

@@ -86,7 +86,7 @@ public class MFLinkedStaffItem extends Item {
         BlockPos pos = stack.get(ModItemDataComponents.LINKED_BLOCK_POS);
         
         if (pos != null) {
-            tooltip.add(Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.LINKED, Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkedStaff.BLOCK_POS, pos.getX(), pos.getY(), pos.getY())).withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINKED, Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.BLOCK_POS, pos.getX(), pos.getY(), pos.getY())).withStyle(ChatFormatting.GOLD));
         }
     }
 }
