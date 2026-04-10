@@ -31,32 +31,6 @@ public class MachineFrameItemRenderer extends BlockEntityWithoutLevelRenderer {
     
     @Override
     public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext context, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-//        // 1. フレーム（外枠）の描画
-//        // ブロックのモデルをそのままアイテムとして描画する
-//        Block block = Block.byItem(stack.getItem());
-//        BlockState state = Block.byItem(stack.getItem()).defaultBlockState();
-//
-//        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-//                state, poseStack, buffer, combinedLight, combinedOverlay, ModelData.EMPTY, null
-//        );
-//
-//        // 2. ダミーBEの初期化
-//        if (dummyBE == null || !dummyBE.getBlockState().is(block)) {
-//            dummyBE = new MachineFrameBlockEntity(BlockPos.ZERO, state);
-//        }
-//
-//        // 3. アイテムのコンポーネントからデータを復元
-//        CustomData data = stack.getRenderer(DataComponents.BLOCK_ENTITY_DATA);
-//        if (data != null) {
-//            // ここでアイテム内のNBTをダミーBEに流し込む
-//            data.loadInto(dummyBE, Minecraft.getInstance().level != null ? Minecraft.getInstance().level.registryAccess() : null);
-//        } else {
-//            // データがない場合は中身を空にする（重要！）
-//            dummyBE.clearContent();
-//        }
-//
-//        // 4. 既存のBERを呼び出して描画
-//        this.dispatcher.renderItem(dummyBE, poseStack, buffer, combinedLight, combinedOverlay);
         
         BlockState state = Block.byItem(stack.getItem()).defaultBlockState();
         

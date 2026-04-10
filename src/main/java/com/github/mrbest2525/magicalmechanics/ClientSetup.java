@@ -1,8 +1,8 @@
 package com.github.mrbest2525.magicalmechanics;
 
 import com.github.mrbest2525.magicalmechanics.client.block.ber.MachineFrameBER;
+import com.github.mrbest2525.magicalmechanics.client.item.bewlr.MFLinkStaffItemRenderer;
 import com.github.mrbest2525.magicalmechanics.client.item.bewlr.MachineFrameItemRenderer;
-import com.github.mrbest2525.magicalmechanics.client.item.bewlr.ModClientExtensions;
 import com.github.mrbest2525.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbest2525.magicalmechanics.content.block.ModBlockItems;
 import com.github.mrbest2525.magicalmechanics.content.block.ModBlocks;
@@ -18,6 +18,7 @@ import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.fur
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
@@ -25,6 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -36,6 +38,7 @@ public class ClientSetup {
     
     // インスタンスを保持する変数（シングルトン用）
     private static MachineFrameItemRenderer MACHINE_FRAME_RENDERER;
+    private static MFLinkStaffItemRenderer MF_LINK_STAFF_RENDERER;
     
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
@@ -49,25 +52,23 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         for (DeferredItem<Item> mayurant: ModItems.MAYURANT_ITEMS.values()) {
-            event.enqueueWork(() -> {
-                ItemProperties.register(
-                        mayurant.get(), // 登録したアイテム
-                        ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "magic_power"), // JSONのpredicateで使う名前
-                        (stack, level, entity, seed) -> {
-                            // コンポーネントから値を取得
-                            int power;
-                            int minPower = 0;
-                            if (stack.getItem() instanceof MayurantItem mayurantItem) {
-                                power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), mayurantItem.getMinMagicPower());
-                                minPower = mayurantItem.getMinMagicPower();
-                            } else {
-                                power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), 0);
-                            }
-                            // MagicPowerが空でないなら1.0Fを返す
-                            return power > minPower ? 1.0F : 0.0F;
+            event.enqueueWork(() -> ItemProperties.register(
+                    mayurant.get(), // 登録したアイテム
+                    ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "magic_power"), // JSONのpredicateで使う名前
+                    (stack, level, entity, seed) -> {
+                        // コンポーネントから値を取得
+                        int power;
+                        int minPower = 0;
+                        if (stack.getItem() instanceof MayurantItem mayurantItem) {
+                            power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), mayurantItem.getMinMagicPower());
+                            minPower = mayurantItem.getMinMagicPower();
+                        } else {
+                            power = stack.getOrDefault(ModItemDataComponents.MAGIC_POWER.get(), 0);
                         }
-                );
-            });
+                        // MagicPowerが空でないなら1.0Fを返す
+                        return power > minPower ? 1.0F : 0.0F;
+                    }
+            ));
         }
     }
     
@@ -78,34 +79,40 @@ public class ClientSetup {
     
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        // 1. レンダラーの遅延初期化（すでにある場合はそれを使う）
+        // ※クラス内で private static で保持している前提
+        if (MACHINE_FRAME_RENDERER == null) {
+            Minecraft mc = Minecraft.getInstance();
+            MACHINE_FRAME_RENDERER = new MachineFrameItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
+            MF_LINK_STAFF_RENDERER = new MFLinkStaffItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
+        }
         
-        Minecraft mc = Minecraft.getInstance();
-        MACHINE_FRAME_RENDERER = new MachineFrameItemRenderer(
-                mc.getBlockEntityRenderDispatcher(),
-                mc.getEntityModels()
-        );
+        // 2. IClientItemExtensions の定義
+        IClientItemExtensions machineFrameExt = new IClientItemExtensions() {
+            @Override
+            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return MACHINE_FRAME_RENDERER;
+            }
+        };
         
-        // MACHINE_FRAMES Map内のすべてのアイテムにレンダラーを登録
-        ModBlocks.MACHINE_FRAMES.values().forEach(blockHolder -> {
-            event.registerItem(new IClientItemExtensions() {
-                @Override
-                public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                    // ここで作成したRendererのインスタンスを返す
-                    // 必要に応じてシングルトンとして保持しておくと効率的です
-                    return MACHINE_FRAME_RENDERER;
-                }
-            }, blockHolder.asItem());
-        });
+        IClientItemExtensions staffExt = new IClientItemExtensions() {
+            @Override
+            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return MF_LINK_STAFF_RENDERER;
+            }
+        };
         
-        // ここで特定のアイテムに対して、レンダラー（拡張）を紐付ける
-        event.registerItem(
-                new IClientItemExtensions() {
-                    @Override
-                    public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return ModClientExtensions.getMachineFrameItemRenderer();
-                    }
-                },
-                ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get() // 対象のアイテム
-        );
+        // 3. 登録
+        ModBlocks.MACHINE_FRAMES.values().forEach(blockHolder -> event.registerItem(machineFrameExt, blockHolder.asItem()));
+        event.registerItem(machineFrameExt, ModBlockItems.MACHINE_FRAME_BLOCK_ITEM.get());
+        event.registerItem(staffExt, ModItems.MF_LINK_STAFF.get());
+    }
+    
+    @SubscribeEvent
+    public static void onAdditionalModels(ModelEvent.RegisterAdditional event) {
+        // 描画コード内で呼び出したい各 JSON モデルのパスを登録する
+        event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_base"), "standalone"));
+        event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_orb_core"), "standalone"));
+        event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_orb_aura"), "standalone"));
     }
 }

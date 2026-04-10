@@ -89,4 +89,8 @@ public class MFLinkedStaffItem extends Item {
             tooltip.add(Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINKED, Component.translatable(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.BLOCK_POS, pos.getX(), pos.getY(), pos.getY())).withStyle(ChatFormatting.GOLD));
         }
     }
+    
+    public int getColor() {
+        return 0xFF00FFFF;
+    }
 }
