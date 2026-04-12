@@ -152,20 +152,10 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern(" SI")
                 .pattern("S  ")
                 .define('A', Items.AMETHYST_SHARD)
-                .define('I', Items.IRON_NUGGET)
+                .define('I', Items.IRON_INGOT)
                 .define('S', Items.STICK)
                 .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
                 .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.MF_LINK_STAFF.getId().getPath()));
-        
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.MF_LINK_STAFF)
-                .pattern("AI ")
-                .pattern("IS ")
-                .pattern("  S")
-                .define('A', Items.AMETHYST_SHARD)
-                .define('I', Items.IRON_NUGGET)
-                .define('S', Items.STICK)
-                .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
-                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.MF_LINK_STAFF.getId().getPath() + "_mirrored"));
         
         // fe_input_adapter_block
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM)
