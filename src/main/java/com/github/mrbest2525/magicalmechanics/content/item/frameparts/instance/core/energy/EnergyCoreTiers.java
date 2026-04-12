@@ -4,7 +4,7 @@ import com.github.mrbest2525.magicalmechanics.util.math.MMLong;
 
 public enum EnergyCoreTiers implements EnergyCoreTier {
     UNLIMITED("unlimited", true, EnergyCoreTier.UNLIMITED, EnergyCoreTier.UNLIMITED, true, EnergyCoreTier.UNLIMITED, true, EnergyCoreTier.UNLIMITED, 0xFF00AEEF),
-    NORMAL("normal", false, new MMLong(1_000_000_000), new MMLong(10), false, new MMLong(1_000_000), true, new MMLong(1_000_000), 0xFF00FF00),
+    NORMAL("normal", false, new MMLong(1_000_000_000), new MMLong(0), false, new MMLong(1_000_000), true, new MMLong(1_000_000), 0xFF00FF00),
     ADVANCED("advanced", false, new MMLong(1_000_000_000), new MMLong(0), false, new MMLong(1_000_000), true, new MMLong(1_000_000), 0xFFFF00FF);
     
     // --- TierName ---
