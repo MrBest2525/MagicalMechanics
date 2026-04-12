@@ -6,7 +6,7 @@ import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.i
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.side.energy.WirelessEnergySideTiers;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantItem;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantTiers;
-import com.github.mrbest2525.magicalmechanics.content.item.mfwirelesslinker.MFLinkedStaffItem;
+import com.github.mrbest2525.magicalmechanics.content.item.wirelesslinker.mfwirelesslinker.MFLinkedStaffItem;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchData;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchItem;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchMode;

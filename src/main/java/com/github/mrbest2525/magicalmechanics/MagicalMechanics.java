@@ -38,8 +38,6 @@ public class MagicalMechanics {
         
         // テクスチャの色付け
         modEventBus.addListener(ModColorHandlers::registerItemColors);
-        
-        modEventBus.register(ClientSetup.class);
     }
     
     @SubscribeEvent

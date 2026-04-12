@@ -46,6 +46,9 @@ public class MMLang {
                 public static final String LINK_SUCCESSFUL = join(BASE, "link_successful");
                 public static final String BLOCK_POS = join(BASE, "block_pos");
                 public static final String ACCESS_FAILED = join(BASE, "access_failed");
+                
+                public static final String SET_SOURCE_MODE = join(BASE, "set_source_mode");
+                public static final String SET_TARGET_MODE = join(BASE, "set_target_mode");
             }
         }
     }
@@ -97,8 +100,12 @@ public class MMLang {
                 public static class MFLinkStaff {
                     private static final String BASE = join(MagicalMechanics.BASE, "mf_link_staff");
                     
-                    public static final String LINKED = join(BASE, "linked");
+                    public static final String LINK = join(BASE, "link");
                     public static final String BLOCK_POS = join(BASE, "block_pos");
+                    
+                    public static final String MODE = join(BASE, "mode");
+                    public static final String SOURCE_MODE = join(BASE, "source_mode");
+                    public static final String TARGET_MODE = join(BASE, "target_mode");
                 }
                 
                 public static class MachineFrame {

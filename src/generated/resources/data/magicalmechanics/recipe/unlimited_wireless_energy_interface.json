@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "B": {
+      "item": "minecraft:stone_button"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "H": {
+      "item": "minecraft:stone_slab"
+    },
+    "S": {
+      "item": "minecraft:stone_stairs"
+    }
+  },
+  "pattern": [
+    "HHA",
+    "BDB",
+    "S S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "magicalmechanics:unlimited_wireless_energy_interface"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "magicalmechanics:block/fe_output_adapter_block" }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "AI ",
+    "IS ",
+    "  S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "magicalmechanics:mf_link_staff"
+  }
+}

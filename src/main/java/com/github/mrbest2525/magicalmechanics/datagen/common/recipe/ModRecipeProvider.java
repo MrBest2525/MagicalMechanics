@@ -7,6 +7,7 @@ import com.github.mrbest2525.magicalmechanics.content.block.machine.frame.IMachi
 import com.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameTiers;
 import com.github.mrbest2525.magicalmechanics.content.item.ModItems;
 import com.github.mrbest2525.magicalmechanics.content.item.mayurant.MayurantTiers;
+import com.github.mrbest2525.magicalmechanics.datagen.common.tag.item.ModItemTagsProvider;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -144,5 +145,110 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('N', Items.IRON_NUGGET)
                 .unlockedBy("has_" + Items.IRON_INGOT + "_material", has(Items.IRON_INGOT))
                 .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.WRENCH.getId().getPath() + "_mirrored"));
+        
+        // mf_link_staff
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.MF_LINK_STAFF)
+                .pattern(" IA")
+                .pattern(" SI")
+                .pattern("S  ")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('I', Items.IRON_NUGGET)
+                .define('S', Items.STICK)
+                .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.MF_LINK_STAFF.getId().getPath()));
+        
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.MF_LINK_STAFF)
+                .pattern("AI ")
+                .pattern("IS ")
+                .pattern("  S")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('I', Items.IRON_NUGGET)
+                .define('S', Items.STICK)
+                .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.MF_LINK_STAFF.getId().getPath() + "_mirrored"));
+        
+        // fe_input_adapter_block
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM)
+                .pattern("GAG")
+                .pattern("A A")
+                .pattern("GAG")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('G', Items.GLASS_PANE)
+                .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM.getId().getPath()));
+        
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM)
+                .requires(ModBlockItems.FE_OUTPUT_ADAPTER_BLOCK_ITEM)
+                .unlockedBy("has_energy_part", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM.getId().getPath() + "_from_output"));
+        
+        // fe_output_adapter_block
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, ModBlockItems.FE_OUTPUT_ADAPTER_BLOCK_ITEM)
+                .requires(ModBlockItems.FE_INPUT_ADAPTER_BLOCK_ITEM)
+                .unlockedBy("has_energy_core", has(ModItemTagsProvider.ENERGY_MACHINE_PART_TAG))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModBlockItems.FE_OUTPUT_ADAPTER_BLOCK_ITEM.getId().getPath() + "_from_input"));
+        
+        // normal_energy_core
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.NORMAL_ENERGY_CORE)
+                .pattern(" I ")
+                .pattern("IAI")
+                .pattern(" I ")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy("has_" + Items.IRON_INGOT, has(Items.IRON_INGOT))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.NORMAL_ENERGY_CORE.getId().getPath()));
+        
+        // advanced_energy_core
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.ADVANCED_ENERGY_CORE)
+                .pattern(" I ")
+                .pattern("IAI")
+                .pattern(" I ")
+                .define('A', Items.AMETHYST_BLOCK)
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy("has_" + Items.IRON_INGOT, has(Items.IRON_INGOT))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.ADVANCED_ENERGY_CORE.getId().getPath()));
+        
+        // unlimited_energy_core
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.UNLIMITED_ENERGY_CORE)
+                .pattern(" I ")
+                .pattern("IAI")
+                .pattern(" I ")
+                .define('A', Items.AMETHYST_BLOCK)
+                .define('I', Items.IRON_BLOCK)
+                .unlockedBy("has_" + Items.IRON_BLOCK, has(Items.IRON_BLOCK))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.UNLIMITED_ENERGY_CORE.getId().getPath()));
+        
+        // unlimited_wireless_energy_interface
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.UNLIMITED_WIRELESS_ENERGY_INTERFACE)
+                .pattern("HHA")
+                .pattern("BDB")
+                .pattern("S S")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('B', Items.STONE_BUTTON)
+                .define('D', Items.DIAMOND)
+                .define('H', Items.STONE_SLAB)
+                .define('S', Items.STONE_STAIRS)
+                .unlockedBy("has_" + Items.DANDELION, has(Items.DIAMOND))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.UNLIMITED_WIRELESS_ENERGY_INTERFACE.getId().getPath()));
+        
+        // furnace_core
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.FURNACE_CORE)
+                .pattern("SSS")
+                .pattern("SFS")
+                .pattern("SSS")
+                .define('F', Items.FURNACE)
+                .define('S', Items.STONE)
+                .unlockedBy("has_" + Items.FURNACE, has(Items.FURNACE))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.FURNACE_CORE.getId().getPath()));
+        
+        // furnace_side
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.FURNACE_SIDE)
+                .pattern("SSS")
+                .pattern("SFS")
+                .pattern("SSS")
+                .define('F', Items.FURNACE)
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_" + Items.FURNACE, has(Items.FURNACE))
+                .save(output, ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, ModItems.FURNACE_SIDE.getId().getPath()));
     }
 }

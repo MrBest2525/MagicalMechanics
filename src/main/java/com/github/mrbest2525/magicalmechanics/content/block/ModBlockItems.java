@@ -46,10 +46,10 @@ public class ModBlockItems {
     }
     
     public static final DeferredItem<BlockItem> FE_INPUT_ADAPTER_BLOCK_ITEM =
-            BLOCK_ITEMS.register("fe_input_adapter", () -> new BlockItem(ModBlocks.FE_INPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
+            BLOCK_ITEMS.register("fe_input_adapter_block", () -> new BlockItem(ModBlocks.FE_INPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
     
     public static final DeferredItem<BlockItem> FE_OUTPUT_ADAPTER_BLOCK_ITEM =
-            BLOCK_ITEMS.register("fe_output_adapter", () -> new BlockItem(ModBlocks.FE_OUTPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
+            BLOCK_ITEMS.register("fe_output_adapter_block", () -> new BlockItem(ModBlocks.FE_OUTPUT_ADAPTER_BLOCK.get(), new Item.Properties()));
     
     private ModBlockItems() {}
     

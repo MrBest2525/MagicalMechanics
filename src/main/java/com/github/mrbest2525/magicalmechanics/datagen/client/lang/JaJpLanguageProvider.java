@@ -67,14 +67,19 @@ public class JaJpLanguageProvider extends AbstractModLanguageProvider{
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.MODE, "Mode: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.CORE, "CORE");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.SIDE, "SIDE");
-        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINKED, "リンクするブロック座標: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINK, "リンクするブロック座標: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.BLOCK_POS, "[X=%s Y=%s Z=%s]");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.MODE, "モード: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.SOURCE_MODE, "リンク元（Source）取得");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.TARGET_MODE, "リンク先（Target）設定");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "レンチモード: %s");
         add(MMLang.Msg.Actionbar.Linker.BLOCK_POS, "[X=%s Y=%s Z=%s]");
         add(MMLang.Msg.Actionbar.Linker.LINK_SUCCESSFUL, "リンク完了: %s");
         add(MMLang.Msg.Actionbar.Linker.SET_BLOCK_POS, "座標を記録: %s");
         add(MMLang.Msg.Actionbar.Linker.ACCESS_FAILED, "接続に失敗しました！");
+        add(MMLang.Msg.Actionbar.Linker.SET_SOURCE_MODE, "リンク元（Source）取得モードに変更");
+        add(MMLang.Msg.Actionbar.Linker.SET_TARGET_MODE, "リンク先（Target）設定モードに変更");
         
         add(ModBlocks.MACHINE_FRAME.get(), "マシンフレーム");
         add(ModItems.FURNACE_CORE.get(), "ファーネスコア");

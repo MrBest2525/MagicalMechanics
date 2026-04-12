@@ -1,7 +1,7 @@
 package com.github.mrbest2525.magicalmechanics.content.item;
 
 import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
-import com.github.mrbest2525.magicalmechanics.api.SourceType;
+import com.github.mrbest2525.magicalmechanics.content.item.wirelesslinker.WirelessLinkerMode;
 import com.github.mrbest2525.magicalmechanics.content.item.wrench.WrenchData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -28,18 +28,19 @@ public class ModItemDataComponents {
                     .networkSynchronized(ByteBufCodecs.INT)
                     .build());
     
-    // Linkerのリンク先情報保存
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINKED_BLOCK_POS =
-            COMPONENTS.register("linked_block_pos", () -> DataComponentType.<BlockPos>builder()
+    // Linkのリンク先情報保存
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> LINK_BLOCK_POS =
+            COMPONENTS.register("link_block_pos", () -> DataComponentType.<BlockPos>builder()
                     .persistent(BlockPos.CODEC)
                     .networkSynchronized(BlockPos.STREAM_CODEC)
                     .build());
     
-    // LinkerのSourceTypeの保持
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SourceType>> LINKED_SOURCE_TYPE =
-            COMPONENTS.register("linked_source_type", () -> DataComponentType.<SourceType>builder()
-                    .persistent(SourceType.CODEC)
-                    .networkSynchronized(SourceType.STREAM_CODEC)
+    // LinkのSourceTypeの保持
+    
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WirelessLinkerMode>> WIRELESS_LINK_MODE =
+            COMPONENTS.register("wireless_link_mode", () -> DataComponentType.<WirelessLinkerMode>builder()
+                    .persistent(WirelessLinkerMode.CODEC)
+                    .networkSynchronized(WirelessLinkerMode.STREAM_CODEC)
                     .build());
     
     public static void register(IEventBus bus) {

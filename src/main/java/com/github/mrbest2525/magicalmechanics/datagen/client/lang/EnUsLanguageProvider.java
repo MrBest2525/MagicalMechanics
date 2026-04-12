@@ -44,14 +44,19 @@ public class EnUsLanguageProvider extends AbstractModLanguageProvider {
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.MODE, "Mode: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.CORE, "CORE");
         add(MMLang.Tooltip.Item.MagicalMechanics.Wrench.SIDE, "SIDE");
-        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINKED, "Target block pos: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.LINK, "Target block pos: %s");
         add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.BLOCK_POS, "[X=%s Y=%s Z=%s]");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.MODE, "Mode: %s");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.SOURCE_MODE, "Source Mode");
+        add(MMLang.Tooltip.Item.MagicalMechanics.MFLinkStaff.TARGET_MODE, "Target Mode");
         
         add(MMLang.Msg.Actionbar.Wrench.MODE_CHANGE, "Wrench Mode: %s");
         add(MMLang.Msg.Actionbar.Linker.BLOCK_POS, "[X=%s Y=%s Z=%s]");
         add(MMLang.Msg.Actionbar.Linker.LINK_SUCCESSFUL, "Linked to: %s");
         add(MMLang.Msg.Actionbar.Linker.SET_BLOCK_POS, "Target set: %s");
         add(MMLang.Msg.Actionbar.Linker.ACCESS_FAILED, "Connection Failed!");
+        add(MMLang.Msg.Actionbar.Linker.SET_SOURCE_MODE, "Switched to: Source Mode");
+        add(MMLang.Msg.Actionbar.Linker.SET_TARGET_MODE, "Switched to: Target Mode");
         
         add("tag.item.magicalmechanics.frame_core_parts", "Core Parts");
         add("tag.item.magicalmechanics.frame_side_parts", "Side Parts");

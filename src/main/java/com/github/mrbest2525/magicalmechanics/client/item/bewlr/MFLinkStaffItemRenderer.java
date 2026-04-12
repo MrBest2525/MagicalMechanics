@@ -106,17 +106,6 @@ public class MFLinkStaffItemRenderer extends BlockEntityWithoutLevelRenderer {
                 combinedOverlay,
                 auraModel
         );
-//        renderBilBord(
-//                renderer,
-//                stack,
-//                context,
-//                isLeftHand,
-//                poseStack,
-//                buffer,
-//                combinedLight,
-//                combinedOverlay,
-//                auraModel
-//        );
         
         poseStack.popPose();
         

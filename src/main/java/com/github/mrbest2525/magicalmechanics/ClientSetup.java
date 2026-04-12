@@ -1,5 +1,6 @@
 package com.github.mrbest2525.magicalmechanics;
 
+import com.github.mrbest2525.magicalmechanics.client.block.ber.FEAdapterBlockBER;
 import com.github.mrbest2525.magicalmechanics.client.block.ber.MachineFrameBER;
 import com.github.mrbest2525.magicalmechanics.client.item.bewlr.MFLinkStaffItemRenderer;
 import com.github.mrbest2525.magicalmechanics.client.item.bewlr.MachineFrameItemRenderer;
@@ -75,6 +76,8 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_FRAME.get(), MachineFrameBER::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.FE_INPUT_ADAPTER.get(), FEAdapterBlockBER::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.FE_OUTPUT_ADAPTER.get(), FEAdapterBlockBER::new);
     }
     
     @SubscribeEvent
@@ -114,5 +117,7 @@ public class ClientSetup {
         event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_base"), "standalone"));
         event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_orb_core"), "standalone"));
         event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "item/mf_link_staff_orb_aura"), "standalone"));
+        event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "orb/orb_core"), "standalone"));
+        event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "orb/orb_aura"), "standalone"));
     }
 }

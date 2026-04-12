@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "magicalmechanics:fe_output_adapter"
+          "name": "magicalmechanics:fe_output_adapter_block"
         }
       ],
       "rolls": 1.0

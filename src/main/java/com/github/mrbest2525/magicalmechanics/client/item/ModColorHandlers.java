@@ -2,7 +2,7 @@ package com.github.mrbest2525.magicalmechanics.client.item;
 
 import com.github.mrbest2525.magicalmechanics.content.item.ModItems;
 import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items.EnergyCoreItem;
-import com.github.mrbest2525.magicalmechanics.content.item.mfwirelesslinker.MFLinkedStaffItem;
+import com.github.mrbest2525.magicalmechanics.content.item.wirelesslinker.mfwirelesslinker.MFLinkedStaffItem;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 //@EventBusSubscriber(modid = MagicalMechanics.MODID, value = Dist.CLIENT)
@@ -27,8 +27,8 @@ public class ModColorHandlers {
         event.register((stack, tintIndex) -> {
                     // JSONで書いた "tintindex": 0 のエレメントだけ色を変える
                     if (tintIndex == 0 && stack.getItem() instanceof MFLinkedStaffItem mfLinkedStaffItem) {
-                        // Tier Enum から色を直接取得
-                        return mfLinkedStaffItem.getColor();
+                        // ItemStackから色を直接取得
+                        return mfLinkedStaffItem.getColor(stack);
                     }
                     // tintIndex が 0 以外（枠など）は元のテクスチャの色（白）のまま
                     return 0xFFFFFFFF;

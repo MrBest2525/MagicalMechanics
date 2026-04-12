@@ -1,5 +1,6 @@
 package com.github.mrbest2525.magicalmechanics.content.block.machine.energy;
 
+import com.github.mrbest2525.magicalmechanics.api.ISourceTypeProvider;
 import com.github.mrbest2525.magicalmechanics.api.SourceType;
 import com.github.mrbest2525.magicalmechanics.content.block.ModBlockEntities;
 import com.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
@@ -18,7 +19,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
-public class FEOutputAdapterBlockEntity extends BlockEntity implements IWirelessLinkableTarget, IEnergyStorage {
+public class FEOutputAdapterBlockEntity extends BlockEntity implements IWirelessLinkableTarget, IEnergyStorage, ISourceTypeProvider {
     
     private BlockPos linkedMachineFramePos;
     
@@ -130,5 +131,15 @@ public class FEOutputAdapterBlockEntity extends BlockEntity implements IWireless
     public void setTargetLink(SourceType type, BlockPos pos) {
         this.linkedMachineFramePos = pos;
         this.setChanged();
+    }
+    
+    // ==========================================
+    // ⚙️ ISourceTypeProviderの実装
+    // ==========================================
+    
+    
+    @Override
+    public SourceType getSourceType() {
+        return SourceType.MagicalFlux;
     }
 }
