@@ -26,6 +26,8 @@ public class EnergyCorePartMenu extends MMAbstractContainerMenu<MachineFrameBloc
     
     private boolean lastUnlimitedState = false;
     
+    private boolean firstFlag = true;
+    
     public EnergyCorePartMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, MachineFrameBlockEntity blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
         this.playerInventory = playerInventory;
@@ -67,7 +69,7 @@ public class EnergyCorePartMenu extends MMAbstractContainerMenu<MachineFrameBloc
         
         // 2. 「前回のバッファ」と比較する
         // MMLong に isEqualTo(MMLong other) があるので、それを利用
-        if (!tempBuffer.isEqualTo(lastCurrentBuffer) || unlimited != lastUnlimitedState) {
+        if (firstFlag || !tempBuffer.isEqualTo(lastCurrentBuffer) || unlimited != lastUnlimitedState) {
             
             // 3. 変化があった場合のみパケット送出
             core.getMaxEnergy(lastMaxBuffer); // Maxも一応最新を取る
@@ -80,6 +82,8 @@ public class EnergyCorePartMenu extends MMAbstractContainerMenu<MachineFrameBloc
             // 4. 次回比較のために「今回の値」を「前回のバッファ」に保存
             lastCurrentBuffer.set(tempBuffer);
             this.lastUnlimitedState = unlimited;
+            
+            firstFlag = false;
         }
     }
     

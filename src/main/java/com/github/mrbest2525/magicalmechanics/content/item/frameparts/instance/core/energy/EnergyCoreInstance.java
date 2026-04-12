@@ -77,6 +77,11 @@ public class EnergyCoreInstance implements CoreInstance {
     }
     
     @Override
+    public MMLong getMaxEnergy(MMLong buffer) {
+        return buffer.set(tier.getMaxEnergy());
+    }
+    
+    @Override
     public MMLong addEnergy(MMLong resultBuffer, MMLong requestAmount, boolean simulate) {
         // 0. バリデーション
         if (requestAmount.isZero()) {

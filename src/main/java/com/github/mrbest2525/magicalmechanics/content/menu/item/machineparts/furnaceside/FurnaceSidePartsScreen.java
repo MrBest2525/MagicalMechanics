@@ -6,6 +6,7 @@ import com.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.s
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.util.furnace.ThermalUtil;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.PlayerInventoryUtil;
+import com.github.mrbest2525.magicalmechanics.util.MMTextures;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,11 +25,8 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
     
     private final GuiLayout GUI_LAYOUT = new GuiLayout(this.width, this.height);
     
-    private final ResourceLocation NORMAL_SLOT_1 = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_slot1.png");
     private final ResourceLocation FIRE_1 = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/furnace_side/fire1.png");
     private final ResourceLocation WOK_1 = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/furnace_side/wok1.png");
-    
-    private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
     private final float inputSlotX = 0.35f;
     private final float inputSlotY = 0.35f;
@@ -81,11 +79,10 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         // inventoryの描画
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(inventoryX), GUI_LAYOUT.getPointY(inventoryY), 0);
-        guiGraphics.pose().translate(-110, -83, 0);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(INVENTORY_SLOT_TEXTURE, 0, 0, 0, 0, 220, 166, 220, 166);
+        MMTextures.blitAssetCentered(guiGraphics, MMTextures.GUI.NORMAL_INVENTORY, 0, 0);
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();
         
@@ -96,7 +93,7 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(NORMAL_SLOT_1, 0, 0, 0, 0, 20, 20, 20, 20);
+        MMTextures.blitAsset(guiGraphics, MMTextures.GUI.NORMAL_SLOT, 0, 0);
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();
         
@@ -107,7 +104,7 @@ public class FurnaceSidePartsScreen extends AbstractContainerScreen<FurnaceSideP
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(NORMAL_SLOT_1, 0, 0, 0, 0, 20, 20, 20, 20);
+        MMTextures.blitAsset(guiGraphics, MMTextures.GUI.NORMAL_SLOT, 0, 0);
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();
         

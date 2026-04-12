@@ -1,12 +1,14 @@
 package com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.energycore;
 
-import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
+import com.github.mrbest2525.magicalmechanics.api.SourceType;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.MMAbstractContainerScreen;
 import com.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.MFCorePart.MFCorePartMenuSyncPayload;
+import com.github.mrbest2525.magicalmechanics.util.MMTextures;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +17,15 @@ public class EnergyCorePartScreen extends MMAbstractContainerScreen<EnergyCorePa
     
     private final GuiLayout GUI_LAYOUT;
     
-    private final ResourceLocation MOD_GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/carpet4_1_64x64.png");
+    private final float energyBarX = 0.5f;
+    private final float energyBarY = 0.2f;
+    
+    // --- カオスバー制御用 ---
+    private float displayProgress = 0.5f;
+    private float targetProgress = 0.5f;
+    private float startProgress = 0.5f; // 補間の開始地点
+    private long lastLerpTime = 0;
+    private long currentLerpDuration = 1000;
     
     public EnergyCorePartScreen(EnergyCorePartMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -43,12 +53,12 @@ public class EnergyCorePartScreen extends MMAbstractContainerScreen<EnergyCorePa
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
         
         MFCorePartMenuSyncPayload data = menu.getSyncData();
-        if (data == null) return;
         
         // --- 1. テキスト表示 (中央揃え) ---
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(0.5), GUI_LAYOUT.getPointY(0.25), 0);
-        String displayStr = getSmartDisplayString(data);
+        
+        String displayStr = (data == null) ? "Connecting... / ... MF" : getSmartDisplayString(data);
         int textWidth = this.font.width(displayStr);
         guiGraphics.drawString(this.font, displayStr, -textWidth / 2, 0, 0xFFFFFF, true);
         guiGraphics.pose().popPose();
@@ -58,9 +68,82 @@ public class EnergyCorePartScreen extends MMAbstractContainerScreen<EnergyCorePa
     }
     
     /**
+     * EnergyBarの表示
+     */
+    private void renderEnergyBar(GuiGraphics guiGraphics, MFCorePartMenuSyncPayload data) {
+        float progress = (data == null) ? 0.0f : getEnergyProgress(data);
+        long now = System.currentTimeMillis();
+        
+        if (data != null && data.mode() == 2) { // Unlimited
+            
+            // 1. 目標設定ロジック
+            if (now - lastLerpTime > currentLerpDuration) {
+                startProgress = displayProgress; // 現在の地点をスタートにする
+                
+                targetProgress = (float) Math.random();
+                lastLerpTime = now;
+            }
+            
+            // 2. 滑らかな補間 (イージング)
+            float delta = (float) (now - lastLerpTime) / currentLerpDuration;
+            delta = Math.min(1.0f, delta);
+            
+            // クルッと回るような Sin補間 (0-1)
+            float smoothDelta = (float) (1.0 - Math.cos(delta * Math.PI)) / 2.0f;
+            
+            // startからtargetへ smoothDelta分だけ移動
+            displayProgress = startProgress + (targetProgress - startProgress) * smoothDelta;
+            progress = displayProgress;
+            
+        }
+        
+        MMTextures.TextureAsset bar = MMTextures.GUI.UTIL_BAR_MEMORY;
+        
+        guiGraphics.pose().pushPose();
+        
+        guiGraphics.pose().translate(GUI_LAYOUT.getPointX(energyBarX), GUI_LAYOUT.getPointY(energyBarY), 0);
+        
+        MMTextures.blitAssetCentered(guiGraphics, MMTextures.GUI.UTIL_BAR_FRAME, 0, 0);
+        
+        if (progress > 0) {
+            // バーの左端を計算（中心から幅の半分だけ左に戻る）
+            int startX = -(bar.width() / 2);
+            int startY = -(bar.height() / 2);
+            int fillWidth = (int) (bar.width() * progress);
+            
+            // 2. SourceTypeから色を取得してメインのバーを描画
+            int color = SourceType.MagicalFlux.getColor();
+            float r = ((color >> 16) & 0xFF) / 255f;
+            float g = ((color >> 8) & 0xFF) / 255f;
+            float b = (color & 0xFF) / 255f;
+            
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderColor(r, g, b, 1.0f);
+            
+            // 左から右へ伸びる（fillWidth分だけ切り出して描画）
+            guiGraphics.blit(bar.location(), startX, startY, bar.u(), bar.v(), fillWidth, bar.height(), bar.texWidth(), bar.texHeight());
+            
+            // 3. エンチャントオーラ（加算合成で脈動させる）
+            float pulse = (float) Math.sin(System.currentTimeMillis() / 400.0) * 0.15f + 0.4f;
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+            RenderSystem.setShaderColor(r, g, b, pulse);
+            
+            guiGraphics.blit(bar.location(), startX, startY, bar.u(), bar.v(), fillWidth, bar.height(), bar.texWidth(), bar.texHeight());
+            
+            // 後片付け
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+            RenderSystem.disableBlend();
+        }
+        
+        guiGraphics.pose().popPose();
+    }
+    
+    /**
      * エネルギーの割合(0.0 - 1.0)を計算する
      */
     private float getEnergyProgress(MFCorePartMenuSyncPayload data) {
+        if (data == null) return 0.0f;
         if (data.mode() == 2) return 1.0f; // 無制限モード
         
         if (data.mode() == 0) { // 正確モード (long)
@@ -74,33 +157,6 @@ public class EnergyCorePartScreen extends MMAbstractContainerScreen<EnergyCorePa
             double ratio = ((double) data.currentMantissa() / data.maxMantissa()) * Math.pow(10, expDiff);
             
             return (float) Math.min(1.0, Math.max(0.0, ratio));
-        }
-    }
-    
-    /**
-     * 実際にバーを描画する処理
-     */
-    private void renderEnergyBar(GuiGraphics gui, MFCorePartMenuSyncPayload data) {
-        float progress = getEnergyProgress(data);
-        
-        // バーの位置とサイズ (テクスチャに合わせて調整)
-        int barX = GUI_LAYOUT.getPointX(0.5);
-        int barY = GUI_LAYOUT.getPointY(0.45);
-        int width = 12;
-        int height = 50;
-        
-        int fillHeight = (int) (height * progress);
-        int emptyHeight = height - fillHeight;
-        
-        if (fillHeight > 0) {
-            // 下から上にせり上がる描画
-            // y座標を emptyHeight 分下げ、テクスチャのV座標も同じだけ下げる
-            gui.blit(
-                    MOD_GUI_TEXTURE,
-                    barX, barY + emptyHeight,        // 画面上の描画開始位置(Y)
-                    176, 0 + emptyHeight,            // テクスチャ上の「満タンバー」のV座標
-                    width, fillHeight                // 描画する高さ
-            );
         }
     }
     

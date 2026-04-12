@@ -4,6 +4,7 @@ import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
 import com.github.mrbest2525.magicalmechanics.content.menu.item.machineparts.util.furnace.ThermalUtil;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.GuiLayout;
 import com.github.mrbest2525.magicalmechanics.content.menu.util.PlayerInventoryUtil;
+import com.github.mrbest2525.magicalmechanics.util.MMTextures;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -28,7 +29,6 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
     
     private final ResourceLocation FIRE_STAND_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand.png");
     private final ResourceLocation FIRE_STAND_HOVERING_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/item/frame_parts/core/furnace_core/fire_stand_hovering.png");
-    private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
     private final float fireX = 0.5f;
     private final float fireY = 0.3f;
@@ -92,14 +92,13 @@ public class FurnaceCorePartsScreen extends AbstractContainerScreen<FurnaceCoreP
         
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(GUI_LAYOUT.getPointX(inventoryX), GUI_LAYOUT.getPointY(inventoryY), 0);
-        guiGraphics.pose().translate(-110, -83, 0);
         // 1. ブレンド（透明度）を有効化
         RenderSystem.enableBlend();
         // 2. ブレンド関数の設定（通常はこの設定でOK）
         RenderSystem.defaultBlendFunc();
         // 3. 色を白（1.0, 1.0, 1.0, 1.0）にリセットして透明度を維持
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(INVENTORY_SLOT_TEXTURE, 0, 0, 0, 0, 220, 166, 220, 166);
+        MMTextures.blitAssetCentered(guiGraphics, MMTextures.GUI.NORMAL_INVENTORY, 0, 0);
         // 4. ブレンドを無効化（他の描画への影響を防ぐため）
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();

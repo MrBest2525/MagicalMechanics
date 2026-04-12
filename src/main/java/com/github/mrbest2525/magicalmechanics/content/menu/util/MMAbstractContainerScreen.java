@@ -1,19 +1,19 @@
 package com.github.mrbest2525.magicalmechanics.content.menu.util;
 
-import com.github.mrbest2525.magicalmechanics.MagicalMechanics;
+import com.github.mrbest2525.magicalmechanics.util.MMTextures;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 
+import static com.github.mrbest2525.magicalmechanics.util.MMTextures.GUI.NORMAL_INVENTORY;
+
 public abstract class MMAbstractContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
     protected final GuiLayout GUI_LAYOUT;
-    private final ResourceLocation INVENTORY_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(MagicalMechanics.MODID, "textures/gui/inventory_slot/normal_inventory_slot.png");
     
     // プレイヤーインベントリの配置基準
     private final float inventoryAnchorX = 0.5f;
@@ -55,7 +55,7 @@ public abstract class MMAbstractContainerScreen<T extends AbstractContainerMenu>
         int bgOffsetY = -46; // 例: -83 - (-37)
         
         RenderSystem.enableBlend();
-        gui.blit(INVENTORY_SLOT_TEXTURE, bgOffsetX, bgOffsetY, 0, 0, 220, 166, 220, 166);
+        MMTextures.blitAsset(gui, NORMAL_INVENTORY, bgOffsetX, bgOffsetY);
         RenderSystem.disableBlend();
         gui.pose().popPose();
     }
