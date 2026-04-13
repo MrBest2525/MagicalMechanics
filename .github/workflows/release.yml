@@ -1,76 +1,124 @@
-name: build_and_release
+name: Build and Release
 
 on:
   push:
-    branches: [ "main", "develop" ]
-    tags: [ "v*" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # タグの打ち直し（強制プッシュ）に必要
       
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: 'gradle'
+      
+      - name: Versioning and Tag Update
+        id: versioning
+        run: |
+          # タグ名を取得 (例: v1.0.0-alpha)
+          RAW_TAG=${{ github.ref_name }}
+          # 'v' を除いたバージョン番号 (例: 1.0.0-alpha)
+          VERSION=${RAW_TAG#v}
           
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
+          # 1. gradle.properties の mod_version を物理的に書き換え [cite: 1]
+          sed -i "s/^mod_version\s*=.*/mod_version=${VERSION}/" gradle.properties
+          
+          # 2. 書き換えたファイルをコミットしてタグを打ち直す
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add gradle.properties
+          
+          # 差分（--cached）があるかチェックし
+          # ローカルのタグを新しいコミットに移動させ、リモートへ強制プッシュ
+          # これによりタグのソースコード内のバージョンが書き換わった状態で保存される
+          if ! git diff --cached --exit-code --quiet; then
+            git commit -m "chore: bump version to ${VERSION} for tag ${RAW_TAG}"
+            git tag -f ${RAW_TAG}
+            git push origin ${RAW_TAG} --force
+          else
+            echo "既にバージョンが一致しているため、コミットをスキップします。"
+          fi
+          
+      
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
+      
       - name: Build with Gradle
+        run: ./gradlew build
+      
+      - name: Determine Version Type
+        id: check_type
+        shell: bash
         run: |
-          TAG_NAME=${{ github.ref_name }}
-          VERSION=${TAG_NAME#v}
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            echo "Building version: $VERSION"
-            ./gradlew build -Pversion=$VERSION
+          TAG="${{ github.ref_name }}"
+          # 正規表現による厳密な完全一致判定
+          if [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "type=release" >> $GITHUB_OUTPUT
+            echo "status_msg=✅ 正式リリース" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-alpha$ ]]; then
+            echo "type=alpha" >> $GITHUB_OUTPUT
+            echo "status_msg=🛠 Alpha" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-beta$ ]]; then
+            echo "type=beta" >> $GITHUB_OUTPUT
+            echo "status_msg=🧪 Beta" >> $GITHUB_OUTPUT
           else
-            echo "Building dev version"
-            ./gradlew build
+            echo "type=skip" >> $GITHUB_OUTPUT
+            echo "Skipping Modrinth publish: Tag $TAG does not match required formats."
           fi
-
-      # リリース作成（タグがプッシュされた時のみ実行）
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
+      
+      - name: Create GitHub Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          # 下書き(Draft)として作成
-          draft: true
-          # コミット履歴から自動でリリースノートのベースを生成
+          draft: false
+          # ハイフンが含まれていれば Pre-release 扱いにする
+          prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: true
-          # mainならRelease、それ以外ならDev
-          name: ${{ github.ref_name == 'main' && 'Release' || 'Dev' }} ${{ github.ref_name }}
-          # main以外のタグはPre-release扱い
-          prerelease: ${{ github.ref_name != 'main' }}
-          tag_name: ${{ github.ref_name }}
-          # build/libs 内の全JARファイルを添付
-          files: |
-            build/libs/*.jar
+          name: ${{ github.ref_name }}
+          files: build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Discord通知ステップ
-      - name: Discord notification
-        if: always()
+      
+      - name: Publish to Modrinth
+        # ステップ出力が skip でない場合のみ実行
+        if: steps.check_type.outputs.type != 'skip'
+        uses: Kir-Antipov/mc-publish@v3
+        with:
+          modrinth-id: ${{ secrets.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: build/libs/*.jar
+          version: ${{ github.ref_name }}
+          version-type: ${{ steps.check_type.outputs.type }}
+          # リリース作成時の本文をチェンジログとして使用
+          changelog: ${{ github.event.release.body }}
+      
+      - name: Discord Notification
+        if: success()
         uses: appleboy/discord-action@master
         with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_UPDATE_WEBHOOK }}
           username: "Magical Mechanics Bot"
-          # 通知内容をカスタマイズ
           message: |
-            **${{ job.status == 'success' && '✅ Build Success' || '❌ Build Failed' }}: ${{ github.repository }}**
-            **Event:** `${{ github.event_name }}`
-            **Branch/Tag:** `${{ github.ref_name }}`
-            **Commit:** ${{ github.event.head_commit.message }}
-            ${{ startsWith(github.ref, 'refs/tags/') && '📝 **Draft Release Created! Check GitHub.**' || '' }}
-            [View Build Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **📦 Magical Mechanics 更新通知**
+            
+            **バージョン:** `${{ github.ref_name }}`
+            **タイプ:** `${{ steps.check_type.outputs.status_msg || '📦 開発版' }}`
+            
+            **📝 更新内容 (Highlights):**
+            ${{ github.event.release.body || '詳細はGitHubのリリースノートを確認してください。' }}
+            
+            **📖 Wiki:** https://github.com/${{ github.repository }}/wiki
+            **🚀 リリース:** https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}
+            **📥 ダウンロード (Modrinth):** https://modrinth.com/mod/magicalmechanics
