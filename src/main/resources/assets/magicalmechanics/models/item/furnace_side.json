@@ -1,10 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "1": "magicalmechanics:item/machine_parts/furnace_side/furnace_side_front",
-    "2": "magicalmechanics:item/machine_parts/furnace_side/furnace_side_side",
-    "3": "magicalmechanics:item/machine_parts/furnace_side/furnace_side_up",
-    "particle": "magicalmechanics:item/machine_parts/furnace_side/furnace_side_up"
+    "1": "magicalmechanics:item/machine_part/furnace_side/furnace_side_front",
+    "2": "magicalmechanics:item/machine_part/furnace_side/furnace_side_side",
+    "3": "magicalmechanics:item/machine_part/furnace_side/furnace_side_up",
+    "particle": "magicalmechanics:item/machine_part/furnace_side/furnace_side_up"
   },
   "elements": [
     {

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "magicalmechanics:fe_input_adapter_block"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "magicalmechanics:fe_output_adapter_block"
+  }
+}

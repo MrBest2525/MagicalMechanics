@@ -1,0 +1,6 @@
+{
+  "parent": "magicalmechanics:item/core_part_all",
+  "textures": {
+    "all": "magicalmechanics:item/machine_part/core/furnace_core/furnace_core"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "parent": "magicalmechanics:item/core_part_mask",
+  "textures": {
+    "down": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_top",
+    "east": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side",
+    "mask_down": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_top_mask",
+    "mask_east": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side_mask",
+    "mask_north": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side_mask",
+    "mask_south": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side_mask",
+    "mask_up": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_top_mask",
+    "mask_west": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side_mask",
+    "north": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side",
+    "south": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side",
+    "up": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_top",
+    "west": "magicalmechanics:item/machine_part/core/magical_flux_core/magical_flux_core_side"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_energy_core": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#magicalmechanics:energy_machine_part"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "magicalmechanics:fe_output_adapter_block_from_input"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_energy_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "magicalmechanics:fe_output_adapter_block_from_input"
+    ]
+  }
+}
