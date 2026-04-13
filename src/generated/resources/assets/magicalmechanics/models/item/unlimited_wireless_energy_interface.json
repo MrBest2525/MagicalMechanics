@@ -1,0 +1,6 @@
+{
+  "parent": "magicalmechanics:item/wireless_energy_interface",
+  "textures": {
+    "all": "magicalmechanics:item/machine_part/side/wireless_energy_interface/unlimited_wireless_energy_interface"
+  }
+}

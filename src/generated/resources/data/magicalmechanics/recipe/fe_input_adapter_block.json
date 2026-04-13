@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "GAG",
+    "A A",
+    "GAG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "magicalmechanics:fe_input_adapter_block"
+  }
+}

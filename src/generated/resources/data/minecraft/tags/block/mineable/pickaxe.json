@@ -6,6 +6,8 @@
     "magicalmechanics:stone_machine_frame",
     "magicalmechanics:diamond_machine_frame",
     "magicalmechanics:iron_machine_frame",
-    "magicalmechanics:gold_machine_frame"
+    "magicalmechanics:gold_machine_frame",
+    "magicalmechanics:fe_input_adapter_block",
+    "magicalmechanics:fe_output_adapter_block"
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "textures": {
+    "all": "magicalmechanics:item/orb/orb_core",
+    "particle": "magicalmechanics:item/orb/orb_core"
+  },
+  "elements": [
+    {
+      "from": [-1, -1, -1],
+      "to": [1, 1, 1],
+      "rotation": {"angle": 0, "axis": "y", "origin": [6, -6, 6]},
+      "faces": {
+        "north": {"uv": [0, 2, 2, 4], "texture": "#all", "tintindex": 0},
+        "east" : {"uv": [2, 2, 4, 4], "texture": "#all", "tintindex": 0},
+        "south": {"uv": [4, 2, 6, 4], "texture": "#all", "tintindex": 0},
+        "west" : {"uv": [6, 2, 8, 4], "texture": "#all", "tintindex": 0},
+        "up"   : {"uv": [0, 0, 2, 2], "texture": "#all", "tintindex": 0},
+        "down" : {"uv": [2, 0, 4, 2], "texture": "#all", "tintindex": 0}
+      }
+    }
+  ]
+}

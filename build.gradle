@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.140'
+    id("com.gradleup.shadow") version "9.4.0"
 }
 
 version = project.hasProperty('version') ? project.property('version') : mod_version
@@ -116,6 +117,26 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    // jsoup HTML parser library @ https://jsoup.org/
+    // shadow 用の設定を定義 (dependencies の直前か中に記述)
+    configurations {
+        shadowImplementation
+        implementation.extendsFrom shadowImplementation
+    }
+
+    // SnakeYAML を shadowImplementation に入れる
+    implementation 'org.yaml:snakeyaml:2.6'
+    shadowImplementation 'org.yaml:snakeyaml:2.6'
+    additionalRuntimeClasspath 'org.yaml:snakeyaml:2.6'
+}
+
+// 2. ShadowJar の設定
+shadowJar {
+    archiveClassifier = '' // 分類子を空にして、本来の jar 名にする
+    mergeServiceFiles()    // サービスファイルを統合（念のため）
+    relocate 'org.yaml.snakeyaml', 'com.github.mrbest2525.shadow.snakeyaml'
+    configurations = [project.configurations.shadowImplementation]
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -179,4 +200,29 @@ tasks.named('processResources', ProcessResources) {
             into 'META-INF'
         }
     }
+
+    // 例: LICENSES/jsoup/LICENSE.txt -> META-INF/LICENSES/jsoup/LICENSE.txt
+    if (rootProject.file('LICENSES').exists()) {
+        from(rootProject.file('LICENSES')) {
+            into 'META-INF/LICENSES'
+        }
+    }
+}
+
+// 通常の jar タスクを ShadowJar で上書きするための設定
+tasks.named('jar', Jar) {
+//    // 通常の Jar は classifier を付けて退避させる
+//    archiveClassifier = 'raw'
+//    // マニフェストの設定（必要なら）
+    finalizedBy('shadowJar')
+}
+
+tasks.named('assemble').configure {
+    dependsOn shadowJar
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Java 21 の言語機能を明示的に有効化
+    options.release.set(21)
 }
