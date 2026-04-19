@@ -135,7 +135,7 @@ dependencies {
 shadowJar {
     archiveClassifier = '' // 分類子を空にして、本来の jar 名にする
     mergeServiceFiles()    // サービスファイルを統合（念のため）
-    relocate 'org.yaml.snakeyaml', 'com.github.mrbest2525.shadow.snakeyaml'
+    relocate 'org.yaml.snakeyaml', 'io.github.mrbest2525.shadow.snakeyaml'
     configurations = [project.configurations.shadowImplementation]
 }
 
