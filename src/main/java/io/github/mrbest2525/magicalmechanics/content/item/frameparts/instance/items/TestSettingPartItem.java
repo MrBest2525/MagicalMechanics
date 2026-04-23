@@ -1,7 +1,7 @@
 package io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.items;
 
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingParts;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPartsInstance;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPart;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPartInstance;
 import io.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -9,13 +9,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
-public class TestSettingPartsItem extends Item implements SettingParts {
-    public TestSettingPartsItem(Item.Properties properties) {
+public class TestSettingPartItem extends Item implements SettingPart {
+    public TestSettingPartItem(Item.Properties properties) {
         super(properties);
     }
     
     @Override
-    public SettingPartsInstance createInstance() {
+    public SettingPartInstance createInstance() {
         return null;
     }
     

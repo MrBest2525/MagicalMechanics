@@ -3,8 +3,8 @@ package io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance;
 import io.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame.FrameBlockSettingPartsScreen;
 import net.minecraft.client.gui.GuiGraphics;
 
-public interface SettingParts {
-    SettingPartsInstance createInstance();
+public interface SettingPart {
+    SettingPartInstance createInstance();
     
     /**
      * 左パネルの静的情報を描画し、描画したトータルの高さを返す

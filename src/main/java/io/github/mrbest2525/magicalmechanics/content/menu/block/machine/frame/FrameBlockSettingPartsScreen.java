@@ -3,7 +3,7 @@ package io.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame;
 import com.mojang.math.Axis;
 import io.github.mrbest2525.magicalmechanics.MagicalMechanics;
 import io.github.mrbest2525.magicalmechanics.content.block.machine.frame.SettingPartsManager;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingParts;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPart;
 import io.github.mrbest2525.magicalmechanics.content.menu.util.MMAbstractContainerScreen;
 import io.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.DeselectPartPayload;
 import io.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.SelectPartPayload;
@@ -255,7 +255,7 @@ public class FrameBlockSettingPartsScreen extends MMAbstractContainerScreen<Fram
         UUID selectedUuid = this.menu.getSelectedPartUuid();
         if (selectedUuid != null && partsList.containsKey(selectedUuid)) {
             ItemStack selectedStack = partsList.get(selectedUuid).getItemStack();
-            if (selectedStack.getItem() instanceof SettingParts part) {
+            if (selectedStack.getItem() instanceof SettingPart part) {
                 // マウス座標をパネル内の相対座標（スクロール補正込み）に変換
                 double relMouseX = mouseX - startX;
                 double relMouseY = mouseY - startY + pixelOffset;

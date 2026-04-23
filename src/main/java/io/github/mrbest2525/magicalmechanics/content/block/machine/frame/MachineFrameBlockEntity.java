@@ -361,7 +361,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     }
     
     // ========================================
-    // SettingParts
+    // SettingPart
     // ========================================
     public SettingPartsManager getSettingPartsManager() {
         return this.settingParts;
@@ -384,7 +384,7 @@ public class MachineFrameBlockEntity extends BlockEntity implements WrenchIntera
     
     @Override
     public boolean canAcceptLinkTarget(SourceType type, BlockPos sourcePos, Player player) {
-        return type == SourceType.MagicalFlux && settingParts.getInstanceList().stream()
+        return settingParts.getInstanceList().stream()
                 .anyMatch(instance -> instance.canAcceptTarget(this, type, sourcePos, player));
     }
     

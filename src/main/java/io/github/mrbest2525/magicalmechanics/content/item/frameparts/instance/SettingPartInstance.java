@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public interface SettingPartsInstance {
+public interface SettingPartInstance {
     /**
      * InstanceのID
      */
@@ -65,7 +65,7 @@ public interface SettingPartsInstance {
     /**
      * 座標受付の許可
      */
-    default boolean canAcceptTarget(MachineFrameBlockEntity frame, SourceType type, BlockPos pos, Player plsyer) {
+    default boolean canAcceptTarget(MachineFrameBlockEntity frame, SourceType type, BlockPos pos, Player player) {
         return false;
     }
     

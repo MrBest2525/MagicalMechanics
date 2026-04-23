@@ -5,7 +5,8 @@ import io.github.mrbest2525.magicalmechanics.api.SourceType;
 import io.github.mrbest2525.magicalmechanics.content.block.ModBlockEntities;
 import io.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import io.github.mrbest2525.magicalmechanics.content.block.mf.wireless.IWirelessLinkableTarget;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.CoreInstance;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SideInstance;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.side.energy.IWirelessMFProvider;
 import io.github.mrbest2525.magicalmechanics.util.math.MMLong;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -62,15 +63,16 @@ public class FEInputAdapterBlockEntity extends BlockEntity implements IWirelessL
         BlockEntity blockEntity = level.getBlockEntity(linkedMachineFramePos);
         if (!(blockEntity instanceof MachineFrameBlockEntity machineFrame)) return 0;
         
-        CoreInstance coreInstance = machineFrame.getCoreInstance();
-        if (coreInstance == null || !coreInstance.supportsEnergy()) return 0;
+        SideInstance sideInstance = machineFrame.getSideInstance();
+        if (!(sideInstance instanceof IWirelessMFProvider provider)) return 0;
         
         // 外部からの int (FE) を MMLong 用のバッファにセット
         energyBuffer.set(maxReceive);
         
-        // CoreInstance 側の addEnergy を利用する。
+        // IWirelessMFProvider の insertWirelessEnergy を利用する。
         // このメソッドは内部で適切に「空き容量」を計算し、実際に受け入れた量を calcBuffer に書き込んでくれる。
-        return coreInstance.addEnergy(calcBuffer, energyBuffer, simulate).asInt();
+        provider.insertWirelessEnergy(calcBuffer, energyBuffer, simulate);
+        return calcBuffer.asInt();
     }
     
     @Override
@@ -82,9 +84,9 @@ public class FEInputAdapterBlockEntity extends BlockEntity implements IWirelessL
     public int getEnergyStored() {
         if (linkedMachineFramePos == null || level == null || !level.isLoaded(linkedMachineFramePos)) return 0;
         BlockEntity be = level.getBlockEntity(linkedMachineFramePos);
-        if (be instanceof MachineFrameBlockEntity mf && mf.getCoreInstance() != null) {
-            // asInt() は MMLong 内で 0 以下のガードが入っているので安全
-            return mf.getCoreInstance().getEnergy(energyBuffer).asInt();
+        if (be instanceof MachineFrameBlockEntity mf && mf.getSideInstance() != null && mf.getSideInstance() instanceof IWirelessMFProvider provider) {
+            provider.getAvailableWirelessEnergy(energyBuffer);
+            return energyBuffer.asInt();
         }
         return 0;
     }
@@ -93,8 +95,9 @@ public class FEInputAdapterBlockEntity extends BlockEntity implements IWirelessL
     public int getMaxEnergyStored() {
         if (linkedMachineFramePos == null || level == null || !level.isLoaded(linkedMachineFramePos)) return 0;
         BlockEntity be = level.getBlockEntity(linkedMachineFramePos);
-        if (be instanceof MachineFrameBlockEntity mf && mf.getCoreInstance() != null) {
-            return mf.getCoreInstance().getMaxEnergy(energyBuffer).asInt();
+        if (be instanceof MachineFrameBlockEntity mf && mf.getCoreInstance() != null && mf.getSideInstance() instanceof IWirelessMFProvider provider) {
+            provider.getWirelessMaxEnergyCapacity(energyBuffer);
+            return energyBuffer.asInt();
         }
         return 0;
     }

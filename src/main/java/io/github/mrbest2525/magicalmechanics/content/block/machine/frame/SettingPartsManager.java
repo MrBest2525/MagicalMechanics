@@ -1,9 +1,9 @@
 package io.github.mrbest2525.magicalmechanics.content.block.machine.frame;
 
 import com.mojang.logging.LogUtils;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingParts;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPart;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPartInstance;
 import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPartsExecutionPhase;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPartsInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,14 +28,14 @@ public class SettingPartsManager {
     
     private final Map<UUID, PartItemStack> items = new HashMap<>();
     // 1. 実体 (UUID -> Instance)
-    private final Map<UUID, SettingPartsInstance> instances = new HashMap<>();
+    private final Map<UUID, SettingPartInstance> instances = new HashMap<>();
     
     // 2. ID索引 (ID -> UUIDs)
     private final Map<ResourceLocation, Set<UUID>> idIndex = new HashMap<>();
     
     // 3. 実行キャッシュ (ソート済み)
-    private List<SettingPartsInstance> preTickCache = new ArrayList<>();
-    private List<SettingPartsInstance> postTickCache = new ArrayList<>();
+    private List<SettingPartInstance> preTickCache = new ArrayList<>();
+    private List<SettingPartInstance> postTickCache = new ArrayList<>();
     
     public SettingPartsManager(MachineFrameBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
@@ -162,9 +162,9 @@ public class SettingPartsManager {
         
         UUID uuid = UUID.randomUUID();
         
-        SettingPartsInstance instance = null;
-        if (itemStack.getItem() instanceof SettingParts settingParts) {
-            instance = settingParts.createInstance();
+        SettingPartInstance instance = null;
+        if (itemStack.getItem() instanceof SettingPart settingPart) {
+            instance = settingPart.createInstance();
         }
         
         PartItemStack saveStack = new PartItemStack(itemStack);
@@ -185,7 +185,7 @@ public class SettingPartsManager {
     public void removePart(UUID uuid) {
         // 1. アイテム実体とインスタンスを両方取り出す
         PartItemStack stack = items.remove(uuid);
-        SettingPartsInstance removedInstance = instances.remove(uuid);
+        SettingPartInstance removedInstance = instances.remove(uuid);
         
         // 2. ID索引 (idIndex) の掃除
         // インスタンスがある場合とない場合（ただのアイテムの場合）で、キーが異なるので注意
@@ -271,7 +271,7 @@ public class SettingPartsManager {
      */
     private void rebuildExecutionCache() {
         // 1. ソート用の一時リストを作成
-        List<SettingPartsInstance> allParts = new ArrayList<>();
+        List<SettingPartInstance> allParts = new ArrayList<>();
         instances.forEach((uuid, settingPartsInstance) -> {
             PartItemStack stack = items.get(uuid);
             if (settingPartsInstance != null && stack != null && stack.getCount() > 0) {
@@ -281,17 +281,17 @@ public class SettingPartsManager {
         
         // 2. 「Group順 > SubPriority順」でソート
         // Phaseはリスト自体を分けるのでソート条件には入れない
-        Comparator<SettingPartsInstance> sorter = Comparator
-                .comparingInt((SettingPartsInstance p) -> p.getGroup().getOrder())
-                .thenComparingInt(SettingPartsInstance::getSubPriority);
+        Comparator<SettingPartInstance> sorter = Comparator
+                .comparingInt((SettingPartInstance p) -> p.getGroup().getOrder())
+                .thenComparingInt(SettingPartInstance::getSubPriority);
         
         allParts.sort(sorter);
         
         // 3. Phaseごとに振り分けてキャッシュを更新
-        List<SettingPartsInstance> pre = new ArrayList<>();
-        List<SettingPartsInstance> post = new ArrayList<>();
+        List<SettingPartInstance> pre = new ArrayList<>();
+        List<SettingPartInstance> post = new ArrayList<>();
         
-        for (SettingPartsInstance p : allParts) {
+        for (SettingPartInstance p : allParts) {
             if (p.getPhase() == SettingPartsExecutionPhase.PRE) pre.add(p);
             else post.add(p);
         }
@@ -306,11 +306,11 @@ public class SettingPartsManager {
     /**
      * Frame側のTickから呼ばれる取得メソッド
      */
-    public List<SettingPartsInstance> getPreTickParts() {
+    public List<SettingPartInstance> getPreTickParts() {
         return preTickCache;
     }
     
-    public List<SettingPartsInstance> getPostTickParts() {
+    public List<SettingPartInstance> getPostTickParts() {
         return postTickCache;
     }
     
@@ -348,7 +348,7 @@ public class SettingPartsManager {
         return Map.copyOf(items);
     }
     
-    public List<SettingPartsInstance> getInstanceList() {
+    public List<SettingPartInstance> getInstanceList() {
         return instances.values().stream()
                 .filter(Objects::nonNull)
                 .toList();
@@ -373,7 +373,7 @@ public class SettingPartsManager {
             }
             
             // 3. Instanceの動的データの保存
-            SettingPartsInstance instance = instances.get(uuid);
+            SettingPartInstance instance = instances.get(uuid);
             if (instance != null) {
                 CompoundTag data = new CompoundTag();
                 instance.save(data, provider);
@@ -403,9 +403,9 @@ public class SettingPartsManager {
             if (stack == null || stack.isEmpty()) continue;
             
             // Instanceの生成と復元
-            SettingPartsInstance instance = null;
-            if (stack.getItemStack().getItem() instanceof SettingParts settingParts) {
-                instance = settingParts.createInstance();
+            SettingPartInstance instance = null;
+            if (stack.getItemStack().getItem() instanceof SettingPart settingPart) {
+                instance = settingPart.createInstance();
                 if (compound.contains("InstanceData")) {
                     instance.load(compound.getCompound("InstanceData"), provider);
                 }
@@ -475,8 +475,8 @@ public class SettingPartsManager {
             UUID uuid = entry.getKey();
             ItemStack stack = entry.getValue().getItemStack();
             
-            if (stack.getItem() instanceof SettingParts settingParts) {
-                SettingPartsInstance instance = settingParts.createInstance();
+            if (stack.getItem() instanceof SettingPart settingPart) {
+                SettingPartInstance instance = settingPart.createInstance();
                 
                 // ⭐ ここで null チェックを入れる
                 if (instance != null) {

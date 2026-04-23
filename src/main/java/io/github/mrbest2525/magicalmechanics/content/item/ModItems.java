@@ -35,15 +35,14 @@ public class ModItems {
     
     public static final Map<String, DeferredItem<Item>> MACHINE_CORE_PARTS = new HashMap<>();
     // ==============================
-    // SettingParts
+    // SettingPart
     // ==============================
-    public static final DeferredItem<Item> TEST_SETTING_PARTS1 =
-            ITEMS.register("test_setting_parts1", () -> new TestSettingPartsItem(new Item.Properties()));
-    static {
-        for (int i = 0; i < 30; i++) {
-            ITEMS.register("test_setting_parts" + (i + 3), () -> new TestSettingPartsItem(new Item.Properties()));
-        }
-    }
+    public static final DeferredItem<Item> MF_WIRELESS_CHARGER = ITEMS.register(
+            "mf_wireless_charger",
+            () -> new MFWirelessChargerSettingPartItem(new Item.Properties())
+    );
+    
+    
     
     
     // MachineSideParts
@@ -61,7 +60,7 @@ public class ModItems {
         MACHINE_SIDE_PARTS.put(UNLIMITED_WIRELESS_ENERGY_INTERFACE.getRegisteredName(), UNLIMITED_WIRELESS_ENERGY_INTERFACE);
     }
     public static final DeferredItem<Item> TEST_SETTING_PARTS2 =
-            ITEMS.register("test_setting_parts2", () -> new TestSettingPartsItem(new Item.Properties()));
+            ITEMS.register("test_setting_parts2", () -> new TestSettingPartItem(new Item.Properties()));
 
     static {
         MACHINE_CORE_PARTS.put(FURNACE_CORE.getRegisteredName(), FURNACE_CORE);

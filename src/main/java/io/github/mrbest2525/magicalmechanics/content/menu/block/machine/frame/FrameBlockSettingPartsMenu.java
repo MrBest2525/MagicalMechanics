@@ -2,7 +2,7 @@ package io.github.mrbest2525.magicalmechanics.content.menu.block.machine.frame;
 
 import io.github.mrbest2525.magicalmechanics.content.block.machine.frame.MachineFrameBlockEntity;
 import io.github.mrbest2525.magicalmechanics.content.block.machine.frame.SettingPartsManager;
-import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingParts;
+import io.github.mrbest2525.magicalmechanics.content.item.frameparts.instance.SettingPart;
 import io.github.mrbest2525.magicalmechanics.content.menu.ModMenus;
 import io.github.mrbest2525.magicalmechanics.content.menu.util.MMAbstractContainerMenu;
 import io.github.mrbest2525.magicalmechanics.network.packet.menu.machineframe.settingpert.DeselectPartPayload;
@@ -97,7 +97,7 @@ public class FrameBlockSettingPartsMenu extends MMAbstractContainerMenu<MachineF
             // --- プレイヤーインベントリから入力スロット (SettingSlotInput) への移動 ---
             if (index < 36) {
                 // SettingPartsなら入力スロットへ (addContainerSlotで追加した最初のスロットがInputと仮定)
-                if (itemstack1.getItem() instanceof SettingParts) {
+                if (itemstack1.getItem() instanceof SettingPart) {
                     if (!this.moveItemStackTo(itemstack1, 36, 37, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -169,8 +169,8 @@ public class FrameBlockSettingPartsMenu extends MMAbstractContainerMenu<MachineF
         
         @Override
         public boolean mayPlace(ItemStack stack) {
-            // 1. SettingParts（または対応するインターフェース/クラス）を継承しているか
-            if (!(stack.getItem() instanceof SettingParts)) {
+            // 1. SettingPart（または対応するインターフェース/クラス）を継承しているか
+            if (!(stack.getItem() instanceof SettingPart)) {
                 return false;
             }
             

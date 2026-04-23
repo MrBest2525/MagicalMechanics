@@ -58,13 +58,11 @@ public class WirelessMFInterfaceSideInstance implements SideInstance, IWirelessM
     }
     
     @Override
-    public void extractWirelessEnergy(MMLong resultBuffer, MMLong maxExtract, boolean simulate) {
-        // 引数の resultBuffer が null の場合に備えて、自分の resultBuffer をバックアップにする防御策
-        MMLong targetBuffer = (resultBuffer != null) ? resultBuffer : this.resultBuffer;
+    public void extractWirelessEnergy(@NotNull MMLong resultBuffer, @NotNull MMLong maxExtract, boolean simulate) {
         
         // 1. バリデーション
         if (blockEntity.getCoreInstance() == null || !blockEntity.getCoreInstance().supportsEnergy()) {
-            targetBuffer.setZero();
+            resultBuffer.setZero();
             return;
         }
         
@@ -76,11 +74,11 @@ public class WirelessMFInterfaceSideInstance implements SideInstance, IWirelessM
         }
         
         // 3. CoreInstance 側に消費を依頼
-        blockEntity.getCoreInstance().consumeEnergy(targetBuffer, workLimit, simulate);
+        blockEntity.getCoreInstance().consumeEnergy(resultBuffer, workLimit, simulate);
     }
     
     @Override
-    public void insertWirelessEnergy(MMLong resultBuffer, MMLong maxInsert, boolean simulate) {
+    public void insertWirelessEnergy(@NotNull MMLong resultBuffer, @NotNull MMLong maxInsert, boolean simulate) {
         // 1. バリデーション
         if (blockEntity.getCoreInstance() == null || !blockEntity.getCoreInstance().supportsEnergy()) {
             resultBuffer.setZero();
@@ -98,5 +96,37 @@ public class WirelessMFInterfaceSideInstance implements SideInstance, IWirelessM
         // 3. CoreInstance 側に注入を依頼
         // 空き容量のチェック、simulate 判定、実際の加算がすべて完結
         blockEntity.getCoreInstance().addEnergy(resultBuffer, workLimit, simulate);
+    }
+    
+    @Override
+    public void getAvailableWirelessEnergy(@NotNull MMLong resultBuffer) {
+        // 1. Coreがないなら 0
+        if (blockEntity.getCoreInstance() == null) {
+            resultBuffer.setZero();
+            return;
+        }
+        
+        // 2. Coreの「生の残量」を取得
+        blockEntity.getCoreInstance().getEnergy(resultBuffer);
+        
+        // 3. もし Tier 制限があるなら、その上限で丸める（ここが重要！）
+        if (!tier.getUnlimitedExtractEnergy()) {
+            MMLong.minTo(resultBuffer, tier.getMaxExtractEnergy(), resultBuffer);
+        }
+    }
+    
+    @Override
+    public void getWirelessMaxEnergyCapacity(@NotNull MMLong resultBuffer) {
+        if (blockEntity.getCoreInstance() == null) {
+            resultBuffer.setZero();
+            return;
+        }
+        // 基本は Core の最大容量を入れる
+        blockEntity.getCoreInstance().getMaxEnergy(resultBuffer);
+        
+        // ただし、Tier による転送制限があるなら、それを「最大値」として上書き（制限）する
+        if (!tier.getUnlimitedExtractEnergy()) {
+            MMLong.minTo(resultBuffer, tier.getMaxExtractEnergy(), resultBuffer);
+        }
     }
 }

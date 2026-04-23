@@ -223,6 +223,4 @@ tasks.named('assemble').configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    // Java 21 の言語機能を明示的に有効化
-    options.release.set(21)
 }
